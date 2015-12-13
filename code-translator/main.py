@@ -16,21 +16,27 @@
 #
 import webapp2
 from DAL import *
+import os
+import jinja2
+import logging
+
+
+JINJA_ENVIRONMENT = jinja2.Environment(
+    loader=jinja2.FileSystemLoader("web"),
+    extensions=['jinja2.ext.autoescape'],
+    autoescape=True)
+
 
 class MainHandler(webapp2.RequestHandler):
     def show_data(self, keyword):
         return DAL.get_data_from_db(keyword)
 
     def get(self):
-        self.response.write('Welcome to Code Translator')
-        try:
-            DAL.save_data_in_db("java", "for", "statement", "https://docs....", "the for statement is ...")
-        except DataExistException:
-            pass
-        try:
-            self.response.write(self.show_data("for"))
-        except DataNotExistException:
-            self.response.write("No such keyword in DB")
+        logging.info("Main handler: loading landing page")
+
+        template_values = {}
+        template = JINJA_ENVIRONMENT.get_template('index.html')
+        self.response.write(template.render(template_values))
 
     def post(self):
         pass
