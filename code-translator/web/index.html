@@ -10,6 +10,12 @@
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
   <link href="css/materialize.css" type="text/css" rel="stylesheet" media="screen,projection"/>
   <link href="css/style.css" type="text/css" rel="stylesheet" media="screen,projection"/>
+  <link rel="stylesheet" type="text/css"
+    href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.7.1/themes/base/jquery-ui.css"/>
+
+
+
+
 </head>
 <body class=" light-blue lighten-5">
   <nav class="white" role="navigation">
@@ -45,9 +51,11 @@
 
   <br><br>
 
+
   <div class="container ">
     <div class="section">
-       <ul class="pagination offset-l4 center-align">
+        <h5 class="row center">Please choose your language: </h5>
+        <ul class="pagination offset-l4 center-align">
         <li class="disabled"><a href="#!"><i class="material-icons">chevron_left</i></a></li>
         <li class="teal lighten-1 z-depth-1 waves-effect waves-light active "><a href="#!">Python</a></li>
         <li class="waves-effect"><a href="#test">Java</a></li>
@@ -62,12 +70,29 @@
         <form>
               <div class="row">
                     <div class="input-field ">
-                  <i class="material-icons prefix">mode_edit</i>
-                  <textarea id="icon_prefix2" class="materialize-textarea"></textarea>
-                  <label for="icon_prefix2">Put your code here: </label>
-                </div>
+                      <i class="material-icons prefix">mode_edit</i>
+                      <textarea id="input_text" class="materialize-textarea"></textarea>
+                      <label for="input_text">Put your code here: </label>
+                    </div>
+
+
+                  <div class="card-panel hide" id="input-card">
+                      <span class="black-text" id="translation-card"></span>
+                  </div>
+
+
               </div>
-        <a class="waves-effect waves-light btn right">Translate</a>
+        <a  id="tranalslateBtn" class="waves-effect waves-light btn right">Translate</a>
+
+
+            <div class="row">
+                <div class="col s12 m12">
+                    <div class="card-panel hide" id="response-card">
+                        <img src="images/exit.png" class="exit">
+                      <div class="black-text" id="result-card"></div>
+                    </div>
+                </div>
+            </div>
         </form>
     </div>
   </div>
@@ -115,9 +140,13 @@
 
 
   <!--  Scripts-->
-  <script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.3/js/materialize.min.js"></script>
+  <script src="js/jquery-2.1.4.min.js"></script>
+  <script src="js/materialize.min.js"></script>
+  <script src="js/jquery.lettering-0.6.1.min.js"></script>
+  <script src="js/jquery-ui.min.js"></script>
   <script src="js/init.js"></script>
+
+
 
   </body>
 </html>

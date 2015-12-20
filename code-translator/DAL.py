@@ -98,7 +98,7 @@ class DAL():
         :param translation: text
         :except DataExistException
         """
-        res = LanguagesData.find_keyword(keyword)
+        res = LanguagesData.find_keyword(keyword, language)
         if not res:
             _newData = LanguagesData()
             _newData.language = language
@@ -111,7 +111,7 @@ class DAL():
             raise DataExistException()
 
     @staticmethod
-    def get_data_from_db(keyword):
+    def get_data_from_db(keyword, language):
         """
         This function getting data from DB for specific keyword
         :param keyword : string
@@ -119,8 +119,8 @@ class DAL():
         :returns data
         :rtype json
         """
-        res = LanguagesData.find_keyword(keyword)
-        data = dict()
+        res = LanguagesData.find_keyword(keyword, language)
+        data = {}
         if res:
             data['language'] = res.language
             data['keyword'] = res.keyword
@@ -128,7 +128,7 @@ class DAL():
             data['link'] = res.link
             data['translation'] = res.translation
             json_reply = json.dumps(data)
-            return json_reply
+            return data
         else:
             raise DataNotExistException
 

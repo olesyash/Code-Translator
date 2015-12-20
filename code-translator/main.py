@@ -16,9 +16,12 @@
 #
 import webapp2
 from DAL import *
-import os
 import jinja2
 import logging
+import os
+from engine.languages_API import *
+from translation_engine.translation_engine import *
+from engine.result_parser import *
 
 
 JINJA_ENVIRONMENT = jinja2.Environment(
@@ -29,10 +32,35 @@ JINJA_ENVIRONMENT = jinja2.Environment(
 
 class MainHandler(webapp2.RequestHandler):
     def show_data(self, keyword):
-        return DAL.get_data_from_db(keyword)
+        a = LanguagesAPI()
+        language = "python"
+        link = "https://docs.python.org/2/reference/compound_stmts.html#the-for-statement"
+        result, code = a.http_request_using_urlfetch(link, {})
+        b = ResultParser()
+        res = b.find_by_id(result, 'the-for-statement')
+        logging.info("result is " + res)
+        try:
+            DAL.save_data_in_db("python", keyword, "statement", link, res)
+        except DataExistException:
+            pass
+
+        cntb = "for"  # code needed to be translated
+        link = "https://docs.oracle.com/javase/tutorial/java/nutsandbolts/for.html"
+        result, code = a.http_request_using_urlfetch(link, {})
+        clean_text = b.find_by_id(result, 'PageContent')
+        logging.info("result is " + clean_text)
+
+        try:
+            DAL.save_data_in_db("java", cntb, "statement", link, clean_text)
+        except DataExistException:
+            pass
 
     def get(self):
         logging.info("Main handler: loading landing page")
+        try:
+            self.show_data("for")
+        except DataExistException:
+            logging.info("data already exist")
 
         template_values = {}
         template = JINJA_ENVIRONMENT.get_template('index.html')
@@ -41,6 +69,21 @@ class MainHandler(webapp2.RequestHandler):
     def post(self):
         pass
 
+
+class GetTranslation(webapp2.RequestHandler):
+    def get(self):
+        pass
+
+    def post(self):
+        code_text = self.request.body
+        translation_text = TranslationEngine.get_translation(code_text, "python") # TODO: Need to add language treatment
+        json_response = json.dumps(translation_text)
+        self.response.headers['Content-Type'] = 'application/json'
+        self.response.write(json_response)
+
+
+
 app = webapp2.WSGIApplication([
+    ('/gettranslation', GetTranslation),
     ('/', MainHandler)
 ], debug=True)

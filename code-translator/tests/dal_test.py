@@ -45,7 +45,7 @@ class DALTest(unittest.TestCase):
         Test saving data in DB and getting data from DB
         """
         DAL.save_data_in_db("java", "for", "statement", "https://docs....", "the for statement is ...")
-        data = DAL.get_data_from_db("for")
+        data = DAL.get_data_from_db("for", "java")
         print data
         self.assertIsNotNone(data)
 

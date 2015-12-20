@@ -33,14 +33,18 @@ class LanguagesData(ndb.Model):
     translation = ndb.TextProperty()
 
     @staticmethod
-    def find_keyword(word):
+    def find_keyword(word, language):
         """
-        This function find data in DB by keyword
-        :param word:
+        This function find data in DB by keyword and language
+        :param word, language:
         :return: LanguagesData Object if found in DB, false if not
         """
-        _qry = LanguagesData.query(LanguagesData.keyword == word).get()
-        if _qry:
-            return _qry
+        _qry = LanguagesData.query()
+
+        _q = _qry.filter(LanguagesData.language == language)
+        _q = _q.filter(LanguagesData.keyword == word)
+        q = _q.get()
+        if q:
+            return q
         else:
             return False

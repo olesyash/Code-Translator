@@ -6,6 +6,34 @@
  * Made By MaterializeCSS.com
  */
 
+.exit{
+    top:-18px;
+    display: inline-block;
+    left: -18px;
+    position: relative;
+}
+.exit:hover {
+    box-shadow: 1px 2px 3px rgb(0, 0, 0);
+}
+#input-card, #input_text{
+    font-size: 24px;
+}
+
+#response-card{
+    height: 300px;
+    width: 300px;
+}
+
+#result-card{
+    position: sticky;
+    top: -20px;
+    height: 100%;
+    margin-right: -18px;
+    padding-right: 20px;
+    padding-bottom: 20px;
+    overflow: auto;
+}
+
 nav ul a,
 nav .brand-logo {
   color: #444;
@@ -55,3 +83,8 @@ p {
 footer.page-footer {
   margin: 0;
 }
+
+body{
+    font-family: 'open sans', arial, sans-serif;
+}
+

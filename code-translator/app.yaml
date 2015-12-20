@@ -26,10 +26,8 @@ handlers:
 - url: /font
   static_dir: web/font
 
-- url: .*
+- url: /.*
   script: main.app
-
-
 
 libraries:
 - name: webapp2
