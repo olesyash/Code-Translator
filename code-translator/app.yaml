@@ -27,7 +27,7 @@ handlers:
   static_dir: web/font
 
 - url: /.*
-  script: main.app
+  script: server_interface.app
 
 libraries:
 - name: webapp2

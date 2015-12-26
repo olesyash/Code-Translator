@@ -5,10 +5,12 @@ from google.appengine.api import urlfetch
 
 class LanguagesAPI():
 
-    def http_request_using_urlfetch(self, http_url, params):
-        url = self.prepare_get_url(http_url, params)
-        result = urlfetch.fetch(url=url,
-                                deadline=30)
+    def http_request_using_urlfetch(self, http_url, params=None):
+        if params is not None:
+            url = self.prepare_get_url(http_url, params)
+        else:
+            url = http_url
+        result = urlfetch.fetch(url=url, deadline=30)
         return result.content, result.status_code
 
     def prepare_get_url(self, url, params):

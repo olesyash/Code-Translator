@@ -1697,7 +1697,7 @@ class SoupStrainer(object):
 
         if hasattr(match_against, 'match'):
             # Regexp match
-            return match_against.search(markup)
+            return match_against.google_search(markup)
 
         if hasattr(match_against, '__iter__'):
             # The markup must be an exact match against something

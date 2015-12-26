@@ -44,7 +44,7 @@ class DALTest(unittest.TestCase):
         """
         Test saving data in DB and getting data from DB
         """
-        DAL.save_data_in_db("java", "for", "statement", "https://docs....", "the for statement is ...")
+        DAL.save_data_in_db("java", "for", "statement", "https://docs....", "the for statement is ...", approved=True)
         data = DAL.get_data_from_db("for", "java")
         print data
         self.assertIsNotNone(data)
@@ -53,9 +53,9 @@ class DALTest(unittest.TestCase):
         """
         Test to check unique data saved in DB for each keyword
         """
-        DAL.save_data_in_db("java", "for", "statement", "https://docs....", "the for statement is ...")
+        DAL.save_data_in_db("java", "for", "statement", "https://docs....", "the for statement is ...", approved=True)
         self.assertRaises(DataExistException, DAL.save_data_in_db, "java", "for", "statement", "https://docs....",
-                          "the for statement is ...")
+                          "the for statement is ...", True)
 
     def tearDown(self):
         self.testbed.deactivate()

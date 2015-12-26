@@ -4,8 +4,6 @@
     $('.button-collapse').sideNav();
     $('.parallax').parallax();
 
-
-
   }); // end of document ready
 })(jQuery); // end of jQuery name space
 
@@ -77,7 +75,7 @@ function show_translation(response)
     }
     $('#translation-card').html(sendData.toString())
     .lettering('words')
-    .mouseover(function (event) {
+        .mouseover(function (event) {
         var word = event.target.innerHTML;
 
     for(var i = 0; i< response.length; i++)
@@ -94,7 +92,30 @@ function show_translation(response)
     }
 
     });
+    $('#translation-card').html(color_keywords(response));
 
     $("#tranalslateBtn").html("Back");
     pressed = false;
+}
+
+function color_keywords(response)
+{
+    var text = sendData.toString();
+    var res = text.split(" ");
+    var newText = "";
+    for(var i = 0; i< response.length; i++)
+    {
+        for(var j = 0; j< res.length; j++)
+        {
+            if(response[i].keyword == res[j]) {
+                var span = "<span style='color: red;'>" + res[j] +"</span>";
+                newText = newText + " " + span;
+            }
+            else
+            {
+                newText = newText + " " + res[j];
+            }
+        }
+    }
+    return newText;
 }

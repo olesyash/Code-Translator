@@ -31,6 +31,7 @@ class LanguagesData(ndb.Model):
     type = ndb.StringProperty()
     link = ndb.StringProperty()
     translation = ndb.TextProperty()
+    approved = ndb.BooleanProperty()
 
     @staticmethod
     def find_keyword(word, language):
@@ -39,11 +40,10 @@ class LanguagesData(ndb.Model):
         :param word, language:
         :return: LanguagesData Object if found in DB, false if not
         """
-        _qry = LanguagesData.query()
-
-        _q = _qry.filter(LanguagesData.language == language)
-        _q = _q.filter(LanguagesData.keyword == word)
-        q = _q.get()
+        _qry = LanguagesData.query(LanguagesData.language == language, LanguagesData.keyword == word)
+        # _q = _qry.filter(LanguagesData.language == language)
+        # _q = _q.filter(LanguagesData.keyword == word)
+        q = _qry.get()
         if q:
             return q
         else:

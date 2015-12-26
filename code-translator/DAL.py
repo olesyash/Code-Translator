@@ -88,14 +88,15 @@ class DAL():
     # ----------------------------
 
     @staticmethod
-    def save_data_in_db(language, keyword, type, link, translation):
+    def save_data_in_db(language, keyword, word_type, link, translation, approved):
         """
         This function save new data to DB
         :param language: string
         :param keyword: string
-        :param type: string
+        :param word_type: string
         :param link: string
         :param translation: text
+        :param approved: boolean
         :except DataExistException
         """
         res = LanguagesData.find_keyword(keyword, language)
@@ -103,12 +104,15 @@ class DAL():
             _newData = LanguagesData()
             _newData.language = language
             _newData.keyword = keyword
-            _newData.type = type
+            _newData.type = word_type
             _newData.link = link
             _newData.translation = translation
+            _newData.approved = approved
             _newData.put()
+            return create_dict(language, keyword, word_type, link, translation, approved)
         else:
             raise DataExistException()
+
 
     @staticmethod
     def get_data_from_db(keyword, language):
@@ -122,16 +126,20 @@ class DAL():
         res = LanguagesData.find_keyword(keyword, language)
         data = {}
         if res:
-            data['language'] = res.language
-            data['keyword'] = res.keyword
-            data['type'] = res.type
-            data['link'] = res.link
-            data['translation'] = res.translation
-            json_reply = json.dumps(data)
-            return data
+            return create_dict(res.language, res.keyword, res.type, res.link, res.translation, str(res.approved))
         else:
             raise DataNotExistException
 
+
+def create_dict(language, keyword, type, link, translation, approved):
+    data = {}
+    data['language'] = language
+    data['keyword'] = keyword
+    data['type'] = type
+    data['link'] = link
+    data['translation'] = translation
+    data['approved'] = str(approved)
+    return data
 
 class UserExistException(Exception):
     def __init__(self):

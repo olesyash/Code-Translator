@@ -1,16 +1,25 @@
 __author__ = 'olesya'
 
-
 from HTMLParser import HTMLParser
 from lib.bs4 import BeautifulSoup
 
+possible_id = {
+    "python":'content',
+    "java": 'PageContent'
+}
+
 
 class ResultParser():
-    def find_by_id(self, html_data, id_name):
+    def __init__(self, language):
+        self.language = language
+
+    def find_by_id(self, html_data):
         soup = BeautifulSoup(html_data, 'html.parser')
-        found_needed_data = soup.find(id=id_name)
+        id_text = possible_id[self.language]
+        found_needed_data = soup.find(id=id_text)
+        print(found_needed_data)
         if found_needed_data is not None:
-            return found_needed_data.get_text()
+            return str(found_needed_data)
         else:
             return ""
 
