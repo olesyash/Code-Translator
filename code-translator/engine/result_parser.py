@@ -4,8 +4,8 @@ from HTMLParser import HTMLParser
 from lib.bs4 import BeautifulSoup
 
 possible_id = {
-    "python":'content',
-    "java": 'PageContent'
+    "Python":'content',
+    "Java": 'PageContent'
 }
 
 

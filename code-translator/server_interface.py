@@ -27,6 +27,7 @@ import os
 from engine.languages_API import *
 from translation_engine.translation_engine import *
 from engine.result_parser import *
+from translation_engine.languages_specific_features import *
 
 
 JINJA_ENVIRONMENT = jinja2.Environment(
@@ -41,8 +42,8 @@ class MainHandler(webapp2.RequestHandler):
         language = "python"
         link = "https://docs.python.org/2/reference/compound_stmts.html#the-for-statement"
         result, code = a.http_request_using_urlfetch(link, {})
-        b = ResultParser()
-        res = b.find_by_id(result, 'the-for-statement')
+        b = ResultParser(language)
+        res = b.find_by_id(result)
         logging.info("result is " + res)
         try:
             DAL.save_data_in_db("python", keyword, "statement", link, res, approved=True)
@@ -52,7 +53,7 @@ class MainHandler(webapp2.RequestHandler):
         cntb = "for"  # code needed to be translated
         link = "https://docs.oracle.com/javase/tutorial/java/nutsandbolts/for.html"
         result, code = a.http_request_using_urlfetch(link, {})
-        clean_text = b.find_by_id(result, 'PageContent')
+        clean_text = b.find_by_id(result)
         logging.info("result is " + clean_text)
 
         try:
@@ -77,12 +78,15 @@ class MainHandler(webapp2.RequestHandler):
 
 class GetTranslation(webapp2.RequestHandler):
     def get(self):
-        pass
+        json_response = json.dumps(languages)
+        self.response.headers['Content-Type'] = 'application/json'
+        self.response.write(json_response)
 
     def post(self):
         code_text = self.request.body
-        te = TranslationEngine("java")  # TODO: Need to add language treatment
-        translation_text = te.get_translation(code_text)
+        dic = json.loads(code_text)
+        te = TranslationEngine(dic['language'])
+        translation_text = te.get_translation(dic["text"])
         json_response = json.dumps(translation_text)
         self.response.headers['Content-Type'] = 'application/json'
         self.response.write(json_response)
