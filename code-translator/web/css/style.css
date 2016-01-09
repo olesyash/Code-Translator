@@ -6,6 +6,15 @@
  * Made By MaterializeCSS.com
  */
 
+#search-container, #cards-container{
+    display: block;
+}
+#cards-container{
+
+    /*margin: 0 auto;*/
+    display: table;
+    /*align-content: space-between;*/
+}
 .exit{
     top:-18px;
     display: inline-block;
@@ -19,13 +28,19 @@
     font-size: 24px;
 }
 
-#response-card{
+.response-card{
+    display: inline-block;
+    position: absolute !important;
+    /*display: initial -no none-no;  table-cell (no) inline- no, table -no block-no run-in -no flex-no list-iitem-no ruby-no*/
     height: 300px;
     width: 300px;
 }
 
-#result-card{
+.response-card .result-card{
+    /*width: 280px;*/
+    /*width: inherit;*/
     height: 98%;
+    /*margin: 0 auto;*/
     margin-right: -18px;
     padding-right: 20px;
     padding-bottom: 20px;

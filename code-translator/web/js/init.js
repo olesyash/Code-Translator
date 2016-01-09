@@ -16,6 +16,7 @@ var start = 0;
 var counter = 0;
 var MAX = 5;
 var minPage, maxPage;
+var placeholders;
 
 /////////////debugging
 //            $('#response-card').removeClass('hide').show()
@@ -129,7 +130,7 @@ function prevPage() {
 }
 
 $('.exit').click(function(){
-     $('#response-card').hide();
+     $('.card-panel').hide();
 });
 
 
@@ -171,6 +172,9 @@ function ()
 
 function show_translation(response)
 {
+     var cards = document.getElementById("cards-container");
+    // placeholders = document.getElementById("cards-container");
+
     $('.input-field').hide();
     $('#input-card').removeClass('hide')
     .show();
@@ -179,19 +183,30 @@ function show_translation(response)
     .lettering('words')
         .mouseover(function (event) {
         var word = event.target.innerHTML;
-
+     var h = parseInt(response.length/3) + 1;
+     cards.setAttribute("style", " min-height:"+h*300+"px");
     for(var i = 0; i< response.length; i++)
     {
         if(word == response[i].keyword) {
             translation = response[i].translation;
-            $('#response-card').removeClass('hide').show()
-            .draggable()
-            .resizable();
-            var element =  "<a target='_blank' href='"+response[i].link+"'>"+response[i].link +"<a>";
-            //element.setAttribute("href", response[i].link);
-            //element.innerHTML = "<a>"+response[i].link +"<a>";
-            $('#result-card').html(translation.toString() + element);
+            var $found = $('#card'+i);
+            if($found.length)
+            {
+                if($found.is(":hidden"))
+                   $found.show();
+            }
+            else
+            {
+                 var card = createCard(translation, i);
+                cards.appendChild(card);
+                $('.response-card')
+                .draggable()
+                .resizable();
+            }
 
+            //var element =  "<a target='_blank' href='"+response[i].link+"'>"+response[i].link +"<a>";
+
+           // $('#result-card').html(translation.toString() + element);
         }
     }
 
@@ -221,4 +236,36 @@ function color_keywords(response)
         }
     }
     return newText;
+}
+
+
+function createCard(text, i)
+{
+   // var col =  document.createElement("div");//"<div class="col s4">"
+   // col.className = "col s4";
+    var card = document.createElement("div"); // <div class="card-panel response-card">
+     card.className = "card-panel response-card";
+    card.setAttribute("id", "card"+i);
+    var initH = $('#cards-container').offset().top;
+    var initW = $('#cards-container').offset().left;
+    var space = 10;
+    var h = initH + parseInt(i/3)*300 + space*(parseInt(i/3));
+    var w = initW + (i%3)*300 + space*(i%3);
+    card.setAttribute("style", "left:"+ w +"px; top:"+ h +"px");
+    var img = document.createElement("img"); // <img src="images/exit.png" class="exit">
+    img.setAttribute("src", "images/exit.png");
+    img.addEventListener("click", function(){
+            $("#card"+i).hide();
+        });
+
+    img.className = "exit";
+    var text_el = document.createElement("div"); //<div class="black-text" id="result-card"></div>
+    text_el.setAttribute("class", "black-text result-card");
+    text_el.innerHTML = text;
+
+    card.appendChild(img);
+    card.appendChild(text_el);
+   // col.appendChild(card);
+   // placeholders.appendChild(col);
+    return  card;
 }
