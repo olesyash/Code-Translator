@@ -4,7 +4,6 @@
     $('.button-collapse').sideNav();
     $('.parallax').parallax();
     get_languages();
-
   }); // end of document ready
 })(jQuery); // end of jQuery name space
 
@@ -85,7 +84,7 @@ function add_pagination()
                 li.setAttribute("class", active);
             else
                 li.setAttribute("class", enabled);
-            li.setAttribute("onclick", "javascript:changePage(" + i + ")");
+            li.setAttribute("onclick", "changePage(" + i + ")");
             li.innerHTML = '<a>' + languages_response[i] + '</a>';
             list.appendChild(li);
         }
@@ -106,16 +105,22 @@ function add_pagination()
 function changePage(i)
 {
     selected = i;
+    $("#input_text").val("");
     add_pagination();
+    clearCards();//Clear cards list
+
 }
 
+function clearCards() //Clear cards list
+{
+    $(".response-card").remove();
+}
 function nextPage()
 {
     if(counter < maxPage) {
         counter++;
         start = counter * MAX;
         selected = start;
-        console.log(start);
         add_pagination();
     }
 }
@@ -139,6 +144,7 @@ $("#tranalslateBtn").click(
 function ()
 {
     if(pressed) { //Translate button was pressed, show translation
+        pressed = false;
         sendData = $('#input_text').val();
         var dict = {"text": sendData, "language": languages_response[selected]};
         var json = JSON.stringify(dict);
@@ -153,13 +159,17 @@ function ()
                 }
             },
             success: function (response, message, jq) {
-                show_translation(response);
+                var res = response;
+                $("#input-card").append('<span class="black-text" id="translation-card"></span>');
+                show_translation(res);
 
             }
         });
     }
     else //back button was pressed, go back to translation
     {
+          $("#translation-card").remove();
+        clearCards(); //Clear cards list
         $('.input-field').show();
         $('#input-card').hide();
         pressed = true;
@@ -173,7 +183,6 @@ function ()
 function show_translation(response)
 {
      var cards = document.getElementById("cards-container");
-    // placeholders = document.getElementById("cards-container");
 
     $('.input-field').hide();
     $('#input-card').removeClass('hide')
@@ -239,10 +248,8 @@ function color_keywords(response)
 }
 
 
-function createCard(text, i)
+function createCard(translatedText, i)
 {
-   // var col =  document.createElement("div");//"<div class="col s4">"
-   // col.className = "col s4";
     var card = document.createElement("div"); // <div class="card-panel response-card">
      card.className = "card-panel response-card";
     card.setAttribute("id", "card"+i);
@@ -261,11 +268,8 @@ function createCard(text, i)
     img.className = "exit";
     var text_el = document.createElement("div"); //<div class="black-text" id="result-card"></div>
     text_el.setAttribute("class", "black-text result-card");
-    text_el.innerHTML = text;
-
+    text_el.innerHTML = translatedText;
     card.appendChild(img);
     card.appendChild(text_el);
-   // col.appendChild(card);
-   // placeholders.appendChild(col);
     return  card;
 }
