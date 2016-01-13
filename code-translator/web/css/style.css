@@ -16,9 +16,9 @@
     /*align-content: space-between;*/
 }
 .exit{
-    top:-18px;
+    top: 0;
     display: inline-block;
-    left: -18px;
+    left: 0;
     position: relative;
 }
 .exit:hover {
@@ -35,12 +35,15 @@
     height: 300px;
     width: 300px;
 }
-
+.card-action a{
+    color: #bf360c!important;
+}
+.card-action a:hover {
+    color: #ff5722  !important;
+}
 .response-card .result-card{
-    /*width: 280px;*/
-    /*width: inherit;*/
-    height: 98%;
-    /*margin: 0 auto;*/
+    height: 75%;
+    width: 100%;
     margin-right: -18px;
     padding-right: 20px;
     padding-bottom: 20px;

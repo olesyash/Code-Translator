@@ -13,7 +13,8 @@ class Parser():
         words_list = code_text.split()
         for word in words_list:
             if word in self.statements:
-                keywords_list.append(word)
+                if word not in keywords_list:
+                    keywords_list.append(word)
         return keywords_list
 
     def get_word_type(self, word):

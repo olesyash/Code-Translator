@@ -135,11 +135,6 @@ function prevPage() {
     }
 }
 
-$('.exit').click(function(){
-     $('.card-panel').hide();
-});
-
-
 $("#tranalslateBtn").click(
 
 function ()
@@ -207,16 +202,17 @@ function show_translation(response)
             }
             else
             {
-                 var card = createCard(translation, i);
+                 var card = createCard(translation, response[i].link, i);
                 cards.appendChild(card);
                 $('.response-card')
                 .draggable()
-                .resizable();
+                .resizable(
+                    {
+                        minHeight: 250,
+                        minWidth: 204
+                    }
+                );
             }
-
-            //var element =  "<a target='_blank' href='"+response[i].link+"'>"+response[i].link +"<a>";
-
-           // $('#result-card').html(translation.toString() + element);
         }
     }
 
@@ -259,10 +255,10 @@ function color_keywords(response)
 }
 
 
-function createCard(translatedText, i)
+function createCard(translatedText, link, i)
 {
     var card = document.createElement("div"); // <div class="card-panel response-card">
-     card.className = "card-panel response-card";
+     card.className = "card response-card";
     card.setAttribute("id", "card"+i);
     var initH = $('#cards-container').offset().top;
     var initW = $('#cards-container').offset().left;
@@ -278,10 +274,31 @@ function createCard(translatedText, i)
 
     img.className = "exit";
     var text_el = document.createElement("div"); //<div class="black-text" id="result-card"></div>
-    text_el.setAttribute("class", "black-text result-card");
+    text_el.setAttribute("class", "card-content black-text result-card");
     text_el.innerHTML = translatedText;
+    var action = document.createElement("div");
+    action.className = "card-action";
+
+    var l1  = document.createElement("a");
+    var linkText = document.createTextNode("Go To Site");
+    l1.setAttribute("target", '_blank');
+    l1.href = link;
+    l1.title = link;
+    l1.appendChild(linkText);
+
+    var l2  = document.createElement("a");
+    var linkText2 = document.createTextNode("Wrong?");
+    l2.title = "#!";
+    l2.href = "#!";
+    l2.appendChild(linkText2);
+
+    action.appendChild(l1);
+    action.appendChild(l2);
     card.appendChild(img);
     card.appendChild(text_el);
+    card.appendChild(action);
     cardCounter ++;
     return  card;
 }
+
+
