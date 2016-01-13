@@ -15,7 +15,7 @@ var start = 0;
 var counter = 0;
 var MAX = 5;
 var minPage, maxPage;
-var placeholders;
+var cardCounter = 0;
 
 /////////////debugging
 //            $('#response-card').removeClass('hide').show()
@@ -113,6 +113,7 @@ function changePage(i)
 
 function clearCards() //Clear cards list
 {
+    cardCounter = 0;
     $(".response-card").remove();
 }
 function nextPage()
@@ -230,18 +231,28 @@ function color_keywords(response)
 {
     var text = sendData.toString();
     var res = text.split(" ");
+    var res2 = text.split(" ");
+    res2.sort();
+    console.log(""+res);
+    console.log(""+res2);
     var newText = "";
     var j = 0;
-    for(var i =0; i<res.length; i++)
+    var flag;
+    for(var i = 0; i<res.length; i++)
     {
-        if(j < response.length && response[j].keyword == res[i]) {
-            var span = "<span style='color: red;'>" + res[i] +"</span>";
-            newText = newText + " " + span;
-            j++;
-        }
-        else
+        flag = false;
+        for(j = 0; j<response.length; j++)
         {
-            newText = newText + " " + res[i];
+            if(res[i] == response[j].keyword)
+            {
+                var span = "<span style='color: red;'>" + res[i] +"</span>";
+                newText = newText + " " + span;
+                flag = true;
+            }
+        }
+        if(!flag)
+        {
+             newText = newText + " " + res[i];
         }
     }
     return newText;
@@ -256,8 +267,8 @@ function createCard(translatedText, i)
     var initH = $('#cards-container').offset().top;
     var initW = $('#cards-container').offset().left;
     var space = 10;
-    var h = initH + parseInt(i/3)*300 + space*(parseInt(i/3));
-    var w = initW + (i%3)*300 + space*(i%3);
+    var h = initH + parseInt(cardCounter/3)*300 + space*(parseInt(cardCounter/3));
+    var w = initW + (cardCounter%3)*300 + space*(cardCounter%3);
     card.setAttribute("style", "left:"+ w +"px; top:"+ h +"px");
     var img = document.createElement("img"); // <img src="images/exit.png" class="exit">
     img.setAttribute("src", "images/exit.png");
@@ -271,5 +282,6 @@ function createCard(translatedText, i)
     text_el.innerHTML = translatedText;
     card.appendChild(img);
     card.appendChild(text_el);
+    cardCounter ++;
     return  card;
 }
