@@ -124,7 +124,6 @@ class DAL():
         :rtype json
         """
         res = LanguagesData.find_keyword(keyword, language)
-        data = {}
         if res:
             return create_dict(res.language, res.keyword, res.type, res.link, res.translation, str(res.approved))
         else:
@@ -132,7 +131,12 @@ class DAL():
 
 
 def create_dict(language, keyword, type, link, translation, approved):
-    data = {}
+    """
+    This function gets info and put it in dictionary
+     :returns dictionary with all data
+     :rtype dictionary
+    """
+    data = dict()
     data['language'] = language
     data['keyword'] = keyword
     data['type'] = type
@@ -140,6 +144,7 @@ def create_dict(language, keyword, type, link, translation, approved):
     data['translation'] = translation
     data['approved'] = str(approved)
     return data
+
 
 class UserExistException(Exception):
     def __init__(self):

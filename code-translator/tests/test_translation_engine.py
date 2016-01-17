@@ -23,39 +23,75 @@ class TranslationEngineTest(unittest.TestCase):
         # using ndb.get_context().set_cache_policy(False)
         ndb.get_context().clear_cache()
         self.testbed.init_urlfetch_stub()
-        self.l = "java"
-        self.t = TranslationEngine(self.l)
 
     def test_google_search_for_java_get_default_url(self):
-        url = self.t.google_search("for")
+        """
+        Test google search for language = java, make sure url is from the chosen site
+        """
+        self.l = "Java"
+        self.t = TranslationEngine(self.l)
+        url = self.t.google_search_by_default_site("for", "statement")
         self.assertIn(default_urls[self.l], url)
 
     def test_google_search_while_python_get_default_url(self):
-        self.l = "python"
+        """
+        Test google search for language = python, make sure url is from the chosen site
+        """
+        self.l = "Python"
         self.t = TranslationEngine(self.l)
-        url = self.t.google_search("while")
+        url = self.t.google_search_by_default_site("while", "statement")
+        self.assertIn(default_urls[self.l], url)
+
+    def test_google_search_if_python_get_default_url(self):
+        """
+        Test google search for language = python, make sure url is from the chosen site
+        """
+        self.l = "Python"
+        self.t = TranslationEngine(self.l)
+        url = self.t.google_search_by_default_site("if", "statement")
+        print url
         self.assertIn(default_urls[self.l], url)
 
     def test_add_keyword_python(self):
-        self.l = "python"
+        """
+        Test add keyword for language = python, make sure the data is saved in db
+        """
+        self.l = "Python"
         self.t = TranslationEngine(self.l)
         self.t.add_keyword("while", "statement")
+        data = None
         try:
-            data = DAL.get_data_from_db("while", "python")
+            data = DAL.get_data_from_db("while", "Python")
             print 20*"-"
             print data
-            self.assertIsNotNone(data)
         except DataNotExistException:
             print "error"
+        self.assertIsNotNone(data)
 
     def test_add_keyword_java(self):
-        self.l = "java"
+        """
+        Test add keyword for language = java, make sure the data is saved in db
+        """
+        self.l = "Java"
         self.t = TranslationEngine(self.l)
         self.t.add_keyword("while", "statement")
+        data = None
         try:
-            data = DAL.get_data_from_db("while", "java")
+            data = DAL.get_data_from_db("while", "Java")
             print 20*"-"
             print data
-            self.assertIsNotNone(data)
         except DataNotExistException:
             print "error"
+        self.assertIsNotNone(data)
+
+    def test_get_translation_java_code(self):
+        """
+        Test all way from giving code text to getting response
+        Given 3 keywords, expected list of 3 translations
+        """
+        self.l = "Java"
+        self.t = TranslationEngine(self.l)
+        code_text = "for while if"
+        transaltion_list = self.t.get_translation(code_text)
+        print(transaltion_list)
+        self.assertEqual(len(transaltion_list), 3)

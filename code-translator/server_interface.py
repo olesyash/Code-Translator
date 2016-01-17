@@ -20,11 +20,8 @@ This Class will perform the connection between web to server.
 """
 
 import webapp2
-from DAL import *
+
 import jinja2
-import logging
-import os
-from engine.languages_API import *
 from translation_engine.translation_engine import *
 from engine.result_parser import *
 from translation_engine.languages_specific_features import *
@@ -37,37 +34,8 @@ JINJA_ENVIRONMENT = jinja2.Environment(
 
 
 class MainHandler(webapp2.RequestHandler):
-    def show_data(self, keyword):
-        a = LanguagesAPI()
-        language = "python"
-        link = "https://docs.python.org/2/reference/compound_stmts.html#the-for-statement"
-        result, code = a.http_request_using_urlfetch(link, {})
-        b = ResultParser(language)
-        res = b.find_by_id(result)
-        logging.info("result is " + res)
-        try:
-            DAL.save_data_in_db("python", keyword, "statement", link, res, approved=True)
-        except DataExistException:
-            pass
-
-        cntb = "for"  # code needed to be translated
-        link = "https://docs.oracle.com/javase/tutorial/java/nutsandbolts/for.html"
-        result, code = a.http_request_using_urlfetch(link, {})
-        clean_text = b.find_by_id(result)
-        logging.info("result is " + clean_text)
-
-        try:
-            DAL.save_data_in_db("java", cntb, "statement", link, clean_text, approved=True)
-        except DataExistException:
-            pass
-
     def get(self):
         logging.info("Main handler: loading landing page")
-        # try:
-        #     self.show_data("for")
-        # except DataExistException:
-        #     logging.info("data already exist")
-
         template_values = {}
         template = JINJA_ENVIRONMENT.get_template('index.html')
         self.response.write(template.render(template_values))

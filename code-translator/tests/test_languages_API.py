@@ -1,15 +1,12 @@
 __author__ = 'olesya'
 
 import unittest
-
 from google.appengine.ext import ndb
 from google.appengine.ext import testbed
-
-from engine.result_parser import ResultParser
-from engine.languages_API import LanguagesAPI
+from engine.languages_API import *
 
 
-class CTest(unittest.TestCase):
+class LanguagesApiTest(unittest.TestCase):
     def setUp(self):
         # First, create an instance of the Testbed class.
         self.testbed = testbed.Testbed()
@@ -23,14 +20,13 @@ class CTest(unittest.TestCase):
         # Alternatively, you could disable caching by
         # using ndb.get_context().set_cache_policy(False)
         ndb.get_context().clear_cache()
-
         self.testbed.init_urlfetch_stub()
 
-    def test_get_for_statement(self):
+    def test_java_get_for_statement_using_urlfetch(self):
         a = LanguagesAPI()
-        cntb = "for"  # code needed to be translated
-        result, code = a.http_request_using_urlfetch("http://www.tutorialspoint.com/cprogramming/c_for_loop.htm", {})
-        b = ResultParser()
-        clean_text = b.find_by_p(result)
-        print clean_text
-        self.assertTrue(cntb in clean_text)
+        result, code = a.http_request_using_urlfetch("https://docs.oracle.com/javase/tutorial/java/nutsandbolts/for.html")
+        self.assertTrue(code)
+
+    def test_negative_test_java_get_for_statement_using_urlfetch(self):
+        a = LanguagesAPI()
+        self.assertRaises(WrongURL, a.http_request_using_urlfetch, "wrong_html")
