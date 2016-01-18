@@ -10,25 +10,12 @@
 var sendData;
 var pressed = true;
 var selected = 0;
-var languages_response;
+var languages_response = ["Java", "Python", "C", "C++", "C#", "R", "PHP", "JS", "Ruby", "Matlab"];
 var start = 0;
 var counter = 0;
 var MAX = 5;
 var minPage, maxPage;
 var cardCounter = 0;
-
-/////////////debugging
-//            $('#response-card').removeClass('hide').show()
-//            .draggable()
-//            .resizable();
-//            $('#result-card').html("sssssssssssssssssssss" +
-//                "sssss sss ssss ssssss ssss s s s s  s sss s s s s s s s s s s s s s s  sssssssssssss" +
-//                "ssssssssss s s      sssss ssssssssssss s s s s ssssssssss ssssss sssss ssss ssss ss  ssss ss sss" +
-//                "ssssssssss s s      sssss ssssssssssss s s s s ssssssssss ssssss sssss ssss ssss ss  ssss ss sss" +
-//                "ssssssssss s s      sssss ssssssssssss s s s s ssssssssss ssssss sssss ssss ssss ss  ssss ss sss"
-//            );
-
-/////////////////////////////////////////
 
 function get_languages()
 {
@@ -47,13 +34,13 @@ function get_languages()
                 maxPage = parseInt(response.length/MAX) - 1;
                 if(response.length%MAX >0)
                     maxPage ++;
-                add_pagination();
+                addPagination();
 
             }
         });
 }
 
-function add_pagination()
+function addPagination()
 {
     var list = document.getElementById("languages");
     var disabled = "disabled";
@@ -106,7 +93,7 @@ function changePage(i)
 {
     selected = i;
     $("#input_text").val("");
-    add_pagination();
+    addPagination();
     clearCards();//Clear cards list
 
 }
@@ -122,7 +109,7 @@ function nextPage()
         counter++;
         start = counter * MAX;
         selected = start;
-        add_pagination();
+        addPagination();
     }
 }
 
@@ -131,16 +118,25 @@ function prevPage() {
     counter--;
     start = counter * MAX;
         selected = start;
-    add_pagination();
+    addPagination();
     }
 }
 
+//Translate button listener
 $("#tranalslateBtn").click(
-
 function ()
 {
     if(pressed) { //Translate button was pressed, show translation
         pressed = false;
+
+        $("#tranalslateBtn").html("Back"); //Replace button to ->  "Back"
+       var btn = document.getElementById("tranalslateBtn"); //disable button
+        btn.className += " disabled";
+
+        //Show loader (spinner) while waiting for translation
+        var loader = document.getElementById("loader-container");
+        $(".loader").removeClass("hide").show();
+
         sendData = $('#input_text').val();
         var dict = {"text": sendData, "language": languages_response[selected]};
         var json = JSON.stringify(dict);
@@ -148,7 +144,7 @@ function ()
             url: '/gettranslation',
             type: "POST",
             data: json,
-            contentType: "json", //'text/html; charset=utf-8',
+            contentType: "json",
             dataType: "json",
             statusCode: {
                 400: function () {
@@ -157,14 +153,14 @@ function ()
             success: function (response, message, jq) {
                 var res = response;
                 $("#input-card").append('<span class="black-text" id="translation-card"></span>');
-                show_translation(res);
+                showTranslation(res);
 
             }
         });
     }
     else //back button was pressed, go back to translation
     {
-          $("#translation-card").remove();
+        $("#translation-card").remove(); //remove the card with translation
         clearCards(); //Clear cards list
         $('.input-field').show();
         $('#input-card').hide();
@@ -176,7 +172,7 @@ function ()
 }
 );
 
-function show_translation(response)
+function showTranslation(response)
 {
      var cards = document.getElementById("cards-container");
 
@@ -188,6 +184,7 @@ function show_translation(response)
     .lettering('words')
         .mouseover(function (event) {
         var word = event.target.innerHTML;
+
      var h = parseInt(response.length/3) + 1;
      cards.setAttribute("style", " min-height:"+h*300+"px");
     for(var i = 0; i< response.length; i++)
@@ -217,20 +214,17 @@ function show_translation(response)
     }
 
     });
-    $('#translation-card').html(color_keywords(response));
+    $('#translation-card').html(colorKeywords(response)); //Use function to color keywords in red
 
-    $("#tranalslateBtn").html("Back");
-    pressed = false;
+    var btn = document.getElementById("tranalslateBtn");
+        btn.className = "waves-effect waves-light btn right";
+    $(".loader").hide(); // Stop spinner
 }
 
-function color_keywords(response)
+function colorKeywords(response)
 {
     var text = sendData.toString();
     var res = text.split(" ");
-    var res2 = text.split(" ");
-    res2.sort();
-    console.log(""+res);
-    console.log(""+res2);
     var newText = "";
     var j = 0;
     var flag;
@@ -243,12 +237,19 @@ function color_keywords(response)
             {
                 var span = "<span style='color: red;'>" + res[i] +"</span>";
                 newText = newText + " " + span;
+                if(res[i].charAt(res[i].length-1) === '\n')
+                    newText = newText + "<br/>";
                 flag = true;
             }
         }
         if(!flag)
         {
+            if(res[i] === "")
+                res[i] ="&nbsp";
              newText = newText + " " + res[i];
+             if(res[i].charAt(res[i].length -1) === '\n')
+                    newText = newText + "<br/>";
+
         }
     }
     return newText;
