@@ -134,8 +134,7 @@ function ()
         btn.className += " disabled";
 
         //Show loader (spinner) while waiting for translation
-        var loader = document.getElementById("loader-container");
-        $(".loader").removeClass("hide").show();
+        $(".darken").removeClass("hide").show();
 
         sendData = $('#input_text').val();
         var dict = {"text": sendData, "language": languages_response[selected]};
@@ -218,7 +217,7 @@ function showTranslation(response)
 
     var btn = document.getElementById("tranalslateBtn");
         btn.className = "waves-effect waves-light btn right";
-    $(".loader").hide(); // Stop spinner
+    $(".darken").hide(); // Stop spinner
 }
 
 function colorKeywords(response)

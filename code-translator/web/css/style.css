@@ -5,15 +5,57 @@
  *
  * Made By MaterializeCSS.com
  */
-.loader {
+
+
+.card.response-card  h1 {
+  font-size: 1.8rem !important;
+  line-height: 110%;
+  margin: 2.1rem 0 1.68rem 0;
+}
+
+.card.response-card  h2 {
+  font-size: 1.8rem !important;
+  line-height: 110%;
+  margin: 1.78rem 0 1.424rem 0;
+}
+.mytext{
+     font-size: 1.3rem;
+     color: #000e39 ;
+}
+
+
+.darken{
+    height: 100%;
+    width: 100%;
+    top: 0;
+    position: fixed;
+    z-index: 9999;
+    background: rgba(0,0,0,0.5);
+}
+.darken .loader-text{
+    position: fixed;
+    z-index: 9999;
+    font-size: 25px;
+    color: #ffffff;
+    top: 36vh;
+    left: 30vw;
+}
+.darken .loader {
   margin: 60px auto;
   font-size: 10px;
-  position: relative;
+  position: fixed;
+
+    z-index: 999;
+    top: 40vh;
+    left: 45vw;
+
   text-indent: -9999em;
   border-top: 1.1em solid #e0e0e0;
   border-right: 1.1em solid #e0e0e0;
   border-bottom: 1.1em solid #e0e0e0;
-  border-left: 1.1em solid 	#404040;
+  border-left: 1.1em solid 	#00838f;
+
+
   -webkit-transform: translateZ(0);
   -ms-transform: translateZ(0);
   transform: translateZ(0);
