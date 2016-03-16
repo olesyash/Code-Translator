@@ -1,6 +1,18 @@
 __author__ = 'olesya'
 
 
+from lib.plex import *
+
+python_keywords = Str('and', 'as', 'assert', 'break', 'class', 'continue', 'def', 'del', 'elif', 'else', 'except', 'exec',
+                   'finally', 'for', 'global', 'if', 'in', 'is', 'lambda', 'not', 'or', 'pass',
+                   'print', 'raise', 'return', 'try', 'while', 'with', 'yield')
+
+simple_conditions = ['<', '>', '=', '*']
+bool = ['True', 'False']
+
+conditional_expressions = ['<=', '>=', '==', '!=']
+
+'''
 def get_statements(language):
     if language == "Python":
         return python_statements
@@ -18,3 +30,4 @@ default_urls = {
     "Python": "https://wiki.python.org",
     "Java": "https://docs.oracle.com"
 }
+'''

@@ -1,5 +1,5 @@
 __author__ = 'olesya'
-from parser import Parser
+from my_parser import Parser
 from DAL import *
 import logging
 from lib.pygoogle import pygoogle
