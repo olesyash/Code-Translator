@@ -37,9 +37,9 @@ class MyParserPythonTest(unittest.TestCase):
         expected_keywords = []
         self.assertListEqual(expected_keywords, self.keywords)
 
-    # def test_run_real_code(self):
-    #     self.filename = "test_result_parser.py"
-    #     self.run_parser()
+    def test_run_real_code(self):
+        self.filename = "test_result_parser.py"
+        self.run_parser()
 
     def run_parser(self):
         f = open(self.filename, "r")
