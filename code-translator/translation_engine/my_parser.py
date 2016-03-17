@@ -26,7 +26,9 @@ class PythonScanner(Scanner):
 
 
     symbols = Str(',', '.', '_', '!', '/', '(', ')', '"', ';', ':', '-', "'", '[', ']', '{', '}', '@', '%', '^', '&',
-                  '*', '=', ' ')
+                  '*', '=', ' ', '`', '$', '+', '|', '\\', '?', '<', '>')
+
+    comments_symbols = Str('#', '"""', "'''")
     start_comment_symb = Str('#')
     new_line = Str('\n')
     escaped_newline = Str("\\\n")
@@ -40,7 +42,7 @@ class PythonScanner(Scanner):
     word = Rep1(letter | number | Any('._'))
 
     comment1 = Str('"""') + Rep(AnyBut('"""')) + Str('"""')
-    comment2 = Str('#') + Rep(AnyBut("\t\n")) + Eol
+    comment2 = Str("'''") + Rep(AnyBut("'''")) + Str("'''")
     comments = comment1 | comment2
 
     name = Rep(letter | number | symbols)
@@ -51,17 +53,18 @@ class PythonScanner(Scanner):
         (start_comment_symb,  Begin('comment')),            #Ignore comments
         State('comment', [
             (Eol,             newline_action),
-            (name,            IGNORE)
+            (name | comments_symbols,            IGNORE)
 
         ]),
-        (number,              IGNORE),                      #Ignore numbers
-        (ADD_LIBRARY,         recognize_lib),               #Catch all libraries
-        State('lib', [
+       (comments,            IGNORE),
+       (number,              IGNORE),                      #Ignore numbers
+       (ADD_LIBRARY,         recognize_lib),               #Catch all libraries
+       State('lib', [
             (ADD_LIBRARY,     "keyword"),
             (word,            save_libraries),
             (Str(',', ' '),        IGNORE),
             (Eol | Str(";"),    Begin('')),
-        ]),
+       ]),
         (word,              IGNORE),
         (Rep1(Any(" \t\n")), IGNORE)
     ])
@@ -72,24 +75,3 @@ class PythonScanner(Scanner):
         self.indentation_stack = [0]
         self.bracket_nesting_level = 0
         self.begin('')
-
-
-#
-# #filename = "my_file.txt"
-# filename = "main.py"
-# f = open(filename, "r")
-#
-# scanner = PythonScanner(f)
-#
-# final = {}
-#
-# while 1:
-#         token = scanner.read()
-#         print token
-#      #   print scanner.position()
-#         final[token[1]] = token[0]
-#         if token[0] is None:
-#             break
-#
-# print("all libraries: ")
-# print(scanner.libraries)

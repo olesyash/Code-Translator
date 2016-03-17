@@ -1,10 +1,6 @@
 __author__ = 'olesya'
 
-
-__author__ = 'olesya'
-
 import unittest
-
 from google.appengine.ext import ndb
 from google.appengine.ext import testbed
 from engine.result_parser import ResultParser

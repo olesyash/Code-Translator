@@ -1,0 +1,7 @@
+"""
+import foo
+import _foo_
+import lib.foo
+from lib import foo
+for
+"""
