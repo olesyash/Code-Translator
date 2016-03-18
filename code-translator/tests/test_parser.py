@@ -13,10 +13,16 @@ class MyParserPythonTest(unittest.TestCase):
         expected_libraries = ['foo', '_foo_', 'lib.foo', 'lib', 'foo']
         self.assertEqual(expected_libraries, self.scanner.libraries)
 
-    def test_python_keywords(self):
+    def test_python_libraries(self):
         self.filename = "parser_tests/python_imports.txt"
         self.run_parser()
         expected_keywords = ['import', 'import', 'import', 'from', 'import']
+        self.assertEqual(expected_keywords, self.keywords)
+
+    def test_python_keywords(self):
+        self.filename = "parser_tests/python_keywords.txt"
+        self.run_parser()
+        expected_keywords = ['if', 'else']
         self.assertEqual(expected_keywords, self.keywords)
 
     def test_ignore_one_line_comments(self):
@@ -56,6 +62,9 @@ class MyParserPythonTest(unittest.TestCase):
         self.run_parser()
         self.assertListEqual(expected_keywords, self.keywords)
 
+    def test_run_real_code2(self):
+        self.filename = "../translation_engine/translation_engine.py"
+        self.run_parser()
 
     def run_parser(self):
         f = open(self.filename, "r")

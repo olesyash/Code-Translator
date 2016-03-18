@@ -1,5 +1,5 @@
 "for" "if" "not"
 'else' 'elif' 'import'
-"'for'" '"for"' 
-
+"'for'" '"for"'
+"'g" 'bb"'
 self.assertNotEqual(res, "", "The result is empty string!")

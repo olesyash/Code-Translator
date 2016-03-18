@@ -56,7 +56,6 @@ class PythonScanner(Scanner):
 
     word = Rep1(letter | number | Any('._'))
 
-
     cm1 = Str("'''")
     cm2 = Str('"""')
 
@@ -64,8 +63,8 @@ class PythonScanner(Scanner):
 
     str_symbol1 = Str('"')
     str_symbol2 = Str("'")
-    string_word1 = str_symbol1 + name + str_symbol1
-    string_word2 = str_symbol2 + name + str_symbol2
+    string_word1 = str_symbol1 + (name | Rep(str_symbol2)) + str_symbol1
+    string_word2 = str_symbol2 + (name | Rep(str_symbol1)) + str_symbol2
 
     string_symbol = str_symbol1 | str_symbol2
 
@@ -74,6 +73,7 @@ class PythonScanner(Scanner):
 
 
     lexicon = Lexicon([
+        (string_word1 | string_word2,        IGNORE),
         (cm1,            start_comments),            #first kind multiply line comments
             State('comments', [
             (cm1,        start_comments),
@@ -88,7 +88,7 @@ class PythonScanner(Scanner):
             (Rep1(Any(" \t\n")), IGNORE)
         ]),
 
-        (string_word1 | string_word2,        IGNORE),
+
         (python_keywords,    "keyword"),                    #Catch all keywords
         (symbols | string_symbol,             IGNORE),      #Ignore symbols
         (start_comment_symb,  Begin('comment')),            #Ignore one line comments
@@ -103,7 +103,7 @@ class PythonScanner(Scanner):
         State('lib', [
             (ADD_LIBRARY,     "keyword"),
             (word,            save_libraries),
-            (Str(',', ' '),        IGNORE),
+            (Str(',', ' ', '*'),        IGNORE),
             (Eol | Str(";"),    Begin('')),
         ]),
         (word,              IGNORE),

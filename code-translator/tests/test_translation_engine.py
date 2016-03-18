@@ -3,7 +3,6 @@ __author__ = 'olesya'
 import unittest
 from translation_engine.translation_engine import TranslationEngine
 from translation_engine.languages_specific_features import *
-from google.appengine.ext import ndb
 from google.appengine.ext import testbed
 from DAL import *
 
