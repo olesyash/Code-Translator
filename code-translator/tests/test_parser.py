@@ -37,9 +37,25 @@ class MyParserPythonTest(unittest.TestCase):
         expected_keywords = []
         self.assertListEqual(expected_keywords, self.keywords)
 
+    def test_ignore_strings(self):
+        self.filename = "parser_tests/python_strings.txt"
+        self.run_parser()
+        expected_keywords = []
+        self.assertListEqual(expected_keywords, self.keywords)
+
+    def test__negative_ignore_strings(self):
+        self.filename = "parser_tests/python_imports.txt"
+        self.run_parser()
+        expected_keywords = []
+        self.assertNotEqual(expected_keywords, self.keywords)
+
     def test_run_real_code(self):
         self.filename = "test_result_parser.py"
+        expected_keywords = ['import', 'from', 'import', 'from', 'import', 'from', 'import', 'from',
+                             'import', 'class', 'def', 'def', 'in', 'def', 'def', 'print', 'in', 'def']
         self.run_parser()
+        self.assertListEqual(expected_keywords, self.keywords)
+
 
     def run_parser(self):
         f = open(self.filename, "r")

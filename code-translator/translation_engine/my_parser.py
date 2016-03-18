@@ -40,9 +40,7 @@ class PythonScanner(Scanner):
 
     comments_symbols = Str('#', '"', "'")
 
-    string_symbol = Str('"', "'")
-
-    all_symbols = symbols | comments_symbols | string_symbol
+    strd = "'for'", '"for"', "'g", 'bb"'
 
     start_comment_symb = Str('#')
 
@@ -58,28 +56,39 @@ class PythonScanner(Scanner):
 
     word = Rep1(letter | number | Any('._'))
 
-    comments_words = Rep1(letter | number | Any('._') | all_symbols)
 
     cm1 = Str("'''")
     cm2 = Str('"""')
 
-    name = Rep1(letter | number | symbols)
+    name = Rep1(letter | number | symbols) | Empty
+
+    str_symbol1 = Str('"')
+    str_symbol2 = Str("'")
+    string_word1 = str_symbol1 + name + str_symbol1
+    string_word2 = str_symbol2 + name + str_symbol2
+
+    string_symbol = str_symbol1 | str_symbol2
+
+    all_symbols = symbols | comments_symbols | string_symbol
+    comments_words = Rep1(letter | number | Any('._') | all_symbols)
+
 
     lexicon = Lexicon([
         (cm1,            start_comments),            #first kind multiply line comments
             State('comments', [
-            (comments_words,    "word"),
             (cm1,        start_comments),
+            (comments_words,    "word"),
             (Rep1(Any(" \t\n")), IGNORE)
         ]),
 
         (cm2,         start_comments),
-            State('comments2', [                            #second kind multiply line comments
-            (comments_words,          "word"),
+            State('comments2', [                     #second kind multiply line comments
             (cm2,        start_comments),
+            (comments_words,     IGNORE),
             (Rep1(Any(" \t\n")), IGNORE)
         ]),
 
+        (string_word1 | string_word2,        IGNORE),
         (python_keywords,    "keyword"),                    #Catch all keywords
         (symbols | string_symbol,             IGNORE),      #Ignore symbols
         (start_comment_symb,  Begin('comment')),            #Ignore one line comments
@@ -88,7 +97,6 @@ class PythonScanner(Scanner):
             (name | all_symbols,            IGNORE)
 
         ]),
-
 
         (number,              IGNORE),                      #Ignore numbers
         (ADD_LIBRARY,         recognize_lib),               #Catch all libraries
