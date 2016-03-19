@@ -155,6 +155,9 @@ class PythonScanner(Scanner):
         # Find all keywords in code
         (python_keywords,    KEYWORD),
 
+        # Find all operations
+        (operations,        "operation"),
+
         #Ignore symbols
         (symbols | string_symbol,             IGNORE),
 

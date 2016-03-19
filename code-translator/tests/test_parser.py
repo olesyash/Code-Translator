@@ -97,9 +97,16 @@ class MyParserPythonTest(unittest.TestCase):
         self.run_parser()
         self.assertListEqual(expected_func_def, self.scanner.functions)
 
+    def test_find_all_operations(self):
+        self.filename = "parser_tests/python_operations.txt"
+        expected_operations = ['+', '-', '*', '/', '//', '%', '-', '+', '**']
+        self.run_parser()
+        self.assertListEqual(expected_operations, self.operations)
+
     def run_parser(self):
         f = open(self.filename, "r")
         self.keywords = []
+        self.operations = []
 
         self.scanner = PythonScanner(f)
         self.scanner.libraries = []
@@ -109,5 +116,7 @@ class MyParserPythonTest(unittest.TestCase):
             print self.scanner.position()
             if token[0] == "keyword":
                 self.keywords.append(token[1])
+            elif token[0] == "operation":
+                self.operations.append(token[1])
             if token[0] is None:
                 break

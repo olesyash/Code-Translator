@@ -8,11 +8,13 @@ python_keywords = Str('and', 'as', 'assert', 'break', 'continue', 'del', 'elif',
                       'finally', 'for', 'global', 'if', 'in', 'is', 'lambda', 'not', 'or', 'pass',
                       'print', 'raise', 'return', 'try', 'while', 'with', 'yield')
 
-simple_conditions = ['<', '>', '=', '*']
+operations = Str('<', '<=', '>', '>=', '=', '==', '!=', '+', '-', '*', '/', '//', '%', '**')
 
-bool = ['True', 'False']
+#simple_conditions = ['<', '>', '=', '*']
 
-conditional_expressions = ['<=', '>=', '==', '!=']
+boolean = ['True', 'False']
+
+#conditional_expressions = ['<=', '>=', '==', '!=']
 
 '''
 def get_statements(language):
@@ -29,6 +31,7 @@ python_statements = ['for', 'if', 'else', 'while']
 java_statements = ['for', 'if', 'else', 'while']
 '''
 
+python_symbols_url = "https://docs.python.org/2/library/stdtypes.html#index-9"
 default_urls = {
     "Python": "https://wiki.python.org",
     "Java": "https://docs.oracle.com"
