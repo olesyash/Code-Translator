@@ -4,14 +4,24 @@ from languages_specific_features import *
 from lib.plex.traditional import *
 import logging
 
-class PythonScanner(Scanner):
 
+class PythonScanner(Scanner):
+    """
+    This class is inherit from scanner, for creating additional rules for scanner
+    """
     def recognize_function_definition(self, text):
+        """
+        This function used to recognize function definition
+        Start state 'def_func
+        """
         logging.debug("in function recognize")
         self.produce(KEYWORD, text)
         self.begin('def_func')
 
     def save_functions(self, func_name):
+        """
+        This function used to save function name
+        """
         logging.debug("int func save")
         self.produce("func_name", func_name)
         self.functions.append(func_name)
@@ -26,25 +36,43 @@ class PythonScanner(Scanner):
         self.begin('class')
 
     def save_class(self, class_name):
+        """
+        This function used to save class name
+        """
         logging.debug("in save class " + class_name)
         self.produce("class_name", class_name)
         self.classes.append(class_name)
 
     def recognize_lib(self, lib):
+        """
+        This function called when library import keyword recognized,
+        Start state 'lib'
+        """
         logging.debug("in recognize lin")
         self.produce(KEYWORD, lib)
         self.begin('lib')
 
     def save_libraries(self, lib):
+        """
+        This function used to save library name
+        """
         logging.debug("in save libraries")
         self.libraries.append(lib)
         self.produce("lib", lib)
 
     def start_comment(self):
+        """
+        This function called when comment starts
+        Start state "comment"
+        """
         logging.debug("in comment")
         self.begin('comment')
 
     def start_comments(self, text):
+        """
+        This function called when 2 line comment starts
+        Start state "comments" or "comments2" depends on comments type
+        """
         logging.debug("in comments" + text)
         logging.debug(self.bracket_nesting_level)
 
@@ -60,11 +88,17 @@ class PythonScanner(Scanner):
                 self.begin('')
 
     def check_call_function(self, text):
+        """
+        This function is responsible to save the word that could be function call, and start state "functions"
+        """
         logging.debug("check function " + text)
         self.func_name = text
         self.begin("functions")
 
     def add_function(self, text):
+        """
+        If word is really function name, add it to functions list and go back to init State
+        """
         logging.debug("in add functon " + text)
         self.produce("function", self.func_name)
         self.functions_calls.append(self.func_name)
@@ -72,15 +106,24 @@ class PythonScanner(Scanner):
         self.begin('')
 
     def back_to_init(self, text):
+        """
+        This function returns to init State
+        """
         logging.debug("BACK TO INIT " + text)
         self.start_pos = self.cur_pos
         self.begin('')
 
     def recognize_string(self, text):
+        """
+        This function recognize string
+        """
         logging.debug("in string " + text)
         self.produce("string", text)
 
     def ignore_all(self, text):
+        """
+        This function starts 'ignore' State. Nn case of class or function definition all inside brackets () need to be ignored
+        """
         logging.debug("in ignore " + text)
         self.begin('ignore')
 
@@ -88,7 +131,6 @@ class PythonScanner(Scanner):
                   '*', '=', ' ', '`', '$', '+', '|', '\\', '?', '<', '>')
 
     comments_symbols = Str('#', '"', "'")
-
 
     start_comment_symb = Str('#')
 
@@ -222,3 +264,30 @@ class PythonScanner(Scanner):
         self.bracket_nesting_level = 0
         self.begin('')
 
+
+class Parser():
+    def __init__(self, file):
+        self.filename = file
+
+    def run_parser(self):
+        """
+        This internal function is used in all tests to read tokens using parser
+        """
+        f = open(self.filename, "r")
+        self.keywords = []
+        self.operations = []
+
+        self.scanner = PythonScanner(f)
+        self.scanner.libraries = []
+        while 1:
+            token = self.scanner.read()
+            print token
+            print self.scanner.position()
+            if token[0] == "keyword":
+                self.keywords.append(token[1])
+            elif token[0] == "operation":
+                self.operations.append(token[1])
+            # elif token[0] == "unrecognized":
+            #     raise errors.UnrecognizedInput(self.scanner, '')
+            if token[0] is None:
+                break
