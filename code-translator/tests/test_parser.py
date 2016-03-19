@@ -49,7 +49,7 @@ class MyParserPythonTest(unittest.TestCase):
         expected_keywords = []
         self.assertListEqual(expected_keywords, self.keywords)
 
-    def test__negative_ignore_strings(self):
+    def test_negative_ignore_strings(self):
         self.filename = "parser_tests/python_imports.txt"
         self.run_parser()
         expected_keywords = []
@@ -72,19 +72,30 @@ class MyParserPythonTest(unittest.TestCase):
         self.filename = "parser_tests/python_functions.txt"
         expected_functions = ['foo', 'a.foo']
         self.run_parser()
-        self.assertListEqual(expected_functions, self.scanner.functions)
+        self.assertListEqual(expected_functions, self.scanner.functions_calls)
 
     def test_find_functions_in_longer_text(self):
         self.filename = "parser_tests/test_result_parser.txt"
-        expected_functions = ['test_find_by_id_get_for_statement_python', 'LanguagesAPI',
-                              'a.http_request_using_urlfetch', 'ResultParser',
+        expected_functions = ['LanguagesAPI', 'a.http_request_using_urlfetch', 'ResultParser',
                               'b.find_by_id', 'self.assertNotEqual']
         self.run_parser()
-        self.assertListEqual(expected_functions, self.scanner.functions)
+        self.assertListEqual(expected_functions, self.scanner.functions_calls)
 
     def test_run_real_code2(self):
         self.filename = "../translation_engine/translation_engine.py"
         self.run_parser()
+
+    def test_classes(self):
+        self.filename = "parser_tests/python_classes.txt"
+        expected_classes = ["foo", "foo1", "foo2"]
+        self.run_parser()
+        self.assertListEqual(expected_classes, self.scanner.classes)
+
+    def test_find_all_func_def(self):
+        self.filename = "parser_tests/test_result_parser.txt"
+        expected_func_def = ["test_find_by_id_get_for_statement_python"]
+        self.run_parser()
+        self.assertListEqual(expected_func_def, self.scanner.functions)
 
     def run_parser(self):
         f = open(self.filename, "r")

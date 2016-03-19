@@ -5,23 +5,40 @@ from lib.plex.traditional import *
 
 
 class PythonScanner(Scanner):
+
+    def recognize_function_definition(self, text):
+        print "in function recognize"
+        self.produce(KEYWORD, text)
+        self.begin('def_func')
+
+    def save_functions(self, func_name):
+        print "int func save"
+        self.produce("func_name", func_name)
+        self.functions.append(func_name)
+
     def recognize_class(self, class_keyword):
-        self.produce("keyword", class_keyword)
-        self.begin('lib')
+        """
+        This function called when class keyword recognized,
+        Start state 'class'
+        """
+        print("in recognize class")
+        self.produce(KEYWORD, class_keyword)
+        self.begin('class')
 
     def save_class(self, class_name):
+        print "in save class", class_name
         self.produce("class_name", class_name)
         self.classes.append(class_name)
+
+    def recognize_lib(self, lib):
+      #  print "in recognize"
+        self.produce(KEYWORD, lib)
+        self.begin('lib')
 
     def save_libraries(self, lib):
       #  print "in save"
         self.libraries.append(lib)
         self.produce("lib", lib)
-
-    def recognize_lib(self, lib):
-      #  print "in recognize"
-        self.produce("keyword", lib)
-        self.begin('lib')
 
     def start_comment(self):
         print("in comment")
@@ -45,7 +62,6 @@ class PythonScanner(Scanner):
     def check_call_function(self, text):
         print "check function", text
         self.func_name = text
-       # self.cur_char = text
         self.begin("functions")
 
     def add_function(self, text):
@@ -53,12 +69,10 @@ class PythonScanner(Scanner):
         print "current " + self.cur_char
         self.produce("function", self.func_name)
         print "current " + self.cur_char
-        self.functions.append(self.func_name)
+        self.functions_calls.append(self.func_name)
         print "current " + self.cur_char
         self.start_pos = self.cur_pos
         self.begin('')
-
-        #self.begin("arguments")
 
     def back_to_init(self, text):
         print("BACK TO INIT" + text)
@@ -69,6 +83,10 @@ class PythonScanner(Scanner):
     def recognize_string(self, text):
         print("in string " + text)
         self.produce("string", text)
+
+    def ignore_all(self, text):
+        print "in ignore", text
+        self.begin('ignore')
 
     symbols = Str(',', '.', '_', '!', '/', '(', ')', ';', ':', '-', '[', ']', '{', '}', '@', '%', '^', '&',
                   '*', '=', ' ', '`', '$', '+', '|', '\\', '?', '<', '>')
@@ -85,6 +103,8 @@ class PythonScanner(Scanner):
     ADD_LIBRARY = Str('import', 'from')
 
     CLASS_KEYWORD = Str('class')
+
+    FUNC_DEF = Str('def')
 
     letter = Range("AZaz")
     digit = Range("09")
@@ -113,40 +133,75 @@ class PythonScanner(Scanner):
 
 
     lexicon = Lexicon([
+        # Ignore strings
         (string_word1 | string_word2,        recognize_string),
-        (cm1,            start_comments),            #first kind multiply line comments
+
+        # Ignore first kind multiply line comments
+        (cm1,            start_comments),
             State('comments', [
             (cm1,        start_comments),
             (comments_words,    "word"),
             (Rep1(Any(" \t\n")), IGNORE)
         ]),
 
+        # Ignore second kind multiply line comments
         (cm2,         start_comments),
-            State('comments2', [                     #second kind multiply line comments
+            State('comments2', [
             (cm2,        start_comments),
             (comments_words,     IGNORE),
             (Rep1(Any(" \t\n")), IGNORE)
         ]),
 
+        # Find all keywords in code
+        (python_keywords,    KEYWORD),
 
-        (python_keywords,    "keyword"),                    #Catch all keywords
-        (symbols | string_symbol,             IGNORE),      #Ignore symbols
-        (start_comment_symb,  Begin('comment')),            #Ignore one line comments
+        #Ignore symbols
+        (symbols | string_symbol,             IGNORE),
+
+        #Ignore one line comments
+        (start_comment_symb,  Begin('comment')),
         State('comment', [
             (Eol,            Begin('')),
             (name | all_symbols,            IGNORE)
 
         ]),
+         #Ignore numbers
+        (number,              IGNORE),
+        (ADD_LIBRARY,         recognize_lib),
 
-        (number,              IGNORE),                      #Ignore numbers
-        (ADD_LIBRARY,         recognize_lib),               #Catch all libraries
+        # Find all libraries in code
         State('lib', [
-            (ADD_LIBRARY,     "keyword"),
+            (ADD_LIBRARY,     KEYWORD),
             (word,            save_libraries),
             (Str(',', ' ', '*'),        IGNORE),
             (Eol | Str(";"),    Begin('')),
         ]),
-        #(word,                  TEXT),
+
+        # Find classes
+        (CLASS_KEYWORD,        recognize_class),
+        State('class', [
+           # (CLASS_KEYWORD,    KEYWORD),
+            (word,              save_class),
+            (AnyBut('(:'),      IGNORE),
+            (Str(':'),          Begin('')),
+            (Str('('),          ignore_all),
+        ]),
+        (FUNC_DEF,              recognize_function_definition),
+        State('def_func', [
+            (word,              save_functions),
+            (AnyBut('(:'),     IGNORE),
+            (Str(':'),         Begin('')),
+            (Str('('),         ignore_all),
+
+        ]),
+
+        # Ignore all inside brackets() in class and function declaration
+        State('ignore', [
+            (AnyBut(':'),      IGNORE),
+            (Str(':'),          Begin('')),
+        ]),
+
+        # Find all functions calls
         (word,               check_call_function),
         State('functions', [
             (Str('('),    add_function),
@@ -154,6 +209,7 @@ class PythonScanner(Scanner):
 
         ]),
 
+        # Ignore all indentations and new lines
         (Rep1(Any(" \t\n")), IGNORE)
     ])
 
@@ -161,10 +217,9 @@ class PythonScanner(Scanner):
         Scanner.__init__(self, self.lexicon, file)
         self.libraries = []
         self.functions = []
+        self.functions_calls = []
         self.classes = []
         self.func_name = ""
-        self.indentation_stack = [0]
-        self.com = False
         self.bracket_nesting_level = 0
         self.begin('')
 

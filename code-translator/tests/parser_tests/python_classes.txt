@@ -1,0 +1,7 @@
+class foo:
+    pass
+class foo1(foo):
+    pass
+
+class foo2():
+    pass
