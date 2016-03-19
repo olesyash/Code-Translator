@@ -62,6 +62,26 @@ class MyParserPythonTest(unittest.TestCase):
         self.run_parser()
         self.assertListEqual(expected_keywords, self.keywords)
 
+    def test_keywords_in_function(self):
+        self.filename = "parser_tests/test_result_parser.txt"
+        expected_keywords = ['def']
+        self.run_parser()
+        self.assertListEqual(expected_keywords, self.keywords)
+
+    def test_find_functions(self):
+        self.filename = "parser_tests/python_functions.txt"
+        expected_functions = ['foo', 'a.foo']
+        self.run_parser()
+        self.assertListEqual(expected_functions, self.scanner.functions)
+
+    def test_find_functions_in_longer_text(self):
+        self.filename = "parser_tests/test_result_parser.txt"
+        expected_functions = ['test_find_by_id_get_for_statement_python', 'LanguagesAPI',
+                              'a.http_request_using_urlfetch', 'ResultParser',
+                              'b.find_by_id', 'self.assertNotEqual']
+        self.run_parser()
+        self.assertListEqual(expected_functions, self.scanner.functions)
+
     def test_run_real_code2(self):
         self.filename = "../translation_engine/translation_engine.py"
         self.run_parser()
@@ -69,13 +89,14 @@ class MyParserPythonTest(unittest.TestCase):
     def run_parser(self):
         f = open(self.filename, "r")
         self.keywords = []
+
         self.scanner = PythonScanner(f)
         self.scanner.libraries = []
         while 1:
             token = self.scanner.read()
             print token
             print self.scanner.position()
-            if(token[0]) == "keyword":
+            if token[0] == "keyword":
                 self.keywords.append(token[1])
             if token[0] is None:
                 break

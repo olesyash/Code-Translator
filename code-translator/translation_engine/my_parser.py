@@ -1,10 +1,17 @@
 __author__ = 'olesya'
 
 from languages_specific_features import *
+from lib.plex.traditional import *
 
 
 class PythonScanner(Scanner):
-    libraries = []
+    def recognize_class(self, class_keyword):
+        self.produce("keyword", class_keyword)
+        self.begin('lib')
+
+    def save_class(self, class_name):
+        self.produce("class_name", class_name)
+        self.classes.append(class_name)
 
     def save_libraries(self, lib):
       #  print "in save"
@@ -35,12 +42,39 @@ class PythonScanner(Scanner):
                 self.bracket_nesting_level -= 1
                 self.begin('')
 
+    def check_call_function(self, text):
+        print "check function", text
+        self.func_name = text
+       # self.cur_char = text
+        self.begin("functions")
+
+    def add_function(self, text):
+        print("in add functon" + text)
+        print "current " + self.cur_char
+        self.produce("function", self.func_name)
+        print "current " + self.cur_char
+        self.functions.append(self.func_name)
+        print "current " + self.cur_char
+        self.start_pos = self.cur_pos
+        self.begin('')
+
+        #self.begin("arguments")
+
+    def back_to_init(self, text):
+        print("BACK TO INIT" + text)
+        print(self.cur_char)
+        self.start_pos = self.cur_pos
+        self.begin('')
+
+    def recognize_string(self, text):
+        print("in string " + text)
+        self.produce("string", text)
+
     symbols = Str(',', '.', '_', '!', '/', '(', ')', ';', ':', '-', '[', ']', '{', '}', '@', '%', '^', '&',
                   '*', '=', ' ', '`', '$', '+', '|', '\\', '?', '<', '>')
 
     comments_symbols = Str('#', '"', "'")
 
-    strd = "'for'", '"for"', "'g", 'bb"'
 
     start_comment_symb = Str('#')
 
@@ -49,6 +83,8 @@ class PythonScanner(Scanner):
     escaped_newline = Str("\\\n")
 
     ADD_LIBRARY = Str('import', 'from')
+
+    CLASS_KEYWORD = Str('class')
 
     letter = Range("AZaz")
     digit = Range("09")
@@ -63,8 +99,11 @@ class PythonScanner(Scanner):
 
     str_symbol1 = Str('"')
     str_symbol2 = Str("'")
-    string_word1 = str_symbol1 + (name | Rep(str_symbol2)) + str_symbol1
-    string_word2 = str_symbol2 + (name | Rep(str_symbol1)) + str_symbol2
+
+    # string_word1 = str_symbol1 + re('[^"]') + str_symbol1
+    # string_word2 = str_symbol2 + re("[^']") + str_symbol2
+    string_word1 = str_symbol1 + (Rep(Rep(name) |symbols | start_comment_symb) | Rep(str_symbol2)) + str_symbol1
+    string_word2 = str_symbol2 + (Rep(Rep(name) |symbols | start_comment_symb) | Rep(str_symbol1)) + str_symbol2
 
     string_symbol = str_symbol1 | str_symbol2
 
@@ -72,8 +111,9 @@ class PythonScanner(Scanner):
     comments_words = Rep1(letter | number | Any('._') | all_symbols)
 
 
+
     lexicon = Lexicon([
-        (string_word1 | string_word2,        IGNORE),
+        (string_word1 | string_word2,        recognize_string),
         (cm1,            start_comments),            #first kind multiply line comments
             State('comments', [
             (cm1,        start_comments),
@@ -106,14 +146,25 @@ class PythonScanner(Scanner):
             (Str(',', ' ', '*'),        IGNORE),
             (Eol | Str(";"),    Begin('')),
         ]),
-        (word,              IGNORE),
+        #(word,                  TEXT),
+        (word,               check_call_function),
+        State('functions', [
+            (Str('('),    add_function),
+            (AnyBut('('), back_to_init)
+
+        ]),
+
         (Rep1(Any(" \t\n")), IGNORE)
     ])
 
-
     def __init__(self, file):
         Scanner.__init__(self, self.lexicon, file)
+        self.libraries = []
+        self.functions = []
+        self.classes = []
+        self.func_name = ""
         self.indentation_stack = [0]
         self.com = False
         self.bracket_nesting_level = 0
         self.begin('')
+

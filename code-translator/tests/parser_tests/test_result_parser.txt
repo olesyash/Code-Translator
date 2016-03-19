@@ -1,0 +1,10 @@
+def test_find_by_id_get_for_statement_python(self):
+        """
+        Test getting translation for "for statement" in python from html by given id
+        """
+        a = "bla"
+        a = LanguagesAPI()
+        result, code = a.http_request_using_urlfetch("https://docs.python.org/2/reference/compound_stmts.html#the-for-statement", {})
+        b = ResultParser("Python")
+        res = b.find_by_id(result, 'the-for-statement')
+        self.assertNotEqual(res, "", "The result is empty string!")
