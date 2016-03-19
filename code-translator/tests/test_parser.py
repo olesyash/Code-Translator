@@ -3,13 +3,16 @@ __author__ = 'olesya'
 import unittest
 from translation_engine.my_parser import *
 
+# import logging
+# logger = logging.getLogger()
+# logger.setLevel(logging.DEBUG)
 
 class MyParserPythonTest(unittest.TestCase):
     def test_python_import(self):
         self.filename = "parser_tests/python_imports.txt"
         self.run_parser()
-        print("all libraries: ")
-        print(self.scanner.libraries)
+        #print("all libraries: ")
+        #print(self.scanner.libraries)
         expected_libraries = ['foo', '_foo_', 'lib.foo', 'lib', 'foo']
         self.assertEqual(expected_libraries, self.scanner.libraries)
 
@@ -102,6 +105,12 @@ class MyParserPythonTest(unittest.TestCase):
         expected_operations = ['+', '-', '*', '/', '//', '%', '-', '+', '**']
         self.run_parser()
         self.assertListEqual(expected_operations, self.operations)
+
+    def test_ignore_unrecognized_symbols(self):
+        self.filename = "parser_tests/python_unrecognized_symbols.txt"
+        self.run_parser()
+        expected_keywords = ['if', 'for']
+        self.assertEqual(expected_keywords, self.keywords)
 
     def run_parser(self):
         f = open(self.filename, "r")

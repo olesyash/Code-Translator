@@ -95,6 +95,8 @@ class Scanner:
             if action is None:
                 self.produce(None)
                 self.eof()
+            elif action == 'unrecognized':
+                self.produce('unrecognized')
             else:
                 value = action.perform(self, self.text)
                 if value is not None:
@@ -130,13 +132,15 @@ class Scanner:
             if self.cur_pos == self.start_pos:
                 if self.cur_char == EOL:
                     self.next_char()
-                if not self.cur_char or self.cur_char == EOF:
+                if self.cur_char == EOF:
                     return ('', None)
+
+            self.next_char()
+            return (self.cur_char, 'unrecognized')
 
             import pdb
             #pdb.set_trace()
-
-            raise errors.UnrecognizedInput(self, self.state_name)
+            #raise errors.UnrecognizedInput(self, self.state_name)
 
     def run_machine(self):
         """
@@ -340,24 +344,24 @@ class Scanner:
             print "--> [%d] %d %s" % (input_state,
                                       self.cur_pos, repr(self.cur_char))
 
-#	def read_char(self):
-#		"""
-#    Get the next input character, filling the buffer if necessary.
-#    Returns '' at end of file.
-#    """
-#		next_pos = self.next_pos
-#		buf_index = next_pos - self.buf_start_pos
-#		if buf_index == len(self.buffer):
-#			discard = self.start_pos - self.buf_start_pos
-#			data = self.stream.read(0x1000)
-#			self.buffer = self.buffer[discard:] + data
-#			self.buf_start_pos = self.buf_start_pos + discard
-#			buf_index = buf_index - discard
-#			if not data:
-#				return ''
-#		c = self.buffer[buf_index]
-#		self.next_pos = next_pos + 1
-#		return c
+    def read_char(self):
+        """
+       Get the next input character, filling the buffer if necessary.
+       Returns '' at end of file.
+   """
+        next_pos = self.next_pos
+        buf_index = next_pos - self.buf_start_pos
+        if buf_index == len(self.buffer):
+            discard = self.start_pos - self.buf_start_pos
+            data = self.stream.read(0x1000)
+            self.buffer = self.buffer[discard:] + data
+            self.buf_start_pos = self.buf_start_pos + discard
+            buf_index = buf_index - discard
+            if not data:
+                return ''
+        c = self.buffer[buf_index]
+        self.next_pos = next_pos + 1
+        return c
 
     def position(self):
         """

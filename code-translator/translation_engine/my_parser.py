@@ -2,17 +2,17 @@ __author__ = 'olesya'
 
 from languages_specific_features import *
 from lib.plex.traditional import *
-
+import logging
 
 class PythonScanner(Scanner):
 
     def recognize_function_definition(self, text):
-        print "in function recognize"
+        logging.debug("in function recognize")
         self.produce(KEYWORD, text)
         self.begin('def_func')
 
     def save_functions(self, func_name):
-        print "int func save"
+        logging.debug("int func save")
         self.produce("func_name", func_name)
         self.functions.append(func_name)
 
@@ -21,36 +21,36 @@ class PythonScanner(Scanner):
         This function called when class keyword recognized,
         Start state 'class'
         """
-        print("in recognize class")
+        logging.debug("in recognize class")
         self.produce(KEYWORD, class_keyword)
         self.begin('class')
 
     def save_class(self, class_name):
-        print "in save class", class_name
+        logging.debug("in save class " + class_name)
         self.produce("class_name", class_name)
         self.classes.append(class_name)
 
     def recognize_lib(self, lib):
-      #  print "in recognize"
+        logging.debug("in recognize lin")
         self.produce(KEYWORD, lib)
         self.begin('lib')
 
     def save_libraries(self, lib):
-      #  print "in save"
+        logging.debug("in save libraries")
         self.libraries.append(lib)
         self.produce("lib", lib)
 
     def start_comment(self):
-        print("in comment")
+        logging.debug("in comment")
         self.begin('comment')
 
     def start_comments(self, text):
-        print("in comments" + text)
-        print(self.bracket_nesting_level)
+        logging.debug("in comments" + text)
+        logging.debug(self.bracket_nesting_level)
 
         if self.bracket_nesting_level == 0:
             self.bracket_nesting_level += 1
-            print("start state comments")
+            logging.debug("start state comments")
             if text == "'''":
                 self.begin("comments")
             else:
@@ -60,32 +60,28 @@ class PythonScanner(Scanner):
                 self.begin('')
 
     def check_call_function(self, text):
-        print "check function", text
+        logging.debug("check function " + text)
         self.func_name = text
         self.begin("functions")
 
     def add_function(self, text):
-        print("in add functon" + text)
-        print "current " + self.cur_char
+        logging.debug("in add functon " + text)
         self.produce("function", self.func_name)
-        print "current " + self.cur_char
         self.functions_calls.append(self.func_name)
-        print "current " + self.cur_char
         self.start_pos = self.cur_pos
         self.begin('')
 
     def back_to_init(self, text):
-        print("BACK TO INIT" + text)
-        print(self.cur_char)
+        logging.debug("BACK TO INIT " + text)
         self.start_pos = self.cur_pos
         self.begin('')
 
     def recognize_string(self, text):
-        print("in string " + text)
+        logging.debug("in string " + text)
         self.produce("string", text)
 
     def ignore_all(self, text):
-        print "in ignore", text
+        logging.debug("in ignore " + text)
         self.begin('ignore')
 
     symbols = Str(',', '.', '_', '!', '/', '(', ')', ';', ':', '-', '[', ']', '{', '}', '@', '%', '^', '&',
