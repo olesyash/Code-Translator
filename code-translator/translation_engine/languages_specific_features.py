@@ -1,20 +1,43 @@
 __author__ = 'olesya'
 
-
 from lib.plex import *
 
+# ----------------------------------------- Main -----------------------------------------------------------
 KEYWORD = "keyword"
+
+symbols = Str(',', '.', '_', '!', '/', '(', ')', ';', ':', '-', '[', ']', '{', '}', '@', '%', '^', '&',
+              '*', '=', ' ', '`', '$', '+', '|', '\\', '?', '<', '>')
+
+comments_symbols = Str('#', '"', "'")
+#----------------------------------------- Python -----------------------------------------------------------
+
 python_keywords = Str('and', 'as', 'assert', 'break', 'continue', 'del', 'elif', 'else', 'except', 'exec',
                       'finally', 'for', 'global', 'if', 'in', 'is', 'lambda', 'not', 'or', 'pass',
                       'print', 'raise', 'return', 'try', 'while', 'with', 'yield')
 
-operations = Str('<', '<=', '>', '>=', '=', '==', '!=', '+', '-', '*', '/', '//', '%', '**')
 
-#simple_conditions = ['<', '>', '=', '*']
+python_operations = Str('<', '<=', '>', '>=', '=', '==', '!=', '+', '-', '*', '/', '//', '%', '**')
 
-boolean = ['True', 'False']
 
-#conditional_expressions = ['<=', '>=', '==', '!=']
+boolean = ['True', 'False', 'None']
+
+# ----------------------------------------- Java -----------------------------------------------------------
+
+java_keywords = Str('abstract',	'continue',	'for', 'new', 'switch', 'assert', 'default', 'goto',
+                    'package', 'synchronized', 'boolean', 'do', 'if', 'private', 'this', 'break',
+                    'double', 'implements', 'protected', 'throw', 'byte', 'else', 'import', 'public',
+                    'throws', 'case', 'enum', 'instanceof', 'return', 'transient', 'catch',	'extends',
+                    'int', 'short', 'try', 'char', 'final', 'interface', 'static', 'void', 'class',
+                    'finally', 'long', 'strictfp',  'volatile', 'const', 'float', 'native', 'super',
+                    'while')
+
+java_operations = Str()
+# --------------------------------------------------------------------------------------------------------
+languages_keywords = {"Java": java_keywords,
+                      "Python": python_keywords}
+
+languages_operations = {"Java": java_operations,
+                        "Python": python_operations}
 
 '''
 def get_statements(language):

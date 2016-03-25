@@ -3,9 +3,9 @@ __author__ = 'olesya'
 import unittest
 from translation_engine.my_parser import *
 
-# import logging
-# logger = logging.getLogger()
-# logger.setLevel(logging.DEBUG)
+import logging
+logger = logging.getLogger()
+logger.setLevel(logging.DEBUG)
 
 
 class MyParserPythonTest(unittest.TestCase):
@@ -154,5 +154,5 @@ class MyParserPythonTest(unittest.TestCase):
         """
         This internal function is used in all tests to read tokens using parser
         """
-        self.p = Parser(self.filename)
+        self.p = Parser(self.filename, "Python")
         self.p.run_parser()
