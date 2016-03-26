@@ -114,7 +114,7 @@ class MyParserPythonTest(unittest.TestCase):
         This test is testing parser for finding all function calls in python code
         """
         self.filename = "parser_tests/python_functions.txt"
-        expected_functions = ['foo', 'a.foo']
+        expected_functions = ['foo', 'foo']
         self.run_parser()
         self.assertListEqual(expected_functions, self.p.scanner.functions_calls)
 
@@ -123,8 +123,8 @@ class MyParserPythonTest(unittest.TestCase):
         This test is testing parser for finding all function calls in long python code
         """
         self.filename = "parser_tests/test_result_parser.txt"
-        expected_functions = ['LanguagesAPI', 'a.http_request_using_urlfetch', 'ResultParser',
-                              'b.find_by_id', 'self.assertNotEqual']
+        expected_functions = ['LanguagesAPI', 'http_request_using_urlfetch', 'ResultParser',
+                              'find_by_id', 'assertNotEqual']
         self.run_parser()
         self.assertListEqual(expected_functions, self.p.scanner.functions_calls)
 

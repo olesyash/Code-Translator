@@ -1,0 +1,4 @@
+public class MainPanel extends JPanel implements Runnable //, ActionListener
+{
+
+}

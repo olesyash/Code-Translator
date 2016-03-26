@@ -28,7 +28,7 @@ class MyParserJavaTest(unittest.TestCase):
         expected_literals = ['true', 'false', 'null']
         self.assertEqual(expected_literals, self.p.literals)
 
-    def test_find_all_operations(self):
+    def test_java_find_all_operations(self):
         """
         This test is testing parser for finding all operations in python code
         """
@@ -56,7 +56,7 @@ class MyParserJavaTest(unittest.TestCase):
         expected_libraries = ['java.awt.Color', 'java.awt.Graphics2D', 'java.awt.image.BufferedImage']
         self.assertEqual(expected_libraries, self.p.scanner.libraries)
 
-    def test_ignore_one_line_comments(self):
+    def test_java_ignore_one_line_comments(self):
         """
         This test is testing parser for ignore all one line comments
         """
@@ -67,7 +67,7 @@ class MyParserJavaTest(unittest.TestCase):
         self.assertListEqual(expected_op, self.p.operations)
         self.assertListEqual(expected_keywords, self.p.keywords)
 
-    def test_ignore_two_lines_comments(self):
+    def test_java_ignore_two_lines_comments(self):
         """
         This test is testing parser for ignore all two lines comments
         """
@@ -78,7 +78,7 @@ class MyParserJavaTest(unittest.TestCase):
         self.assertListEqual(expected_op, self.p.operations)
         self.assertListEqual(expected_keywords, self.p.keywords)
 
-    def test_ignore_strings(self):
+    def test_java_ignore_strings(self):
         """
         This test is testing parser for ignore all strings in java code
         """
@@ -87,14 +87,32 @@ class MyParserJavaTest(unittest.TestCase):
         expected_keywords = []
         self.assertListEqual(expected_keywords, self.p.keywords)
 
-    def test_find_all_func_def(self):
+    def test_java_find_all_func_def(self):
         """
-        This test is testing parser for finding all functions declarations in python code
+        This test is testing parser for finding all functions declarations in java code
         """
         self.filename = "parser_tests/java_functions_def.txt"
         expected_func_def = ["addNotify", "startGame"]
         self.run_parser()
         self.assertListEqual(expected_func_def, self.p.scanner.functions)
+
+    def test_java_keywords_in_func_def(self):
+        """
+        This test is testing parser for finding all keywords in java code
+        """
+        self.filename = "parser_tests/java_functions_def.txt"
+        self.run_parser()
+        expected_keywords = ['for', 'int', 'private', 'int', 'public', 'void', 'int', 'float', 'super', 'private', 'int', 'new', 'this']
+        self.assertEqual(expected_keywords, self.p.keywords)
+
+    def test_java_classes(self):
+        """
+        This test is testing parser for finding all classes declarations in java code
+        """
+        self.filename = "parser_tests/java_classes.txt"
+        expected_classes = ["MainPanel"]
+        self.run_parser()
+        self.assertListEqual(expected_classes, self.p.scanner.classes)
 
     def run_parser(self):
         """

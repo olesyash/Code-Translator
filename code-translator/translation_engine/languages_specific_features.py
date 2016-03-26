@@ -13,6 +13,7 @@ comments_symbols = Str('#', '"', "'")
 
 str_symbol1 = Str('"')
 str_symbol2 = Str("'")
+class_keyword = Str('class')
 
 # ----------------------------------------- Python -----------------------------------------------------------
 # Keywords:
@@ -34,15 +35,18 @@ python_comment_start1 = python_comment_end1 = Str("'''")
 python_comment_start2 = python_comment_end2 = Str('"""')
 # Function definition recognize:
 python_func_def = Str('def')
-python_func_start = Str('(')
+python_func_start = '('
+python_ignore_state = ":"
 python_func_end = Str(':')
+python_any_but = '(:'
 python_func_ignore = Str('(:')
 
+python_describe_class_keyword = Str()
 # ----------------------------------------- Java -----------------------------------------------------------
 # Keywords:
 java_keywords = Str('abstract',	'continue',	'for', 'new', 'switch', 'assert', 'default', 'goto',
                     'package', 'synchronized', 'boolean', 'do', 'if', 'this', 'break',
-                    'double', 'implements', 'protected', 'throw', 'byte', 'else', 'public', 'private',
+                    'double', 'implements', 'protected', 'throw', 'byte', 'else',
                     'throws', 'case', 'enum', 'instanceof', 'return', 'transient', 'catch',	'extends',
                     'int', 'short', 'try', 'char', 'final', 'interface', 'static', 'void', 'class',
                     'finally', 'long', 'strictfp',  'volatile', 'const', 'float', 'native', 'super',
@@ -61,10 +65,16 @@ java_start_comment_symb = Str('//')
 java_comment_start1 = Str('/*')
 java_comment_end1 = Str('*/')
 # Function definition word
-java_func_def = Str()
-#java_func_def = Str('public', 'private')
+#java_func_def = Str()
+java_func_def = Str('public', 'private')
+java_func_start = '('
+java_func_end = Str(')')
+java_ignore_state = ")"
+java_any_but = '('
+java_func_ignore = Str('(')
 
-
+# class definition
+java_describe_class_keyword = Str('public', 'private')
 # --------------------------------------------------------------------------------------------------------
 languages_keywords = {"Java": java_keywords,
                       "Python": python_keywords}
@@ -93,12 +103,35 @@ languages_comment_start2 = {"Java": java_comment_start1,
 languages_comment_end2 = {"Java": java_comment_end1,
                           "Python": python_comment_end2}
 
-languages_str_symbol1 = {"default": str_symbol1}
-languages_str_symbol2 = {"default": str_symbol2}
+languages_str_symbol1 = {"Java": str_symbol1,
+                         "Python": str_symbol1}
+
+languages_str_symbol2 = {"Java": str_symbol2,
+                         "Python": str_symbol2}
 
 languages_func_def = {"Java": java_func_def,
                       "Python": python_func_def}
 
+languages_func_start = {"Java": java_func_start,
+                        "Python": python_func_start}
+
+languages_func_ignore = {"Java": java_func_ignore,
+                         "Python": python_func_ignore}
+
+languages_func_end = {"Java": java_func_end,
+                      "Python": python_func_end}
+
+languages_func_any_but = {"Java": java_any_but,
+                          "Python": python_any_but}
+
+languages_ignore_state = {"Java": java_ignore_state,
+                          "Python": python_ignore_state}
+
+languages_class_keyword = {"Java": class_keyword,
+                           "Python": class_keyword}
+
+languages_describe_class_keyword = {"Java": java_describe_class_keyword,
+                                    "Python": python_describe_class_keyword}
 
 '''
 def get_statements(language):

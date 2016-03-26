@@ -16,16 +16,24 @@ class MyScanner(Scanner):
         """
         logging.debug("in function recognize")
         self.produce(KEYWORD, text)
+        logging.debug("start def_func state")
         self.begin('def_func')
 
     def save_functions(self, a, func_name):
         """
         This function used to save function name
         """
-        print ("in func save")
         logging.debug("in func save")
-        self.produce("func_name", func_name)
-        self.functions.append(func_name)
+        logging.debug("current char " + self.cur_char)
+        logging.debug("func start " + str(self.func_start))
+        logging.debug( self.cur_char == str(self.func_start))
+        if self.cur_char == self.func_start:
+            logging.debug("curret char " + self.cur_char)
+
+            self.produce("func_name", func_name)
+            self.functions.append(func_name)
+
+        self.begin('')
 
     def recognize_class(self, a, class_keyword):
         """
@@ -43,6 +51,7 @@ class MyScanner(Scanner):
         logging.debug("in save class " + class_name)
         self.produce("class_name", class_name)
         self.classes.append(class_name)
+        self.begin('')
 
     def recognize_lib(self, a, lib):
         """
@@ -92,7 +101,7 @@ class MyScanner(Scanner):
         """
         This function is responsible to save the word that could be function call, and start state "functions"
         """
-        logging.debug("check function " + text)
+        logging.debug("check call function " + text)
         if self.cur_char == '(':
             self.functions_calls.append(text)
 
@@ -105,20 +114,19 @@ class MyScanner(Scanner):
 
     def ignore_all(self, a, text):
         """
-        This function starts 'ignore' State. Nn case of class or function definition all inside brackets () need to be ignored
+        This function starts 'ignore' State. In case of class or function definition all inside brackets () need to be ignored
         """
         logging.debug("in ignore " + text)
         self.begin('ignore')
+
+    def check_class(self, a, text):
+        logging.debug(("in check class " + text))
+        logging.debug(self.cur_char)
 
     def def_lexicon(self):
         try:
             str_symbol1 = languages_str_symbol1[self.language]
             str_symbol2 = languages_str_symbol2[self.language]
-        except KeyError:
-            # Leave default string symbols
-            str_symbol1 = languages_str_symbol1["default"]
-            str_symbol2 = languages_str_symbol2["default"]
-        try:
             all_keywords = languages_keywords[self.language]
             operations = languages_operations[self.language]
             add_library = languages_add_library[self.language]
@@ -129,22 +137,25 @@ class MyScanner(Scanner):
             comment_end1 = languages_comment_end1[self.language]
             comment_end2 = languages_comment_end2[self.language]
             func_def = languages_func_def[self.language]
-            logging.debug(func_def)
+            self.func_start = languages_func_start[self.language]
+            func_end = languages_func_end[self.language]
+            func_ignore = languages_func_ignore[self.language]
+            func_any_but = languages_func_any_but[self.language]
+            describe_class_keyword = languages_describe_class_keyword[self.language]
+            class_keyword = languages_class_keyword[self.language]
+
         except KeyError:
             print "Language not defined well"
             self.lexicon = Lexicon([])
             return
 
 
-
-        CLASS_KEYWORD = Str('class')
-
         letter = Range("AZaz")
         digit = Range("09")
         number = Rep1(digit)
 
-        word = Rep1(letter | number | Any('._'))
-
+        word = Rep1(letter | number | Any('_'))
+        lib_name = Rep1(letter | number | Any('._'))
         name = Rep1(letter | number | symbols) | Empty
 
         string_word1 = str_symbol1 + (Rep(Rep(name) |symbols | start_comment_symb) | Rep(str_symbol2)) + str_symbol1
@@ -203,15 +214,15 @@ class MyScanner(Scanner):
             # Find all libraries in code
             State('lib', [
                 (add_library,     KEYWORD),
-                (word,            self.save_libraries),
+                (lib_name,            self.save_libraries),
                 (Str(',', ' ', '*'),        IGNORE),
                 (Eol | Str(";"),    Begin('')),
             ]),
 
             # Find classes
-            (CLASS_KEYWORD,        self.recognize_class),
+           # (describe_class_keyword,        self.check_class),
+            (class_keyword,        self.recognize_class),
             State('class', [
-               # (CLASS_KEYWORD,    KEYWORD),
                 (word,              self.save_class),
                 (AnyBut('(:'),      IGNORE),
                 (Str(':'),          Begin('')),
@@ -221,17 +232,19 @@ class MyScanner(Scanner):
             # Find function definition
             (func_def,              self.recognize_function_definition),
             State('def_func', [
+                (all_keywords,      KEYWORD),
                 (word,              self.save_functions),
-                (AnyBut('(:'),     IGNORE),
-                (Str(':'),         Begin('')),
-                (Str('('),         self.ignore_all),
+                (Rep(Any(" ")),     IGNORE)
+                # (AnyBut('('),     IGNORE),
+                # (Str(')'),         Begin('')),
+                # (Str('('),         self.ignore_all),
 
             ]),
 
             # Ignore all inside brackets() in class and function declaration
             State('ignore', [
-                (AnyBut(':'),      IGNORE),
-                (Str(':'),          Begin('')),
+                (AnyBut(')'),      IGNORE),
+                (Str(')'),          Begin('')),
             ]),
 
             # Find all functions calls

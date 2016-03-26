@@ -1,11 +1,19 @@
+for(int i = 0; i < n; i++)
+{
+    res[i] = gc.createCompatibleImage(w, h, t);
+    g2d = res[i].createGraphics();
+    g2d.drawImage(img, 0, 0, w, h, i * w, 0, (i*w) + w, h, null);
+}
+private int x = 5;
+
 // Only start the animation once the JPanel has been added to the JFrame
-	public void addNotify()
+	public void addNotify(int x, float y)
 	{
 		super.addNotify();   // creates the peer
 		startGame();    // start the thread
 	}
 
-	public int startGame()
+	private int startGame()
 	{
 		(new Thread(this)).start();
 	}
