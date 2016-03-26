@@ -348,7 +348,7 @@ class Scanner:
         """
        Get the next input character, filling the buffer if necessary.
        Returns '' at end of file.
-   """
+    """
         next_pos = self.next_pos
         buf_index = next_pos - self.buf_start_pos
         if buf_index == len(self.buffer):
@@ -361,6 +361,24 @@ class Scanner:
                 return ''
         c = self.buffer[buf_index]
         self.next_pos = next_pos + 1
+        return c
+
+    def just_read_char(self):
+        """
+       Get the next input character, filling the buffer if necessary without changing position
+       Returns '' at end of file.
+        """
+        next_pos = self.next_pos
+        buf_index = next_pos - self.buf_start_pos
+        if buf_index == len(self.buffer):
+            discard = self.start_pos - self.buf_start_pos
+            data = self.stream.read(0x1000)
+            buffer = self.buffer[discard:] + data
+            buf_start_pos = self.buf_start_pos + discard
+            buf_index = buf_index - discard
+            if not data:
+                return ''
+        c = self.buffer[buf_index]
         return c
 
     def position(self):

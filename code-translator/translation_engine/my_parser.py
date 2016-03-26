@@ -93,29 +93,8 @@ class MyScanner(Scanner):
         This function is responsible to save the word that could be function call, and start state "functions"
         """
         logging.debug("check function " + text)
-        self.prev_char = self.cur_char
-        
-        self.func_name = text
-        self.begin("functions")
-
-    def add_function(self, a, text):
-        """
-        If word is really function name, add it to functions list and go back to init State
-        """
-        logging.debug("in add functon " + text)
-        self.produce("function", self.func_name)
-        self.functions_calls.append(self.func_name)
-        self.start_pos = self.cur_pos
-        self.begin('')
-
-    def back_to_init(self, a, text):
-        """
-        This function returns to init State
-        """
-        logging.debug("BACK TO INIT " + text)
-        logging.debug(self.cur_char)
-        self.start_pos = self.cur_pos
-        self.begin('')
+        if self.cur_char == '(':
+            self.functions_calls.append(text)
 
     def recognize_string(self, a, text):
         """
@@ -260,11 +239,6 @@ class MyScanner(Scanner):
 
             # Find all functions calls
             (word,               self.check_call_function),
-            State('functions', [
-                (Str('('),    self.add_function),
-                (AnyBut('('), self.back_to_init)
-
-            ]),
 
             # Ignore all indentations and new lines
             (Rep1(Any(" \t\n")), IGNORE)
