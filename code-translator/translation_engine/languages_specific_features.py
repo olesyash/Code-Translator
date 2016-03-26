@@ -24,7 +24,10 @@ python_operations = Str('<', '<=', '>', '>=', '=', '==', '!=', '+', '-', '*', '*
 
 python_add_library = Str('import', 'from')
 
+python_start_comment_symb = Str('#')
 
+python_comment_start1 = python_comment_end1 = Str("'''")
+python_comment_start2 = python_comment_end2 = Str('"""')
 
 # ----------------------------------------- Java -----------------------------------------------------------
 
@@ -42,8 +45,14 @@ java_operations = Str('+', '-', '*', '/', '%', '++', '--',  '==', '!=', '<', '<=
                       '|', '^', '~', '<<', '>>', '>>>', '&&', '||', '!', '+=', '-=', '*=', '/=', '%=',
                       '<<=', '>>=', '&=', '^=', '|=', '?', ':')
 
-
 java_add_library = Str('import')
+
+java_start_comment_symb = Str('//')
+
+java_comment_start1 = Str('/*')
+java_comment_end1 = Str('*/')
+
+
 
 # --------------------------------------------------------------------------------------------------------
 languages_keywords = {"Java": java_keywords,
@@ -58,6 +67,20 @@ languages_operations = {"Java": java_operations,
 languages_add_library = {"Java": java_add_library,
                          "Python": python_add_library}
 
+languages_start_comment_symb = {"Java": java_start_comment_symb,
+                                "Python": python_start_comment_symb}
+
+languages_comment_start1 = {"Java": java_comment_start1,
+                            "Python": python_comment_start1}
+
+languages_comment_end1 = {"Java": java_comment_end1,
+                          "Python": python_comment_end1}
+
+languages_comment_start2 = {"Java": java_comment_start1,
+                            "Python": python_comment_start2}
+
+languages_comment_end2 = {"Java": java_comment_end1,
+                          "Python": python_comment_end2}
 '''
 def get_statements(language):
     if language == "Python":

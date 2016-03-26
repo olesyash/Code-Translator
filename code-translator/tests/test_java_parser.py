@@ -49,12 +49,34 @@ class MyParserJavaTest(unittest.TestCase):
 
     def test_java_libraries(self):
         """
-        This test is testing parser for for finding all keywords of libraries import in python code
+        This test is testing parser for for finding all keywords of libraries import in java code
         """
         self.filename = "parser_tests/java_imports.txt"
         self.run_parser()
         expected_libraries = ['java.awt.Color', 'java.awt.Graphics2D', 'java.awt.image.BufferedImage']
         self.assertEqual(expected_libraries, self.p.scanner.libraries)
+
+    def test_ignore_one_line_comments(self):
+        """
+        This test is testing parser for ignore all one line comments
+        """
+        self.filename = "parser_tests/java_comments.txt"
+        self.run_parser()
+        expected_keywords = []
+        expected_op = []
+        self.assertListEqual(expected_op, self.p.operations)
+        self.assertListEqual(expected_keywords, self.p.keywords)
+
+    def test_ignore_two_lines_comments(self):
+        """
+        This test is testing parser for ignore all two lines comments from type 1 '''comment '''
+        """
+        self.filename = "parser_tests/java_2_lines_comments.txt"
+        self.run_parser()
+        expected_keywords = []
+        expected_op = []
+        self.assertListEqual(expected_op, self.p.operations)
+        self.assertListEqual(expected_keywords, self.p.keywords)
 
     def run_parser(self):
         """

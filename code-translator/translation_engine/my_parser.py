@@ -111,10 +111,20 @@ class MyScanner(Scanner):
         self.begin('ignore')
 
     def def_lexicon(self):
-
-
-
-        start_comment_symb = Str('#')
+        try:
+            all_keywords = languages_keywords[self.language]
+            operations = languages_operations[self.language]
+            add_library = languages_add_library[self.language]
+            literals = languages_literals[self.language]
+            start_comment_symb = languages_start_comment_symb[self.language]
+            comment_start1 = languages_comment_start1[self.language]
+            comment_start2 = languages_comment_start2[self.language]
+            comment_end1 = languages_comment_end1[self.language]
+            comment_end2 = languages_comment_end2[self.language]
+        except KeyError:
+            print "Language not defined well"
+            self.lexicon = Lexicon([])
+            return
 
         new_line = Str('\n')
 
@@ -130,8 +140,9 @@ class MyScanner(Scanner):
 
         word = Rep1(letter | number | Any('._'))
 
-        cm1 = Str("'''")
-        cm2 = Str('"""')
+
+        # cm1 = Str("'''")
+        # cm2 = Str('"""')
 
         name = Rep1(letter | number | symbols) | Empty
 
@@ -148,36 +159,24 @@ class MyScanner(Scanner):
         all_symbols = symbols | comments_symbols | string_symbol
         comments_words = Rep1(letter | number | Any('._') | all_symbols)
 
-        # if self.language == "Python":
-        #     all_keywords = python_keywords
-        #     operations = python_operations
-        try:
-            all_keywords = languages_keywords[self.language]
-            operations = languages_operations[self.language]
-            logging.debug(operations)
-            add_library = languages_add_library[self.language]
-            literals = languages_literals[self.language]
-        except KeyError:
-            print "Language not defined well"
-            self.lexicon = Lexicon([])
-            return
+
 
         self.lexicon = Lexicon([
             # Ignore strings
             (string_word1 | string_word2,        self.recognize_string),
 
             # Ignore first kind multiply line comments
-            (cm1,            self.start_comments),
+            (comment_start1,            self.start_comments),
                 State('comments', [
-                (cm1,        self.start_comments),
+                (comment_end1,        self.start_comments),
                 (comments_words,    "word"),
                 (Rep1(Any(" \t\n")), IGNORE)
             ]),
 
             # Ignore second kind multiply line comments
-            (cm2,         self.start_comments),
+            (comment_start2,         self.start_comments),
                 State('comments2', [
-                (cm2,        self.start_comments),
+                (comment_end2,        self.start_comments),
                 (comments_words,     IGNORE),
                 (Rep1(Any(" \t\n")), IGNORE)
             ]),
