@@ -1,0 +1,3 @@
+asteroids[i].updateSprite();
+foo();
+a.foo();

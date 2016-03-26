@@ -5,6 +5,7 @@ from lib.plex import *
 # ----------------------------------------- Main -----------------------------------------------------------
 KEYWORD = "keyword"
 LITERAL = "literal"
+OPERATION = "operation"
 
 symbols = Str(',', '.', '_', '!', '/', '(', ')', ';', ':', '-', '[', ']', '{', '}', '@', '%', '^', '&',
               '*', '=', ' ', '`', '$', '+', '|', '\\', '?', '<', '>')
@@ -48,7 +49,7 @@ java_keywords = Str('abstract',	'continue',	'for', 'new', 'switch', 'assert', 'd
                     'package', 'synchronized', 'boolean', 'do', 'if', 'this', 'break',
                     'double', 'implements', 'protected', 'throw', 'byte', 'else',
                     'throws', 'case', 'enum', 'instanceof', 'return', 'transient', 'catch',	'extends',
-                    'int', 'short', 'try', 'char', 'final', 'interface', 'static', 'void', 'class',
+                    'int', 'short', 'try', 'char', 'final', 'interface', 'static', 'void',
                     'finally', 'long', 'strictfp',  'volatile', 'const', 'float', 'native', 'super',
                     'while')
 # Literals:

@@ -114,6 +114,15 @@ class MyParserJavaTest(unittest.TestCase):
         self.run_parser()
         self.assertListEqual(expected_classes, self.p.scanner.classes)
 
+    def test_java_find_function_calls(self):
+        """
+        This test is testing parser for finding all function calls in python code
+        """
+        self.filename = "parser_tests/java_functions.txt"
+        expected_functions = ['updateSprite', 'foo', 'foo']
+        self.run_parser()
+        self.assertListEqual(expected_functions, self.p.scanner.functions_calls)
+
     def run_parser(self):
         """
         This internal function is used in all tests to read tokens using parser
