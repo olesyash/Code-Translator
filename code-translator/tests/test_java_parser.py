@@ -30,7 +30,7 @@ class MyParserJavaTest(unittest.TestCase):
 
     def test_java_find_all_operations(self):
         """
-        This test is testing parser for finding all operations in python code
+        This test is testing parser for finding all operations in java code
         """
         self.filename = "parser_tests/java_operations.txt"
         expected_operations = ['+', '-', '*', '/', '%', '-', '+', '++', '--',  '==',
@@ -116,12 +116,32 @@ class MyParserJavaTest(unittest.TestCase):
 
     def test_java_find_function_calls(self):
         """
-        This test is testing parser for finding all function calls in python code
+        This test is testing parser for finding all function calls in java code
         """
         self.filename = "parser_tests/java_functions.txt"
         expected_functions = ['updateSprite', 'foo', 'foo']
         self.run_parser()
         self.assertListEqual(expected_functions, self.p.scanner.functions_calls)
+
+    def test_java_real_code(self):
+        """
+        This test is testing parser for finding all keywords in real java code
+        """
+        self.filename = "parser_tests/GameLogic.java"
+        self.run_parser()
+        expected_keywords = ['import', 'import', 'import', 'import', 'public', 'class', 'private', 'final', 'int',
+                             'private', 'int', 'private', 'new', 'private', 'private', 'boolean', 'private', 'boolean',
+                             'protected', 'private', 'private', 'private', 'private', 'private', 'private',
+                             'public', 'int', 'int', 'this', 'this', 'int', 'new', 'new']
+        expected_lib = ['java.awt.Graphics2D', 'java.awt.Rectangle', 'java.awt.image.BufferedImage', 'java.util.Random']
+        expected_class_name = ['GameLogic']
+        expected_func_def = ['GameLogic']
+        expected_functions_calls = ['Random', 'pow', 'SpaceShip', 'getWidth', 'getHeight', 'createAstroids']
+        self.assertEqual(expected_functions_calls, self.p.scanner.functions_calls)
+        self.assertEqual(expected_func_def, self.p.scanner.functions)
+        self.assertEqual(expected_class_name, self.p.scanner.classes)
+        self.assertEqual(expected_lib, self.p.scanner.libraries)
+        self.assertEqual(expected_keywords, self.p.keywords)
 
     def run_parser(self):
         """
