@@ -69,7 +69,7 @@ class MyParserJavaTest(unittest.TestCase):
 
     def test_ignore_two_lines_comments(self):
         """
-        This test is testing parser for ignore all two lines comments from type 1 '''comment '''
+        This test is testing parser for ignore all two lines comments
         """
         self.filename = "parser_tests/java_2_lines_comments.txt"
         self.run_parser()
@@ -77,6 +77,24 @@ class MyParserJavaTest(unittest.TestCase):
         expected_op = []
         self.assertListEqual(expected_op, self.p.operations)
         self.assertListEqual(expected_keywords, self.p.keywords)
+
+    def test_ignore_strings(self):
+        """
+        This test is testing parser for ignore all strings in java code
+        """
+        self.filename = "parser_tests/java_strings.txt"
+        self.run_parser()
+        expected_keywords = []
+        self.assertListEqual(expected_keywords, self.p.keywords)
+
+    def test_find_all_func_def(self):
+        """
+        This test is testing parser for finding all functions declarations in python code
+        """
+        self.filename = "parser_tests/java_functions_def.txt"
+        expected_func_def = ["addNotify", "startGame"]
+        self.run_parser()
+        self.assertListEqual(expected_func_def, self.p.scanner.functions)
 
     def run_parser(self):
         """

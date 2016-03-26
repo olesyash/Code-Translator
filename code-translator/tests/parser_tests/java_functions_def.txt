@@ -1,0 +1,11 @@
+// Only start the animation once the JPanel has been added to the JFrame
+	public void addNotify()
+	{
+		super.addNotify();   // creates the peer
+		startGame();    // start the thread
+	}
+
+	public int startGame()
+	{
+		(new Thread(this)).start();
+	}

@@ -112,6 +112,13 @@ class MyScanner(Scanner):
 
     def def_lexicon(self):
         try:
+            str_symbol1 = languages_str_symbol1[self.language]
+            str_symbol2 = languages_str_symbol2[self.language]
+        except KeyError:
+            # Leave default string symbols
+            str_symbol1 = languages_str_symbol1["default"]
+            str_symbol2 = languages_str_symbol2["default"]
+        try:
             all_keywords = languages_keywords[self.language]
             operations = languages_operations[self.language]
             add_library = languages_add_library[self.language]
@@ -121,18 +128,16 @@ class MyScanner(Scanner):
             comment_start2 = languages_comment_start2[self.language]
             comment_end1 = languages_comment_end1[self.language]
             comment_end2 = languages_comment_end2[self.language]
+            func_def = languages_func_def[self.language]
+            logging.debug(func_def)
         except KeyError:
             print "Language not defined well"
             self.lexicon = Lexicon([])
             return
 
-        new_line = Str('\n')
 
-        escaped_newline = Str("\\\n")
 
         CLASS_KEYWORD = Str('class')
-
-        FUNC_DEF = Str('def')
 
         letter = Range("AZaz")
         digit = Range("09")
@@ -140,17 +145,8 @@ class MyScanner(Scanner):
 
         word = Rep1(letter | number | Any('._'))
 
-
-        # cm1 = Str("'''")
-        # cm2 = Str('"""')
-
         name = Rep1(letter | number | symbols) | Empty
 
-        str_symbol1 = Str('"')
-        str_symbol2 = Str("'")
-
-        # string_word1 = str_symbol1 + re('[^"]') + str_symbol1
-        # string_word2 = str_symbol2 + re("[^']") + str_symbol2
         string_word1 = str_symbol1 + (Rep(Rep(name) |symbols | start_comment_symb) | Rep(str_symbol2)) + str_symbol1
         string_word2 = str_symbol2 + (Rep(Rep(name) |symbols | start_comment_symb) | Rep(str_symbol1)) + str_symbol2
 
@@ -221,7 +217,9 @@ class MyScanner(Scanner):
                 (Str(':'),          Begin('')),
                 (Str('('),          self.ignore_all),
             ]),
-            (FUNC_DEF,              self.recognize_function_definition),
+
+            # Find function definition
+            (func_def,              self.recognize_function_definition),
             State('def_func', [
                 (word,              self.save_functions),
                 (AnyBut('(:'),     IGNORE),

@@ -1,0 +1,2 @@
+bufferdSpaceshipImg = createBufferedImage("for");
+bufferedAstroidImg = createBufferedImage("if");
