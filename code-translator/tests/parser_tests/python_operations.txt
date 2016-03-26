@@ -1,9 +1,9 @@
-x + y	#sum of x and y x + y
-x - y	#difference of x and y x - y
-x * y	#product of x and y x * y
-x / y	#quotient of x and y  x / y
-x // y	#floored) quotient of x and y x // y
-x % y	# remainder of x / y (4) x % y
+x+y	#sum of x and y x + y
+x-y	#difference of x and y x - y
+x*y	#product of x and y x * y
+x/y	#quotient of x and y  x / y
+x//y	#floored) quotient of x and y x // y
+x%y	# remainder of x / y (4) x % y
 -x	    #x negated -x
 +x	    #x unchanged +x
-x ** y  # x to the power y x ** y
+x**y  # x to the power y x ** y

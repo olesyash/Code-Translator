@@ -49,7 +49,7 @@ class MyScanner(Scanner):
         This function called when library import keyword recognized,
         Start state 'lib'
         """
-        logging.debug("in recognize lin")
+        logging.debug("in recognize lib")
         self.produce(KEYWORD, lib)
         self.begin('lib')
 
@@ -93,6 +93,8 @@ class MyScanner(Scanner):
         This function is responsible to save the word that could be function call, and start state "functions"
         """
         logging.debug("check function " + text)
+        self.prev_char = self.cur_char
+        
         self.func_name = text
         self.begin("functions")
 
@@ -111,6 +113,7 @@ class MyScanner(Scanner):
         This function returns to init State
         """
         logging.debug("BACK TO INIT " + text)
+        logging.debug(self.cur_char)
         self.start_pos = self.cur_pos
         self.begin('')
 
@@ -137,8 +140,6 @@ class MyScanner(Scanner):
         new_line = Str('\n')
 
         escaped_newline = Str("\\\n")
-
-        ADD_LIBRARY = Str('import', 'from')
 
         CLASS_KEYWORD = Str('class')
 
@@ -174,6 +175,9 @@ class MyScanner(Scanner):
         try:
             all_keywords = languages_keywords[self.language]
             operations = languages_operations[self.language]
+            logging.debug(operations)
+            add_library = languages_add_library[self.language]
+            literals = languages_literals[self.language]
         except KeyError:
             print "Language not defined well"
             self.lexicon = Lexicon([])
@@ -202,6 +206,9 @@ class MyScanner(Scanner):
             # Find all keywords in code
             (all_keywords,    KEYWORD),
 
+            #Find all literals in code
+            (literals,        LITERAL),
+
             # Find all operations
             (operations,        "operation"),
 
@@ -217,11 +224,11 @@ class MyScanner(Scanner):
             ]),
              #Ignore numbers
             (number,              IGNORE),
-            (ADD_LIBRARY,         self.recognize_lib),
+            (add_library,         self.recognize_lib),
 
             # Find all libraries in code
             State('lib', [
-                (ADD_LIBRARY,     KEYWORD),
+                (add_library,     KEYWORD),
                 (word,            self.save_libraries),
                 (Str(',', ' ', '*'),        IGNORE),
                 (Eol | Str(";"),    Begin('')),
@@ -271,6 +278,7 @@ class MyScanner(Scanner):
         self.functions = []
         self.functions_calls = []
         self.classes = []
+        self.prev_char = ""
         self.func_name = ""
         self.bracket_nesting_level = 0
         self.begin('')
@@ -288,6 +296,7 @@ class Parser():
         f = open(self.filename, "r")
         self.keywords = []
         self.operations = []
+        self.literals = []
 
         self.scanner = MyScanner(f, self.language)
         self.scanner.libraries = []
@@ -295,10 +304,12 @@ class Parser():
             token = self.scanner.read()
             print token
             print self.scanner.position()
-            if token[0] == "keyword":
+            if token[0] == KEYWORD:
                 self.keywords.append(token[1])
             elif token[0] == "operation":
                 self.operations.append(token[1])
+            elif token[0] == LITERAL:
+                self.literals.append(token[1])
             # elif token[0] == "unrecognized":
             #     raise errors.UnrecognizedInput(self.scanner, '')
             if token[0] is None:

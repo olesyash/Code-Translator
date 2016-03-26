@@ -9,6 +9,33 @@ logger.setLevel(logging.DEBUG)
 
 
 class MyParserPythonTest(unittest.TestCase):
+    def test_python_keywords(self):
+        """
+        This test is testing parser for finding all keywords in python code
+        """
+        self.filename = "parser_tests/python_keywords.txt"
+        self.run_parser()
+        expected_keywords = ['if', 'else']
+        self.assertEqual(expected_keywords, self.p.keywords)
+
+    def test_python_literals(self):
+        """
+        This test is testing parser for finding all literals in python code
+        """
+        self.filename = "parser_tests/python_literals.txt"
+        self.run_parser()
+        expected_literals = ['True', 'False', 'None']
+        self.assertEqual(expected_literals, self.p.literals)
+
+    def test_find_all_operations(self):
+        """
+        This test is testing parser for finding all operations in python code
+        """
+        self.filename = "parser_tests/python_operations.txt"
+        expected_operations = ['+', '-', '*', '/', '//', '%', '-', '+', '**']
+        self.run_parser()
+        self.assertListEqual(expected_operations, self.p.operations)
+
     def test_python_import(self):
         """
         This test is testing parser for finding all libraries in python code
@@ -26,15 +53,6 @@ class MyParserPythonTest(unittest.TestCase):
         self.run_parser()
         expected_libraries = ['foo', '_foo_', 'lib.foo', 'lib', 'foo']
         self.assertEqual(expected_libraries, self.p.scanner.libraries)
-
-    def test_python_keywords(self):
-        """
-        This test is testing parser for finding all keywords in python code
-        """
-        self.filename = "parser_tests/python_keywords.txt"
-        self.run_parser()
-        expected_keywords = ['if', 'else']
-        self.assertEqual(expected_keywords, self.p.keywords)
 
     def test_ignore_one_line_comments(self):
         """
@@ -131,15 +149,6 @@ class MyParserPythonTest(unittest.TestCase):
         expected_func_def = ["test_find_by_id_get_for_statement_python"]
         self.run_parser()
         self.assertListEqual(expected_func_def, self.p.scanner.functions)
-
-    def test_find_all_operations(self):
-        """
-        This test is testing parser for finding all operations in python code
-        """
-        self.filename = "parser_tests/python_operations.txt"
-        expected_operations = ['+', '-', '*', '/', '//', '%', '-', '+', '**']
-        self.run_parser()
-        self.assertListEqual(expected_operations, self.p.operations)
 
     def test_ignore_unrecognized_symbols(self):
         """
