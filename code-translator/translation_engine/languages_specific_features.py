@@ -134,6 +134,12 @@ languages_class_keyword = {"Java": class_keyword,
 languages_describe_class_keyword = {"Java": java_describe_class_keyword,
                                     "Python": python_describe_class_keyword}
 
+
+python_symbols_url = "https://docs.python.org/2/library/stdtypes.html#index-9"
+
+# Supported languages:
+languages = ["Java", "Python", "C", "C++", "C#", "R", "PHP", "JS", "Ruby", "Matlab"]
+
 '''
 def get_statements(language):
     if language == "Python":
@@ -143,13 +149,10 @@ def get_statements(language):
     else:
         return []
 
-languages = ["Java", "Python", "C", "C++", "C#", "R", "PHP", "JS", "Ruby", "Matlab"]
 
 python_statements = ['for', 'if', 'else', 'while']
 java_statements = ['for', 'if', 'else', 'while']
 '''
-
-python_symbols_url = "https://docs.python.org/2/library/stdtypes.html#index-9"
 
 #python_symbols_url = "http://www.tutorialspoint.com/python/python_basic_operators.htm"
 #java_symbols_url = "http://www.tutorialspoint.com/java/java_basic_operators.htm"

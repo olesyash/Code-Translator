@@ -128,10 +128,6 @@ class MyParserPythonTest(unittest.TestCase):
         self.run_parser()
         self.assertListEqual(expected_functions, self.p.scanner.functions_calls)
 
-    def test_run_real_code2(self):
-        self.filename = "../translation_engine/translation_engine.py"
-        self.run_parser()
-
     def test_classes(self):
         """
         This test is testing parser for finding all classes declarations in python code
@@ -163,5 +159,7 @@ class MyParserPythonTest(unittest.TestCase):
         """
         This internal function is used in all tests to read tokens using parser
         """
-        self.p = Parser(self.filename, "Python")
-        self.p.run_parser()
+        f = open(self.filename, "r")
+        output = f.read()
+        self.p = Parser("Python")
+        self.p.run_parser(output)

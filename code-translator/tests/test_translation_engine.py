@@ -6,6 +6,9 @@ from translation_engine.languages_specific_features import *
 from google.appengine.ext import testbed
 from DAL import *
 
+import logging
+logger = logging.getLogger()
+logger.setLevel(logging.DEBUG)
 
 class TranslationEngineTest(unittest.TestCase):
     def setUp(self):
@@ -29,7 +32,7 @@ class TranslationEngineTest(unittest.TestCase):
         """
         self.l = "Java"
         self.t = TranslationEngine(self.l)
-        url = self.t.google_search_by_default_site("for", "statement")
+        url = self.t.google_search("for", "statement")
         self.assertIn(default_urls[self.l], url)
 
     def test_google_search_while_python_get_default_url(self):
@@ -38,7 +41,7 @@ class TranslationEngineTest(unittest.TestCase):
         """
         self.l = "Python"
         self.t = TranslationEngine(self.l)
-        url = self.t.google_search_by_default_site("while", "statement")
+        url = self.t.google_search("while", "statement")
         self.assertIn(default_urls[self.l], url)
 
     def test_google_search_if_python_get_default_url(self):
@@ -47,7 +50,7 @@ class TranslationEngineTest(unittest.TestCase):
         """
         self.l = "Python"
         self.t = TranslationEngine(self.l)
-        url = self.t.google_search_by_default_site("if", "statement")
+        url = self.t.google_search("if", "statement")
         print url
         self.assertIn(default_urls[self.l], url)
 

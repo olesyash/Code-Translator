@@ -54,8 +54,9 @@ class GetTranslation(webapp2.RequestHandler):
         code_text = self.request.body
         dic = json.loads(code_text)
         te = TranslationEngine(dic['language'])
-        translation_text = te.get_translation(dic["text"])
-        json_response = json.dumps(translation_text)
+
+        translated_text = te.get_translation((dic["text"]).encode('utf8'))
+        json_response = json.dumps(translated_text)
         self.response.headers['Content-Type'] = 'application/json'
         self.response.write(json_response)
 

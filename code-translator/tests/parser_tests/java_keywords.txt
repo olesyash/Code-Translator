@@ -2,6 +2,7 @@ import java.awt.image.BufferedImage;
 
 public class SpaceShip extends Sprite
 {
+    for(i=0;i<10;i++);
 	private static final int ANGLE = 30; //Rotation one step angle
 	private AffineTransform tx ;
 	private int rotateAngle;

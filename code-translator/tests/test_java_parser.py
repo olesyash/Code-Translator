@@ -15,7 +15,7 @@ class MyParserJavaTest(unittest.TestCase):
         """
         self.filename = "parser_tests/java_keywords.txt"
         self.run_parser()
-        expected_keywords = ['import', 'public', 'class', 'extends', 'private', 'static', 'final', 'int', 'private',
+        expected_keywords = ['import', 'public', 'class', 'extends', 'for', 'private', 'static', 'final', 'int', 'private',
                              'private', 'int', 'public', 'int', 'int', 'int', 'int', 'int', 'double', 'super']
         self.assertEqual(expected_keywords, self.p.keywords)
 
@@ -147,5 +147,7 @@ class MyParserJavaTest(unittest.TestCase):
         """
         This internal function is used in all tests to read tokens using parser
         """
-        self.p = Parser(self.filename, "Java")
-        self.p.run_parser()
+        f = open(self.filename, "r")
+        output = f.read()
+        self.p = Parser("Java")
+        self.p.run_parser(output)

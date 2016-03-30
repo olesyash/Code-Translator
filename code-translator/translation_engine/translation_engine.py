@@ -30,15 +30,16 @@ class TranslationEngine():
         """
         logging.info("Got request from client " + code_text)
         translated_list = []
-        keywords_list = self.parser_obj.parse_text(code_text)
-        for word in keywords_list:
-            logging.info("in keywords")
+        keywords_list = self.parser_obj.run_parser(code_text)
+        print keywords_list
+        for word, word_type in keywords_list.iteritems():
+            logging.info("in keywords, the word is: " + word)
             try:
                 logging.info("Found in DB")
                 translated_list.append(DAL.get_data_from_db(word, self.language))
             except DataNotExistException:
                 logging.info("Not found in DB")
-                word_type = self.parser_obj.get_word_type(word)
+                #word_type = self.parser_obj.get_word_type(word)
                 res = self.add_keyword(word, word_type)
                 if res:
                     translated_list.append(res)
@@ -50,13 +51,13 @@ class TranslationEngine():
         :param keyword: string
         :param word_type: string
         """
-        url = self.google_search_by_default_site(keyword, word_type)
+        url = self.google_search(keyword, word_type)
         logging.info("URL" + url)
         la = LanguagesAPI()
         try:
             result, code = la.http_request_using_urlfetch(http_url=url)
         except WrongURL:
-            url = self.google_search(keyword, word_type)
+            url = self.google_search(keyword, word_type, site=False)
             try:
                 result, code = la.http_request_using_urlfetch(http_url=url)
             except WrongURL:
@@ -76,7 +77,7 @@ class TranslationEngine():
         else:
             return None
 
-    def google_search_by_default_site(self, keyword, word_type):
+    def google_search(self, keyword, word_type, site=True):
         """
         Search in google for keyword, returns first url of website with answer.
         Search in google using "site:" option, making google to search in specific site
@@ -84,22 +85,12 @@ class TranslationEngine():
         :return: url
         :rtype : string
         """
-        s = self.language + " " + keyword + word_type + " site:" + default_urls[self.language]
-        g = pygoogle(s)
-        g.pages = 1
-        urls = g.get_urls()
-        print urls
-        return urls[0]
-
-    def google_search(self, keyword, word_type):
-        """
-        Search in google for keyword, returns first url of website with answer.
-        :param keyword: string
-        :return: url
-        :rtype : string
-        """
-        s = self.language + " " + keyword + word_type
-        g = pygoogle(s)
+        if site:
+            search_string = self.language + " " + keyword + " " + word_type + " site:" + default_urls[self.language]
+        else:
+            search_string = self.language + " " + keyword + " " + word_type
+        logging.info("search in google: " + search_string)
+        g = pygoogle(search_string)
         g.pages = 1
         urls = g.get_urls()
         print urls

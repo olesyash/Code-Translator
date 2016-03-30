@@ -147,6 +147,10 @@ function ()
             dataType: "json",
             statusCode: {
                 400: function () {
+                },
+                500: function () {
+                    $(".darken").hide(); // Stop spinner
+                    alert("Sorry, there is some error in the server side =(")
                 }
             },
             success: function (response, message, jq) {
