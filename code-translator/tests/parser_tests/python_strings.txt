@@ -1,6 +1,6 @@
 "for" "if" "not"
 'else' 'elif' 'import'
 "'for'" '"for"'
-"'g" 'bb"'
+"'g if" 'bb for ()"'
 foo("https://docs.python.org/2/reference/compound_stmts.html#the-for-statement")
 self.assertNotEqual(res, "", "The result is empty string!")

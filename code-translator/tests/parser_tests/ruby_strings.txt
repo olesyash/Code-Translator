@@ -1,0 +1,6 @@
+'This is a simple Ruby string literal'
+'Won\'t you read for O\'Reilly\'s book?'
+
+puts "The value of x is #{ x }."
+puts "The sum of x and y is #{ x + y }."
+puts "The average was #{ (x + y + z)/3 }."

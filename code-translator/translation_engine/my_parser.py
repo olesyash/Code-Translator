@@ -107,12 +107,21 @@ class MyScanner(Scanner):
         if self.cur_char == '(':
             self.functions_calls.append(text)
 
-    def recognize_string(self, a, text):
+    def start_string(self, a, text):
         """
         This function recognize string
         """
-        logging.debug("in string " + text)
-        self.produce("string", text)
+        logging.debug("in start string " + text)
+        logging.debug("in start string char is  " + self.cur_char)
+        self.begin("string")
+        #self.produce("string", text)
+
+    def escape_character_in_string(self, a, text):
+        """
+        This function will skip on the string symbol ending if escape character found
+        """
+        logging.debug("in escape character " + text)
+        self.read_char()
 
     def ignore_all(self, a, text):
         """
@@ -139,8 +148,9 @@ class MyScanner(Scanner):
             comment_end1 = languages_comment_end1[self.language]
             comment_end2 = languages_comment_end2[self.language]
             func_def = languages_func_def[self.language]
-            self.func_start = languages_func_start[self.language]
             class_keyword = languages_class_keyword[self.language]
+            escape_character = languages_escape_character[self.language]
+            self.func_start = languages_func_start[self.language]
         except KeyError:
             print "Language not defined well"
             self.lexicon = Lexicon([])
@@ -154,17 +164,25 @@ class MyScanner(Scanner):
         lib_name = Rep1(letter | number | Any('._'))
         name = Rep1(letter | number | symbols) | Empty
 
-        string_word1 = str_symbol1 + (Rep(Rep(name) | symbols | start_comment_symb) | Rep(str_symbol2)) + str_symbol1
-        string_word2 = str_symbol2 + (Rep(Rep(name) | symbols | start_comment_symb) | Rep(str_symbol1)) + str_symbol2
-
-        string_symbol = str_symbol1 | str_symbol2
+        string_symbol = Str(str_symbol1) | Str(str_symbol2)
 
         all_symbols = symbols | comments_symbols | string_symbol
         comments_words = Rep1(letter | number | Any('._') | all_symbols)
 
         self.lexicon = Lexicon([
             # Ignore strings
-            (string_word1 | string_word2, self.recognize_string),
+            (Str(str_symbol1),       Begin('string1')),
+            State('string1', [
+                (AnyBut(str_symbol1),  IGNORE),
+                (escape_character,     IGNORE),
+                (Str(str_symbol1), Begin('')),
+            ]),
+            (Str(str_symbol2),       Begin('string2')),
+            State('string2', [
+                (AnyBut(str_symbol2),  IGNORE),
+                (escape_character,     IGNORE),
+                (Str(str_symbol2), Begin('')),
+            ]),
 
             # Ignore first kind multiply line comments
             (comment_start1, self.start_comments),
@@ -209,7 +227,7 @@ class MyScanner(Scanner):
             State('lib', [
                 (add_library, KEYWORD),
                 (lib_name, self.save_libraries),
-                (Str(',', ' ', '*'), IGNORE),
+                (Str(',', ' ', '*', str_symbol1, str_symbol2), IGNORE),
                 (Eol | Str(";"), Begin('')),
             ]),
 

@@ -12,8 +12,8 @@ symbols = Str(',', '.', '_', '!', '/', '(', ')', ';', ':', '-', '[', ']', '{', '
 
 comments_symbols = Str('#', '"', "'")
 
-str_symbol1 = Str('"')
-str_symbol2 = Str("'")
+str_symbol1 = '"'
+str_symbol2 = "'"
 default_class_keyword = Str('class')
 
 # ----------------------------------------- Python -----------------------------------------------------------
@@ -82,12 +82,11 @@ ruby_operations = Str('+', '-', '*', '/', '%', '**', '==','.eql?', '!=', '<', '<
                       '|', '^', '~', '<<', '>>', '&&', '||', '!', '+=', '-=', '*=', '/=', '%=', '|=', '<<=', '>>=',
                       '**=', 'equal?', '&', '?', ':', '..', '...', '::')
 
-ruby_add_library = Str('require ')
-
+ruby_add_library = Str('require')
 ruby_start_comment_symb = Str('#')
-
 ruby_comment_start = Str('=begin')
 ruby_comment_end = Str('=end')
+ruby_escape_string_character = Str("\'")
 
 # -----------------------------------------------------------------------------------------------------------
 languages_keywords = {"Java": java_keywords,
@@ -146,7 +145,9 @@ languages_class_keyword = {"Java": default_class_keyword,
                            "Python": default_class_keyword,
                            "Ruby": default_class_keyword}
 
-
+languages_escape_character = {"Java": Str(),
+                              "Python": Str(),
+                              "Ruby": ruby_escape_string_character}
 
 # Supported languages:
 languages = ["Java", "Python", "C", "C++", "C#", "R", "PHP", "JS", "Ruby", "Matlab"]

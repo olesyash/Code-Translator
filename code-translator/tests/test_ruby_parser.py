@@ -55,6 +55,33 @@ class MyParserPythonTest(unittest.TestCase):
         expected_keywords = []
         self.assertListEqual(expected_keywords, self.p.keywords)
 
+    def test_ignore_strings(self):
+        """
+        This test is testing parser for ignore all strings in python code
+        """
+        self.filename = "parser_tests/ruby_strings.txt"
+        self.run_parser()
+        expected_keywords = []
+        self.assertListEqual(expected_keywords, self.p.keywords)
+
+    def test_ruby_require(self):
+        """
+        This test is testing parser for finding all libraries in python code
+        """
+        self.filename = "parser_tests/ruby_imports.txt"
+        self.run_parser()
+        expected_keywords = ["require", "require"]
+        self.assertEqual(expected_keywords, self.p.keywords)
+
+    def test_ruby_libraries(self):
+        """
+        This test is testing parser for for finding all keywords of libraries import in python code
+        """
+        self.filename = "parser_tests/ruby_imports.txt"
+        self.run_parser()
+        expected_libraries = ['support', 'moral']
+        self.assertEqual(expected_libraries, self.p.scanner.libraries)
+
     def run_parser(self):
         """
         This internal function is used in all tests to read tokens using parser
