@@ -11,7 +11,7 @@ logger.setLevel(logging.DEBUG)
 class MyParserRubyTest(unittest.TestCase):
     def test_ruby_keywords(self):
         """
-        This test is testing parser for finding all keywords in python code
+        This test is testing parser for finding all keywords in ruby code
         """
         self.filename = "parser_tests/ruby_keywords.txt"
         self.run_parser()
@@ -48,7 +48,7 @@ class MyParserRubyTest(unittest.TestCase):
 
     def test_ignore_two_lines_comments(self):
         """
-        This test is testing parser for ignore all two lines comments from type 1 '''comment '''
+        This test is testing parser for ignore all two lines comments
         """
         self.filename = "parser_tests/ruby_2_lines_comments.txt"
         self.run_parser()
@@ -57,7 +57,7 @@ class MyParserRubyTest(unittest.TestCase):
 
     def test_ignore_strings(self):
         """
-        This test is testing parser for ignore all strings in python code
+        This test is testing parser for ignore all strings in ruby code
         """
         self.filename = "parser_tests/ruby_strings.txt"
         self.run_parser()
@@ -66,7 +66,7 @@ class MyParserRubyTest(unittest.TestCase):
 
     def test_ruby_require(self):
         """
-        This test is testing parser for finding all libraries in python code
+        This test is testing parser for finding all libraries in ruby code
         """
         self.filename = "parser_tests/ruby_imports.txt"
         self.run_parser()
@@ -75,7 +75,7 @@ class MyParserRubyTest(unittest.TestCase):
 
     def test_ruby_libraries(self):
         """
-        This test is testing parser for for finding all keywords of libraries import in python code
+        This test is testing parser for for finding all keywords of libraries import in ruby code
         """
         self.filename = "parser_tests/ruby_imports.txt"
         self.run_parser()
@@ -84,7 +84,7 @@ class MyParserRubyTest(unittest.TestCase):
 
     def test_find_all_func_def(self):
         """
-        This test is testing parser for finding all functions declarations in python code
+        This test is testing parser for finding all functions declarations in ruby code
         """
         self.filename = "parser_tests/ruby_function_def.txt"
         expected_func_def = ["method_name", "test"]
@@ -93,12 +93,38 @@ class MyParserRubyTest(unittest.TestCase):
 
     def test_classes(self):
         """
-        This test is testing parser for finding all classes declarations in python code
+        This test is testing parser for finding all classes declarations in ruby code
         """
         self.filename = "parser_tests/ruby_classes.txt"
         expected_classes = ["Customer"]
         self.run_parser()
         self.assertListEqual(expected_classes, self.p.scanner.classes)
+
+    def test_find_functions(self):
+        """
+        This test is testing parser for finding all function calls in ruby code
+        """
+        self.filename = "parser_tests/ruby_functions.txt"
+        expected_functions = ['multiply', 'method_name']
+        self.run_parser()
+        self.assertListEqual(expected_functions, self.p.scanner.functions_calls)
+
+    def test_ruby_real_code(self):
+        """
+        This test is testing parser for finding all keywords in real ruby code
+        """
+        self.filename = "parser_tests/sample.rb"
+        self.run_parser()
+        expected_keywords = ['require', 'require', 'require', 'require', 'require', 'if', 'end', 'def', 'end']
+        expected_lib = ['watir', 'watir\contrib\enabled_popup', 'startClicker', 'net/http', 'net/https']
+        expected_func_def = ['setDdlPriority']
+        expected_functions_calls = ['contains_text', 'text_field', 'set', 'text_field', 'set', 'button',
+                                    'link', 'link', 'select_list', 'select', 'button', 'startClicker',
+                                    'setDdlPriority', 'setDdlPriority']
+        self.assertEqual(expected_functions_calls, self.p.scanner.functions_calls)
+        self.assertEqual(expected_func_def, self.p.scanner.functions)
+        self.assertEqual(expected_lib, self.p.scanner.libraries)
+        self.assertEqual(expected_keywords, self.p.keywords)
 
     def run_parser(self):
         """

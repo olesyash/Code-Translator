@@ -7,14 +7,18 @@ KEYWORD = "keyword"
 LITERAL = "literal"
 OPERATION = "operation"
 
-symbols = Str(',', '.', '_', '!', '/', '(', ')', ';', ':', '-', '[', ']', '{', '}', '@', '%', '^', '&',
-              '*', '=', ' ', '`', '$', '+', '|', '\\', '?', '<', '>')
+symbols = Str(',', '.', '_', '!', '/', '(', ')', ':', '-', '[', ']', '{', '}', '@', '%', '^', '&',
+              '*', '=', '`', '$', '+', '|', '\\', '?', '<', '>')
+
+terminate_line_symb = Str(';')
 
 comments_symbols = Str('#', '"', "'")
 
 str_symbol1 = '"'
 str_symbol2 = "'"
 default_class_keyword = Str('class')
+default_function_start = '('
+default_function_call_char = '('
 
 # ----------------------------------------- Python -----------------------------------------------------------
 # Keywords:
@@ -32,11 +36,11 @@ python_add_library = Str('import', 'from')
 # One line comment symbol:
 python_start_comment_symb = Str('#')
 # 2 lines comments symbols:
+
 python_comment_start1 = python_comment_end1 = Str("'''")
 python_comment_start2 = python_comment_end2 = Str('"""')
 # Function definition recognize:
 python_func_def = Str('def')
-python_func_start = '('
 
 python_describe_class_keyword = Str()
 # ----------------------------------------- Java -----------------------------------------------------------
@@ -63,7 +67,6 @@ java_comment_start1 = Str('/*')
 java_comment_end1 = Str('*/')
 # Function definition word
 java_func_def = Str('public', 'private')
-java_func_start = '('
 
 # class definition
 java_describe_class_keyword = Str('public', 'private')
@@ -138,8 +141,8 @@ languages_func_def = {"Java": java_func_def,
                       "Python": python_func_def,
                       "Ruby": ruby_func_def}
 
-languages_func_start = {"Java": java_func_start,
-                        "Python": python_func_start,
+languages_func_start = {"Java": default_function_start,
+                        "Python": default_function_start,
                         "Ruby": ""}
 
 languages_class_keyword = {"Java": default_class_keyword,
@@ -149,6 +152,14 @@ languages_class_keyword = {"Java": default_class_keyword,
 languages_escape_character = {"Java": Str(),
                               "Python": Str(),
                               "Ruby": ruby_escape_string_character}
+
+languages_function_call_char = {"Java": default_function_call_char,
+                                "Python": default_function_call_char,
+                                "Ruby": default_function_call_char}
+
+languages_function_call_must_char = {"Java": True,
+                                     "Python": True,
+                                     "Ruby": False}
 
 # Supported languages:
 languages = ["Java", "Python", "C", "C++", "C#", "R", "PHP", "JS", "Ruby", "Matlab"]
@@ -177,5 +188,9 @@ ruby_symbols_url = "http://www.tutorialspoint.com/ruby/ruby_operators.htm"
 
 default_urls = {
     "Python": "https://wiki.python.org",
-    "Java": "https://docs.oracle.com"
+    "Java": "https://docs.oracle.com",
+    "Ruby": "http://ruby-doc.org/"
 }
+
+
+

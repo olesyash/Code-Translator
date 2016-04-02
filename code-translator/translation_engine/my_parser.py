@@ -25,18 +25,13 @@ class MyScanner(Scanner):
         """
         This function used to save function name
         """
-        logging.debug("in func save")
-        logging.debug("current char " + self.cur_char)
-        logging.debug("func start " + str(self.func_start))
-        logging.debug(self.cur_char == str(self.func_start))
-        logging.debug("need to check func start ? " + str(self.need_func_start))
+        logging.debug("in function save")
         if self.need_func_start and (self.cur_char != self.func_start):
             pass
         else:
             logging.debug("current char " + self.cur_char)
             self.produce("func_name", func_name)
             self.functions.append(func_name)
-
         self.begin('')
 
     def recognize_class(self, a, class_keyword):
@@ -93,7 +88,7 @@ class MyScanner(Scanner):
         if self.bracket_nesting_level == 0:
             self.bracket_nesting_level += 1
             logging.debug("start state comments")
-            if text == "'''":
+            if Str(text) == languages_comment_start1:
                 self.begin("comments")
             else:
                 self.begin("comments2")
@@ -106,8 +101,12 @@ class MyScanner(Scanner):
         This function is responsible to save the word that could be function call, and start state "functions"
         """
         logging.debug("check call function " + text)
-        if self.cur_char == '(':
+
+        if self.cur_char == self.func_call_char:
             self.functions_calls.append(text)
+        elif not self.must_func_call_char:
+            if text in self.functions:
+                self.functions_calls.append(text)
 
     def start_string(self, a, text):
         """
@@ -116,7 +115,6 @@ class MyScanner(Scanner):
         logging.debug("in start string " + text)
         logging.debug("in start string char is  " + self.cur_char)
         self.begin("string")
-        #self.produce("string", text)
 
     def escape_character_in_string(self, a, text):
         """
@@ -124,13 +122,6 @@ class MyScanner(Scanner):
         """
         logging.debug("in escape character " + text)
         self.read_char()
-
-    def ignore_all(self, a, text):
-        """
-        This function starts 'ignore' State. In case of class or function definition all inside brackets () need to be ignored
-        """
-        logging.debug("in ignore " + text)
-        self.begin('ignore')
 
     def check_class(self, a, text):
         logging.debug(("in check class " + text))
@@ -153,6 +144,8 @@ class MyScanner(Scanner):
             class_keyword = languages_class_keyword[self.language]
             escape_character = languages_escape_character[self.language]
             self.func_start = languages_func_start[self.language]
+            self.func_call_char = languages_function_call_char[self.language]
+            self.must_func_call_char = languages_function_call_must_char[self.language]
             self.need_func_start = self.func_start != ""
         except KeyError:
             print "Language not defined well"
@@ -164,12 +157,12 @@ class MyScanner(Scanner):
         number = Rep1(digit)
 
         word = Rep1(letter | number | Any('_'))
-        lib_name = Rep1(letter | number | Any('._'))
+        lib_name = Rep1(letter | number | symbols)
         name = Rep1(letter | number | symbols) | Empty
 
         string_symbol = Str(str_symbol1) | Str(str_symbol2)
 
-        all_symbols = symbols | comments_symbols | string_symbol
+        all_symbols = symbols | comments_symbols | string_symbol | terminate_line_symb
         comments_words = Rep1(letter | number | Any('._') | all_symbols)
 
         self.lexicon = Lexicon([
@@ -213,20 +206,21 @@ class MyScanner(Scanner):
             (operations, OPERATION),
 
             # Ignore symbols
+            (terminate_line_symb,      IGNORE),
             (symbols | string_symbol, IGNORE),
 
             # Ignore one line comments
             (start_comment_symb, Begin('comment')),
             State('comment', [
                 (Eol, Begin('')),
-                (name | all_symbols, IGNORE)
+                (name | all_symbols | Str(" "), IGNORE)
 
             ]),
             # Ignore numbers
             (number, IGNORE),
-            (add_library, self.recognize_lib),
 
             # Find all libraries in code
+            (add_library, self.recognize_lib),
             State('lib', [
                 (add_library, KEYWORD),
                 (lib_name, self.save_libraries),
@@ -252,7 +246,6 @@ class MyScanner(Scanner):
 
             # Find all functions calls
             (word, self.check_call_function),
-
             # Ignore all indentations and new lines
             (Rep1(Any(" \t\n")), IGNORE)
         ])
