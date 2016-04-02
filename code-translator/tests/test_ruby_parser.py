@@ -8,7 +8,7 @@ logger = logging.getLogger()
 logger.setLevel(logging.DEBUG)
 
 
-class MyParserPythonTest(unittest.TestCase):
+class MyParserRubyTest(unittest.TestCase):
     def test_ruby_keywords(self):
         """
         This test is testing parser for finding all keywords in python code
@@ -81,6 +81,24 @@ class MyParserPythonTest(unittest.TestCase):
         self.run_parser()
         expected_libraries = ['support', 'moral']
         self.assertEqual(expected_libraries, self.p.scanner.libraries)
+
+    def test_find_all_func_def(self):
+        """
+        This test is testing parser for finding all functions declarations in python code
+        """
+        self.filename = "parser_tests/ruby_function_def.txt"
+        expected_func_def = ["method_name", "test"]
+        self.run_parser()
+        self.assertListEqual(expected_func_def, self.p.scanner.functions)
+
+    def test_classes(self):
+        """
+        This test is testing parser for finding all classes declarations in python code
+        """
+        self.filename = "parser_tests/ruby_classes.txt"
+        expected_classes = ["Customer"]
+        self.run_parser()
+        self.assertListEqual(expected_classes, self.p.scanner.classes)
 
     def run_parser(self):
         """

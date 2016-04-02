@@ -73,7 +73,7 @@ java_describe_class_keyword = Str('public', 'private')
 ruby_keywords = Str('BEGIN', 'do', 'next', 'then', 'END', 'else', 'alias', 'elsif', 'not',
                     'undef', 'and', 'end', 'or', 'unless', 'begin', 'ensure', 'redo', 'until', 'break',
                     'rescue', 'when', 'case', 'for', 'retry', 'while', 'if', 'return',
-                    'def',	'in', 'self', '__FILE__', 'defined?', 'module', 'super', '__LINE__', '__ENCODING__',
+                    'in', 'self', '__FILE__', 'defined?', 'module', 'super', '__LINE__', '__ENCODING__',
                     'yield', '__END__')
 
 ruby_boolean = Str('true', 'false', 'nil')
@@ -87,6 +87,7 @@ ruby_start_comment_symb = Str('#')
 ruby_comment_start = Str('=begin')
 ruby_comment_end = Str('=end')
 ruby_escape_string_character = Str("\'")
+ruby_func_def = Str('def')
 
 # -----------------------------------------------------------------------------------------------------------
 languages_keywords = {"Java": java_keywords,
@@ -135,11 +136,11 @@ languages_str_symbol2 = {"Java": str_symbol2,
 
 languages_func_def = {"Java": java_func_def,
                       "Python": python_func_def,
-                       "Ruby": Str()}
+                      "Ruby": ruby_func_def}
 
 languages_func_start = {"Java": java_func_start,
                         "Python": python_func_start,
-                        "Ruby": Str()}
+                        "Ruby": ""}
 
 languages_class_keyword = {"Java": default_class_keyword,
                            "Python": default_class_keyword,

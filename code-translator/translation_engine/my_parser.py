@@ -29,9 +29,11 @@ class MyScanner(Scanner):
         logging.debug("current char " + self.cur_char)
         logging.debug("func start " + str(self.func_start))
         logging.debug(self.cur_char == str(self.func_start))
-        if self.cur_char == self.func_start:
-            logging.debug("curret char " + self.cur_char)
-
+        logging.debug("need to check func start ? " + str(self.need_func_start))
+        if self.need_func_start and (self.cur_char != self.func_start):
+            pass
+        else:
+            logging.debug("current char " + self.cur_char)
             self.produce("func_name", func_name)
             self.functions.append(func_name)
 
@@ -151,6 +153,7 @@ class MyScanner(Scanner):
             class_keyword = languages_class_keyword[self.language]
             escape_character = languages_escape_character[self.language]
             self.func_start = languages_func_start[self.language]
+            self.need_func_start = self.func_start != ""
         except KeyError:
             print "Language not defined well"
             self.lexicon = Lexicon([])
