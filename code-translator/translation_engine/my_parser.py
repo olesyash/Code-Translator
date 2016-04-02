@@ -2,7 +2,6 @@ __author__ = 'olesya'
 
 from languages_specific_features import *
 from lib.plex.traditional import *
-import StringIO
 import io
 import logging
 
@@ -71,7 +70,7 @@ class MyScanner(Scanner):
         """
         logging.debug("in save libraries")
         self.libraries.append(lib)
-        self.produce("lib", lib)
+        self.produce("library", lib)
 
     def start_comment(self, a):
         """
@@ -128,9 +127,9 @@ class MyScanner(Scanner):
 
     def def_lexicon(self):
         try:
+            all_keywords = languages_keywords[self.language]
             str_symbol1 = languages_str_symbol1[self.language]
             str_symbol2 = languages_str_symbol2[self.language]
-            all_keywords = languages_keywords[self.language]
             operations = languages_operations[self.language]
             add_library = languages_add_library[self.language]
             literals = languages_literals[self.language]
@@ -141,12 +140,7 @@ class MyScanner(Scanner):
             comment_end2 = languages_comment_end2[self.language]
             func_def = languages_func_def[self.language]
             self.func_start = languages_func_start[self.language]
-            func_end = languages_func_end[self.language]
-            func_ignore = languages_func_ignore[self.language]
-            func_any_but = languages_func_any_but[self.language]
-            describe_class_keyword = languages_describe_class_keyword[self.language]
             class_keyword = languages_class_keyword[self.language]
-
         except KeyError:
             print "Language not defined well"
             self.lexicon = Lexicon([])
@@ -197,17 +191,17 @@ class MyScanner(Scanner):
             # Find all operations
             (operations, OPERATION),
 
-            #Ignore symbols
+            # Ignore symbols
             (symbols | string_symbol, IGNORE),
 
-            #Ignore one line comments
+            # Ignore one line comments
             (start_comment_symb, Begin('comment')),
             State('comment', [
                 (Eol, Begin('')),
                 (name | all_symbols, IGNORE)
 
             ]),
-            #Ignore numbers
+            # Ignore numbers
             (number, IGNORE),
             (add_library, self.recognize_lib),
 
@@ -265,7 +259,7 @@ class Parser():
         This internal function is used in all tests to read tokens using parser
         """
         stream = io.TextIOWrapper(io.BytesIO(code_text), encoding="utf8")
-   
+
         self.scanner = MyScanner(stream, self.language)
         self.keywords = []
         self.operations = []

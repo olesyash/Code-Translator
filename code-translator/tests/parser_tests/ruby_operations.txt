@@ -1,0 +1,31 @@
+x = 1           #=>1
+x += x          #=>2
+x -= x          #=>0
+x *= x          #=>16
+x **= x         #=>18446744073709551616 # Raise to the power
+x /= x          #=>1
+
+puts x == y
+puts y > x
+
+if y > x then
+    puts "y is greater than x"
+end
+
+puts ~ 7   # prints -8
+puts ~ -8  # prints 7
+
+puts 6 & 3  # prints 2
+puts 3 & 6  # prints 2
+
+puts 6 ^ 3  # prints 5
+puts 3 ^ 6  # prints 5
+
+puts 6 | 3  # prints 7
+puts 3 | 6  # prints 7
+
+puts 6 << 1  # prints 12
+puts 1 << 6  # prints 64
+
+puts 6 >> 1  # prints 3
+puts 1 >> 6  # prints 0

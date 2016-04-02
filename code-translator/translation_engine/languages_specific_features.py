@@ -14,7 +14,7 @@ comments_symbols = Str('#', '"', "'")
 
 str_symbol1 = Str('"')
 str_symbol2 = Str("'")
-class_keyword = Str('class')
+default_class_keyword = Str('class')
 
 # ----------------------------------------- Python -----------------------------------------------------------
 # Keywords:
@@ -37,10 +37,6 @@ python_comment_start2 = python_comment_end2 = Str('"""')
 # Function definition recognize:
 python_func_def = Str('def')
 python_func_start = '('
-python_ignore_state = ":"
-python_func_end = Str(':')
-python_any_but = '(:'
-python_func_ignore = Str('(:')
 
 python_describe_class_keyword = Str()
 # ----------------------------------------- Java -----------------------------------------------------------
@@ -66,76 +62,91 @@ java_start_comment_symb = Str('//')
 java_comment_start1 = Str('/*')
 java_comment_end1 = Str('*/')
 # Function definition word
-#java_func_def = Str()
 java_func_def = Str('public', 'private')
 java_func_start = '('
-java_func_end = Str(')')
-java_ignore_state = ")"
-java_any_but = '('
-java_func_ignore = Str('(')
 
 # class definition
 java_describe_class_keyword = Str('public', 'private')
-# --------------------------------------------------------------------------------------------------------
+
+# ------------------------------------------- Ruby ---------------------------------------------------------
+
+ruby_keywords = Str('BEGIN', 'do', 'next', 'then', 'END', 'else', 'alias', 'elsif', 'not',
+                    'undef', 'and', 'end', 'or', 'unless', 'begin', 'ensure', 'redo', 'until', 'break',
+                    'rescue', 'when', 'case', 'for', 'retry', 'while', 'if', 'return',
+                    'def',	'in', 'self', '__FILE__', 'defined?', 'module', 'super', '__LINE__', '__ENCODING__',
+                    'yield', '__END__')
+
+ruby_boolean = Str('true', 'false', 'nil')
+
+ruby_operations = Str('+', '-', '*', '/', '%', '**', '==','.eql?', '!=', '<', '<=', '>', '>=', '=', '<=>', '===',
+                      '|', '^', '~', '<<', '>>', '&&', '||', '!', '+=', '-=', '*=', '/=', '%=', '|=', '<<=', '>>=',
+                      '**=', 'equal?', '&', '?', ':', '..', '...', '::')
+
+ruby_add_library = Str('require ')
+
+ruby_start_comment_symb = Str('#')
+
+ruby_comment_start = Str('=begin')
+ruby_comment_end = Str('=end')
+
+# -----------------------------------------------------------------------------------------------------------
 languages_keywords = {"Java": java_keywords,
-                      "Python": python_keywords}
+                      "Python": python_keywords,
+                      "Ruby": ruby_keywords}
 
 languages_literals = {"Java": java_boolean,
-                      "Python": python_boolean}
+                      "Python": python_boolean,
+                      "Ruby": ruby_boolean}
 
 languages_operations = {"Java": java_operations,
-                        "Python": python_operations}
+                        "Python": python_operations,
+                        "Ruby": ruby_operations}
 
 languages_add_library = {"Java": java_add_library,
-                         "Python": python_add_library}
+                         "Python": python_add_library,
+                         "Ruby": ruby_add_library}
 
 languages_start_comment_symb = {"Java": java_start_comment_symb,
-                                "Python": python_start_comment_symb}
+                                "Python": python_start_comment_symb,
+                                "Ruby": ruby_start_comment_symb}
 
 languages_comment_start1 = {"Java": java_comment_start1,
-                            "Python": python_comment_start1}
+                            "Python": python_comment_start1,
+                            "Ruby": ruby_comment_start}
 
 languages_comment_end1 = {"Java": java_comment_end1,
-                          "Python": python_comment_end1}
+                          "Python": python_comment_end1,
+                          "Ruby": ruby_comment_end}
 
 languages_comment_start2 = {"Java": java_comment_start1,
-                            "Python": python_comment_start2}
+                            "Python": python_comment_start2,
+                            "Ruby": ruby_comment_start}
 
 languages_comment_end2 = {"Java": java_comment_end1,
-                          "Python": python_comment_end2}
+                          "Python": python_comment_end2,
+                          "Ruby": ruby_comment_end}
 
 languages_str_symbol1 = {"Java": str_symbol1,
-                         "Python": str_symbol1}
+                         "Python": str_symbol1,
+                         "Ruby": str_symbol1}
 
 languages_str_symbol2 = {"Java": str_symbol2,
-                         "Python": str_symbol2}
+                         "Python": str_symbol2,
+                         "Ruby": str_symbol2}
 
 languages_func_def = {"Java": java_func_def,
-                      "Python": python_func_def}
+                      "Python": python_func_def,
+                       "Ruby": Str()}
 
 languages_func_start = {"Java": java_func_start,
-                        "Python": python_func_start}
+                        "Python": python_func_start,
+                        "Ruby": Str()}
 
-languages_func_ignore = {"Java": java_func_ignore,
-                         "Python": python_func_ignore}
-
-languages_func_end = {"Java": java_func_end,
-                      "Python": python_func_end}
-
-languages_func_any_but = {"Java": java_any_but,
-                          "Python": python_any_but}
-
-languages_ignore_state = {"Java": java_ignore_state,
-                          "Python": python_ignore_state}
-
-languages_class_keyword = {"Java": class_keyword,
-                           "Python": class_keyword}
-
-languages_describe_class_keyword = {"Java": java_describe_class_keyword,
-                                    "Python": python_describe_class_keyword}
+languages_class_keyword = {"Java": default_class_keyword,
+                           "Python": default_class_keyword,
+                           "Ruby": default_class_keyword}
 
 
-python_symbols_url = "https://docs.python.org/2/library/stdtypes.html#index-9"
 
 # Supported languages:
 languages = ["Java", "Python", "C", "C++", "C#", "R", "PHP", "JS", "Ruby", "Matlab"]
@@ -154,10 +165,13 @@ python_statements = ['for', 'if', 'else', 'while']
 java_statements = ['for', 'if', 'else', 'while']
 '''
 
-#python_symbols_url = "http://www.tutorialspoint.com/python/python_basic_operators.htm"
-#java_symbols_url = "http://www.tutorialspoint.com/java/java_basic_operators.htm"
+python_symbols_url = "http://www.tutorialspoint.com/python/python_basic_operators.htm"
+java_symbols_url = "http://www.tutorialspoint.com/java/java_basic_operators.htm"
+ruby_symbols_url = "http://www.tutorialspoint.com/ruby/ruby_operators.htm"
 
-java_symbols_url = "https://docs.oracle.com/javase/tutorial/java/nutsandbolts/opsummary.html"
+#python_symbols_url = "https://docs.python.org/2/library/stdtypes.html#index-9"
+#java_symbols_url = "https://docs.oracle.com/javase/tutorial/java/nutsandbolts/opsummary.html"
+
 
 default_urls = {
     "Python": "https://wiki.python.org",

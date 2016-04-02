@@ -1,0 +1,6 @@
+def getstr
+    print "Please enter a test string: "
+    str = gets
+    return str unless str
+    return str.chomp
+end
