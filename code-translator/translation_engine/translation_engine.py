@@ -42,7 +42,19 @@ class TranslationEngine():
                 res = self.add_keyword(word, word_type)
                 if res:
                     translated_list.append(res)
+                else:
+                    translated_list.append(self.prepare_mock_answer(word, word_type, self.language))
         return translated_list, final_code_text
+
+    def prepare_mock_answer(self, keyword, word_type, language):
+        data = dict()
+        data['language'] = language
+        data['keyword'] = keyword
+        data['type'] = word_type
+        data['link'] = ""
+        data['translation'] = "It's probably user's function definition"
+        data['approved'] = "False"
+        return data
 
     def add_keyword(self, keyword, word_type):
         """
@@ -51,7 +63,7 @@ class TranslationEngine():
         :param word_type: string
         """
         url = self.google_search(keyword, word_type)
-        logging.info("URL" + url)
+        logging.info("URL" + str(url))
         la = LanguagesAPI()
         try:
             result, code = la.http_request_using_urlfetch(http_url=url)

@@ -188,7 +188,7 @@ class MyScanner(Scanner):
             (comment_start1, self.start_comments),
             State('comments', [
                 (comment_end1, self.start_comments),
-                (comments_words, IGNORE),
+                (comments_words, COMMENT),
                 (Rep1(Any(" \t\n")), IGNORE)
             ]),
 
@@ -196,7 +196,7 @@ class MyScanner(Scanner):
             (comment_start2, self.start_comments),
             State('comments2', [
                 (comment_end2, self.start_comments),
-                (comments_words, IGNORE),
+                (comments_words, COMMENT),
                 (Rep1(Any(" \t\n")), IGNORE)
             ]),
 
@@ -217,7 +217,7 @@ class MyScanner(Scanner):
             (start_comment_symb, self.start_comment),
             State('comment', [
                 (Eol, Begin('')),
-                (name | all_symbols | Str(" "), "comment")
+                (name | all_symbols | Str(" "), COMMENT)
 
             ]),
             # Ignore numbers

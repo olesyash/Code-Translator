@@ -150,7 +150,7 @@ $("#tranalslateBtn").click(
                     }
                 },
                 success: function (response, message, jq) {
-                    $("#input-card").append('<span class="black-text" id="translation-card"></span>');
+                   // $("#input-card").append('<span id="translation-card"></span>');
                     console.log(response);
                     showTranslation(response);
 
@@ -217,7 +217,15 @@ function showTranslation(res) {
     $('.input-field').hide();
     $('#input-card').removeClass('hide')
         .show();
-    $('#translation-card').html(res[0]);
+    var j;
+
+    var text = res[0];
+    text = text.replace(/\n/g, "<br/>");
+    //text = text.replace(/ /g, "&nbsp");
+
+    //"&nbsp"
+
+    $('#translation-card').html(text);
     response = res[1];
     var btn = document.getElementById("tranalslateBtn");
     btn.className = "waves-effect waves-light btn right";
@@ -242,7 +250,7 @@ function createCard(translatedText, link, i) {
 
     img.className = "exit";
     var text_el = document.createElement("div"); //<div class="black-text" id="result-card"></div>
-    text_el.setAttribute("class", "card-content black-text result-card");
+    text_el.setAttribute("class", "card-content result-card");
     text_el.innerHTML = translatedText;
     var action = document.createElement("div");
     action.className = "card-action";

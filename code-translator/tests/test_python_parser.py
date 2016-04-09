@@ -94,7 +94,7 @@ class MyParserPythonTest(unittest.TestCase):
         """
         This test is testing parser for finding all keywords in real python code
         """
-        self.filename = "test_result_parser.py"
+        self.filename = "parser_tests/test_result_parser.py"
         expected_keywords = ['import', 'from', 'import', 'from', 'import', 'from', 'import', 'from',
                              'import', 'class', 'def', 'def', 'in', 'def', 'def', 'print', 'in', 'def']
         self.run_parser()

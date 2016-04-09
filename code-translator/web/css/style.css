@@ -10,54 +10,64 @@
 .keyword {
     color: red;
 }
+
 /*This class describing functions - will be orange*/
 .function {
     color: darkorange;
 }
+
 /*This class describing operators - will be blue*/
 .operation {
     color: blue;
 }
+
 /*This class describing libraries - will be purple*/
 .library {
     color: purple;
 }
+
 /*This class describing comments - will be grey*/
 .comment {
     color: grey;
 }
+
 /*This class describing string - will be green*/
 .string {
     color: green;
 }
 
-
-.card.response-card  h1 {
-  font-size: 1.8rem !important;
-  line-height: 110%;
-  margin: 2.1rem 0 1.68rem 0;
+#translation-card {
+    width: inherit;
+    word-wrap: break-word;
 }
 
-.card.response-card  h2 {
-  font-size: 1.8rem !important;
-  line-height: 110%;
-  margin: 1.78rem 0 1.424rem 0;
-}
-.mytext{
-     font-size: 1.3rem;
-     color: #000e39 ;
+.card.response-card h1 {
+    font-size: 1.8rem !important;
+    line-height: 110%;
+    margin: 2.1rem 0 1.68rem 0;
 }
 
+.card.response-card h2 {
+    font-size: 1.8rem !important;
+    line-height: 110%;
+    margin: 1.78rem 0 1.424rem 0;
+}
 
-.darken{
+.mytext {
+    font-size: 1.3rem;
+    color: #000e39;
+}
+
+.darken {
     height: 100%;
     width: 100%;
     top: 0;
     position: fixed;
     z-index: 9999;
-    background: rgba(0,0,0,0.5);
+    background: rgba(0, 0, 0, 0.5);
 }
-.darken .loader-text{
+
+.darken .loader-text {
     position: fixed;
     z-index: 9999;
     font-size: 25px;
@@ -65,92 +75,101 @@
     top: 36vh;
     left: 30vw;
 }
+
 .darken .loader {
-  margin: 60px auto;
-  font-size: 10px;
-  position: fixed;
+    margin: 60px auto;
+    font-size: 10px;
+    position: fixed;
 
     z-index: 999;
     top: 40vh;
     left: 45vw;
 
-  text-indent: -9999em;
-  border-top: 1.1em solid #e0e0e0;
-  border-right: 1.1em solid #e0e0e0;
-  border-bottom: 1.1em solid #e0e0e0;
-  border-left: 1.1em solid 	#00838f;
+    text-indent: -9999em;
+    border-top: 1.1em solid #e0e0e0;
+    border-right: 1.1em solid #e0e0e0;
+    border-bottom: 1.1em solid #e0e0e0;
+    border-left: 1.1em solid #00838f;
 
-
-  -webkit-transform: translateZ(0);
-  -ms-transform: translateZ(0);
-  transform: translateZ(0);
-  -webkit-animation: load8 1.1s infinite linear;
-  animation: load8 1.1s infinite linear;
+    -webkit-transform: translateZ(0);
+    -ms-transform: translateZ(0);
+    transform: translateZ(0);
+    -webkit-animation: load8 1.1s infinite linear;
+    animation: load8 1.1s infinite linear;
 }
+
 .loader,
 .loader:after {
-  border-radius: 50%;
-  width: 10em;
-  height: 10em;
+    border-radius: 50%;
+    width: 10em;
+    height: 10em;
 }
+
 @-webkit-keyframes load8 {
-  0% {
-    -webkit-transform: rotate(0deg);
-    transform: rotate(0deg);
-  }
-  100% {
-    -webkit-transform: rotate(360deg);
-    transform: rotate(360deg);
-  }
+    0% {
+        -webkit-transform: rotate(0deg);
+        transform: rotate(0deg);
+    }
+    100% {
+        -webkit-transform: rotate(360deg);
+        transform: rotate(360deg);
+    }
 }
+
 @keyframes load8 {
-  0% {
-    -webkit-transform: rotate(0deg);
-    transform: rotate(0deg);
-  }
-  100% {
-    -webkit-transform: rotate(360deg);
-    transform: rotate(360deg);
-  }
+    0% {
+        -webkit-transform: rotate(0deg);
+        transform: rotate(0deg);
+    }
+    100% {
+        -webkit-transform: rotate(360deg);
+        transform: rotate(360deg);
+    }
 }
 
-
-#search-container, #cards-container{
+#search-container, #cards-container {
     display: block;
 }
-#cards-container{
+
+#cards-container {
 
     /*margin: 0 auto;*/
     display: table;
     /*align-content: space-between;*/
 }
-.exit{
+
+.exit {
     top: 0;
     display: inline-block;
     left: 0;
     position: relative;
 }
+
 .exit:hover {
     box-shadow: 1px 2px 3px rgb(0, 0, 0);
 }
-#input-card, #input_text{
+
+#input-card, #input_text {
     font-size: 24px;
 }
 
-.response-card{
+.response-card {
     display: inline-block;
     position: absolute !important;
     /*display: initial -no none-no;  table-cell (no) inline- no, table -no block-no run-in -no flex-no list-iitem-no ruby-no*/
     height: 300px;
     width: 300px;
 }
-.card-action a{
-    color: #bf360c!important;
+
+.card-action a {
+    color: #bf360c !important;
 }
+
 .card-action a:hover {
-    color: #ff5722  !important;
+    color: #ff5722 !important;
 }
-.response-card .result-card{
+
+.response-card .result-card {
     height: 75%;
     width: 100%;
     margin-right: -18px;
@@ -161,55 +180,58 @@
 
 nav ul a,
 nav .brand-logo {
-  color: #444;
+    color: #444;
 }
 
 p {
-  line-height: 2rem;
+    line-height: 2rem;
 }
 
 .button-collapse {
-  color: #26a69a;
+    color: #26a69a;
 }
 
 .parallax-container {
-  min-height: 380px;
-  line-height: 0;
-  height: auto;
-  color: rgba(255,255,255,.9);
+    min-height: 380px;
+    line-height: 0;
+    height: auto;
+    color: rgba(255, 255, 255, .9);
 }
-  .parallax-container .section {
+
+.parallax-container .section {
     width: 100%;
-  }
-
-@media only screen and (max-width : 992px) {
-  .parallax-container .section {
-    position: absolute;
-    top: 40%;
-  }
-  #index-banner .section {
-    top: 10%;
-  }
 }
 
-@media only screen and (max-width : 600px) {
-  #index-banner .section {
-    top: 0;
-  }
+@media only screen and (max-width: 992px) {
+    .parallax-container .section {
+        position: absolute;
+        top: 40%;
+    }
+
+    #index-banner .section {
+        top: 10%;
+    }
+}
+
+@media only screen and (max-width: 600px) {
+    #index-banner .section {
+        top: 0;
+    }
 }
 
 .icon-block {
-  padding: 0 15px;
+    padding: 0 15px;
 }
+
 .icon-block .material-icons {
-  font-size: inherit;
+    font-size: inherit;
 }
 
 footer.page-footer {
-  margin: 0;
+    margin: 0;
 }
 
-body{
+body {
     font-family: 'open sans', arial, sans-serif;
 }
 

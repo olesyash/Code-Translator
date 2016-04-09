@@ -13,6 +13,8 @@ class LanguagesAPI():
         :return: content, status code
         :except WrongURL exception
         """
+        if http_url == None:
+            raise WrongURL
         if params is not None:
             url = self.prepare_get_url(http_url, params)
         else:
