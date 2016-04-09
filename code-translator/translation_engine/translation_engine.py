@@ -30,8 +30,8 @@ class TranslationEngine():
         """
         logging.info("Got request from client " + code_text)
         translated_list = []
-        keywords_list = self.parser_obj.run_parser(code_text)
-        print keywords_list
+        keywords_list, parsed = self.parser_obj.run_parser(code_text)
+        final_code_text = self.reformat_parsed_text(code_text, parsed)
         for word, word_type in keywords_list.iteritems():
             logging.info("in keywords, the word is: " + word)
             try:
@@ -39,11 +39,10 @@ class TranslationEngine():
                 translated_list.append(DAL.get_data_from_db(word, self.language))
             except DataNotExistException:
                 logging.info("Not found in DB")
-                #word_type = self.parser_obj.get_word_type(word)
                 res = self.add_keyword(word, word_type)
                 if res:
                     translated_list.append(res)
-        return translated_list
+        return translated_list, final_code_text
 
     def add_keyword(self, keyword, word_type):
         """
@@ -94,4 +93,52 @@ class TranslationEngine():
         g.pages = 1
         urls = g.get_urls()
         print urls
-        return urls[0]
+        for url in urls:
+            if "pdf" not in url:
+                return url
+
+    def reformat_parsed_text(self, code_text, parsed_list):
+        """
+        This function get parsed object and creating new text with suitable tags
+        parsed list is a list of tuples, each tuple has (type, word, ('', line, location))
+        :param code_text: string (original code text)
+        :param parsed_list: list of tuples (parsed object)
+        :return: formatted code text with tags
+        :rtype string
+        """
+        lines = code_text.split('\n')
+        cur_line = 1
+        shift = 0
+        for element in parsed_list:
+            word_type = element[0]
+            word = element[1]
+            line = element[2][1]
+            if cur_line != line:
+                cur_line = line
+                shift = 0
+            char_place = element[2][2] + shift
+            print "char place " + str(char_place)
+            text = lines[line-1]
+            print "text before if: " + text
+            print word
+            print text[char_place:char_place+len(word)]
+            print(text[char_place:char_place+len(word)] == word)
+            if text[char_place:char_place+len(word)] == word:
+                print "in if"
+                text = text[:char_place] + self.add_tag(word_type, word) + text[char_place+len(word):]
+                shift += 22 + len(word_type)
+                print "shift " + str(shift)
+                print "text " + text
+                lines[line-1] = text
+        final_code_text = '\n'.join(lines)
+        print "final code: " + final_code_text
+        return final_code_text
+
+    def add_tag(self, _type, word):
+        """
+        This function add html tag for word to describe it's type
+        :param _type: string - type of word
+        :param word: string - the word need translation
+        :return: the word with suitable tag describing the type
+        """
+        return '<span class="' + _type + '">' + word + '</span>'

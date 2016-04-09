@@ -20,11 +20,12 @@ This Class will perform the connection between web to server.
 """
 
 import webapp2
-
+import logging
 import jinja2
 from translation_engine.translation_engine import *
 from engine.result_parser import *
 from translation_engine.languages_specific_features import *
+
 
 
 JINJA_ENVIRONMENT = jinja2.Environment(
@@ -54,9 +55,12 @@ class GetTranslation(webapp2.RequestHandler):
         code_text = self.request.body
         dic = json.loads(code_text)
         te = TranslationEngine(dic['language'])
-
-        translated_text = te.get_translation((dic["text"]).encode('utf8'))
-        json_response = json.dumps(translated_text)
+        response_list = []
+        translated_text, final_code_text = te.get_translation((dic["text"]).encode('utf8'))
+        logging.info("in server interface " + final_code_text)
+        response_list.append(final_code_text)
+        response_list.append(translated_text)
+        json_response = json.dumps(response_list)
         self.response.headers['Content-Type'] = 'application/json'
         self.response.write(json_response)
 

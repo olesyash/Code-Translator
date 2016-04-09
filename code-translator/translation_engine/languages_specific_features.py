@@ -6,6 +6,9 @@ from lib.plex import *
 KEYWORD = "keyword"
 LITERAL = "literal"
 OPERATION = "operation"
+FUNCTION = "function"
+COMMENT = "comment"
+STRING = "string"
 
 symbols = Str(',', '.', '_', '!', '/', '(', ')', ':', '-', '[', ']', '{', '}', '@', '%', '^', '&',
               '*', '=', '`', '$', '+', '|', '\\', '?', '<', '>')
@@ -81,7 +84,7 @@ ruby_keywords = Str('BEGIN', 'do', 'next', 'then', 'END', 'else', 'alias', 'elsi
 
 ruby_boolean = Str('true', 'false', 'nil')
 
-ruby_operations = Str('+', '-', '*', '/', '%', '**', '==','.eql?', '!=', '<', '<=', '>', '>=', '=', '<=>', '===',
+ruby_operations = Str('+', '-', '*', '/', '%', '**', '=~', '!~', '==','.eql?', '!=', '<', '<=', '>', '>=', '=', '<=>', '===',
                       '|', '^', '~', '<<', '>>', '&&', '||', '!', '+=', '-=', '*=', '/=', '%=', '|=', '<<=', '>>=',
                       '**=', 'equal?', '&', '?', ':', '..', '...', '::')
 
@@ -162,7 +165,7 @@ languages_function_call_must_char = {"Java": True,
                                      "Ruby": False}
 
 # Supported languages:
-languages = ["Java", "Python", "C", "C++", "C#", "R", "PHP", "JS", "Ruby", "Matlab"]
+languages = ["Java", "Python", "Ruby"]
 
 '''
 def get_statements(language):

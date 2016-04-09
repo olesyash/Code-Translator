@@ -6,6 +6,31 @@
  * Made By MaterializeCSS.com
  */
 
+/*This class describing keywords - will be red*/
+.keyword {
+    color: red;
+}
+/*This class describing functions - will be orange*/
+.function {
+    color: darkorange;
+}
+/*This class describing operators - will be blue*/
+.operation {
+    color: blue;
+}
+/*This class describing libraries - will be purple*/
+.library {
+    color: purple;
+}
+/*This class describing comments - will be grey*/
+.comment {
+    color: grey;
+}
+/*This class describing string - will be green*/
+.string {
+    color: green;
+}
+
 
 .card.response-card  h1 {
   font-size: 1.8rem !important;

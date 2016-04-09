@@ -33,6 +33,7 @@ class JavaTest(unittest.TestCase):
         result, code = a.http_request_using_urlfetch("https://docs.oracle.com/javase/tutorial/java/nutsandbolts/for.html", {})
         b = ResultParser("Java")
         res = b.find_by_default_id(result)
+        print res
         self.assertTrue(cntb in res)
 
     def test_find_by_id_get_for_statement_python(self):

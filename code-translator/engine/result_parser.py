@@ -21,7 +21,12 @@ class ResultParser():
         """
         soup = BeautifulSoup(html_data, 'html.parser')
         id_text = possible_id[self.language]
+
         found_needed_data = soup.find(id=id_text)
+        try:
+            str(found_needed_data)
+        except RuntimeError as e:
+            found_needed_data = None
         print(found_needed_data)
         if found_needed_data is not None:
             return str(found_needed_data)

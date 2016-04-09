@@ -69,11 +69,12 @@ class MyScanner(Scanner):
         self.libraries.append(lib)
         self.produce("library", lib)
 
-    def start_comment(self, a):
+    def start_comment(self, a, token):
         """
         This function called when comment starts
         Start state "comment"
         """
+        self.produce("comment", token)
         logging.debug("in comment")
         self.begin('comment')
 
@@ -103,9 +104,11 @@ class MyScanner(Scanner):
         logging.debug("check call function " + text)
 
         if self.cur_char == self.func_call_char:
+            self.produce(FUNCTION, text)
             self.functions_calls.append(text)
         elif not self.must_func_call_char:
             if text in self.functions:
+                self.produce(FUNCTION, text)
                 self.functions_calls.append(text)
 
     def start_string(self, a, text):
@@ -164,19 +167,20 @@ class MyScanner(Scanner):
 
         all_symbols = symbols | comments_symbols | string_symbol | terminate_line_symb
         comments_words = Rep1(letter | number | Any('._') | all_symbols)
+        string_words = Rep1(letter | number | symbols | Str(" "))
 
         self.lexicon = Lexicon([
             # Ignore strings
-            (Str(str_symbol1),       Begin('string1')),
+            (Str(str_symbol1), Begin('string1')),
             State('string1', [
-                (AnyBut(str_symbol1),  IGNORE),
-                (escape_character,     IGNORE),
+                (escape_character, STRING),
+                (string_words, STRING),
                 (Str(str_symbol1), Begin('')),
             ]),
-            (Str(str_symbol2),       Begin('string2')),
+            (Str(str_symbol2), Begin('string2')),
             State('string2', [
-                (AnyBut(str_symbol2),  IGNORE),
-                (escape_character,     IGNORE),
+                (escape_character, STRING),
+                (string_words, STRING),
                 (Str(str_symbol2), Begin('')),
             ]),
 
@@ -206,14 +210,14 @@ class MyScanner(Scanner):
             (operations, OPERATION),
 
             # Ignore symbols
-            (terminate_line_symb,      IGNORE),
+            (terminate_line_symb, IGNORE),
             (symbols | string_symbol, IGNORE),
 
             # Ignore one line comments
-            (start_comment_symb, Begin('comment')),
+            (start_comment_symb, self.start_comment),
             State('comment', [
                 (Eol, Begin('')),
-                (name | all_symbols | Str(" "), IGNORE)
+                (name | all_symbols | Str(" "), "comment")
 
             ]),
             # Ignore numbers
@@ -279,6 +283,7 @@ class Parser():
         self.operations = []
         self.literals = []
         self.full_list = {}
+        self.list_of_tuples = []
         self.scanner.libraries = []
 
         while 1:
@@ -287,7 +292,7 @@ class Parser():
             print self.scanner.position()
             if token[0] == KEYWORD:
                 self.keywords.append(token[1])
-            elif token[0] == "operation":
+            elif token[0] == OPERATION:
                 self.operations.append(token[1])
             elif token[0] == LITERAL:
                 self.literals.append(token[1])
@@ -296,6 +301,11 @@ class Parser():
             elif token[0] == "unrecognized":
                 pass
                 # raise errors.UnrecognizedInput(self.scanner, '')
+            elif token[0] == COMMENT or token[0] == STRING:
+                parsed = (token[0], token[1], self.scanner.position())
+                self.list_of_tuples.append(parsed)
             else:
                 self.full_list[token[1]] = token[0]
-        return self.full_list
+                parsed = (token[0], token[1], self.scanner.position())
+                self.list_of_tuples.append(parsed)
+        return self.full_list, self.list_of_tuples
