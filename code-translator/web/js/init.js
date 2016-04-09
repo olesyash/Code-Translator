@@ -150,7 +150,6 @@ $("#tranalslateBtn").click(
                     }
                 },
                 success: function (response, message, jq) {
-                   // $("#input-card").append('<span id="translation-card"></span>');
                     console.log(response);
                     showTranslation(response);
 
@@ -159,7 +158,7 @@ $("#tranalslateBtn").click(
         }
         else //back button was pressed, go back to translation
         {
-            $("#translation-card").remove(); //remove the card with translation
+            $("#translation-card").empty(); //remove the card with translation
             clearCards(); //Clear cards list
             $('.input-field').show();
             $('#input-card').hide();
