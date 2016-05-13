@@ -4,16 +4,15 @@ from lib.plex import *
 
 # ----------------------------------------- Main -----------------------------------------------------------
 KEYWORD = "keyword"
+STATEMENT = "statement"
 LITERAL = "literal"
 OPERATION = "operation"
 FUNCTION = "function"
 COMMENT = "comment"
 STRING = "string"
 
-symbols = Str(',', '.', '_', '!', '/', '(', ')', ':', '-', '[', ']', '{', '}', '@', '%', '^', '&',
-              '*', '=', '`', '$', '+', '|', '\\', '?', '<', '>')
-
-
+symbols = Str(',', '.', '_', '!', '/', '(', ')', ':', '-', '[', ']', '{', '}', '@', '%', '^', '&', '*', '=', '`', '$',
+              '+', '|', '\\', '?', '<', '>')
 
 terminate_line_symb = Str(';')
 
@@ -27,15 +26,19 @@ default_function_call_char = '('
 
 # ----------------------------------------- Python -----------------------------------------------------------
 # Keywords:
-python_keywords = Str('as', 'assert', 'break', 'continue', 'del', 'elif', 'else', 'except', 'exec',
-                      'finally', 'for', 'global', 'if', 'is', 'lambda', 'pass', 'and', 'or', 'not',
-                      'print', 'raise', 'return', 'try', 'while', 'with', 'yield', 'in')
+python_keywords = Str('as', 'assert', 'del', 'elif', 'else', 'except', 'exec', 'finally', 'global', 'is', 'lambda',
+                      'and', 'or', 'not', 'print', 'raise', 'try', 'with', 'yield', 'in','for', 'if', 'while', 'break',
+                      'continue', 'pass', 'return')
+
+# Statements
+python_statements = ['for', 'if', 'else', 'while', 'break', 'continue', 'pass', 'return']
+
 # Literals:
 python_boolean = Str('True', 'False', 'None')
 # Operations:
-python_operations = Str('<', '<=', '>', '>=', '=', '==', '!=', '+', '-', '*', '**', '/', '//', '%',
-                        '<>', '+=', '-=', '*=', '/=', '%=', '**=', '//=', '&', '|', '^', '~', '<<',
-                        '>>')
+python_operations = Str('<', '<=', '>', '>=', '=', '==', '!=', '+', '-', '*', '**', '/', '//', '%', '<>', '+=', '-=',
+                        '*=', '/=', '%=', '**=', '//=', '&', '|', '^', '~', '<<', '>>')
+
 # The keywords defines library adding:
 python_add_library = Str('import', 'from')
 # One line comment symbol:
@@ -57,12 +60,15 @@ java_keywords = Str('abstract',	'continue',	'for', 'new', 'switch', 'assert', 'd
                     'int', 'short', 'try', 'char', 'final', 'interface', 'static', 'void',
                     'finally', 'long', 'strictfp',  'volatile', 'const', 'float', 'native', 'super',
                     'while')
+# Statements
+java_statements = ['for', 'if', 'else', 'while', 'break', 'continue', 'return', 'switch', 'case', 'do']
+
 # Literals:
 java_boolean = Str('true', 'false', 'null')
 # Operations:
-java_operations = Str('+', '-', '*', '/', '%', '++', '--',  '==', '!=', '<', '<=', '>', '>=', '=', '&',
-                      '|', '^', '~', '<<', '>>', '>>>', '&&', '||', '!', '+=', '-=', '*=', '/=', '%=',
-                      '<<=', '>>=', '&=', '^=', '|=', '?', ':')
+java_operations = Str('+', '-', '*', '/', '%', '++', '--',  '==', '!=', '<', '<=', '>', '>=', '=', '&', '|', '^', '~',
+                      '<<', '>>', '>>>', '&&', '||', '!', '+=', '-=', '*=', '/=', '%=', '<<=', '>>=', '&=', '^=', '|=',
+                      '?', ':')
 # The keywords defines library adding:
 java_add_library = Str('import')
 # One line comment symbol:
@@ -77,27 +83,35 @@ java_func_def = Str('public', 'private')
 java_describe_class_keyword = Str('public', 'private')
 
 # ------------------------------------------- Ruby ---------------------------------------------------------
-
+# Keywords:
 ruby_keywords = Str('BEGIN', 'do', 'next', 'then', 'END', 'else', 'alias', 'elsif', 'not',
                     'undef', 'and', 'end', 'or', 'unless', 'begin', 'ensure', 'redo', 'until', 'break',
                     'rescue', 'when', 'case', 'for', 'retry', 'while', 'if', 'return',
                     'in', 'self', '__FILE__', 'defined?', 'module', 'super', '__LINE__', '__ENCODING__',
                     'yield', '__END__')
-
+# Statements
+ruby_statements = ['for', 'if', 'else', 'unless', 'case', 'when', 'while', 'until', 'break', 'next', 'redo', 'retry', ]
+# Literals:
 ruby_boolean = Str('true', 'false', 'nil')
-
-ruby_operations = Str('+', '-', '*', '/', '%', '**', '=~', '!~', '==', '.eql?', '!=', '<', '<=', '>', '>=', '=', '<=>', '===',
-                      '|', '^', '~', '<<', '>>', '&&', '||', '!', '+=', '-=', '*=', '/=', '%=', '|=', '<<=', '>>=',
-                      '**=', 'equal?', '&', '?', ':', '..', '...', '::')
-
+# Operations:
+ruby_operations = Str('+', '-', '*', '/', '%', '**', '=~', '!~', '==', '.eql?', '!=', '<', '<=', '>', '>=', '=', '<=>',
+                      '===', '|', '^', '~', '<<', '>>', '&&', '||', '!', '+=', '-=', '*=', '/=', '%=', '|=', '<<=',
+                      '**=', 'equal?', '&', '?', ':', '..', '...', '::', '>>=')
+# The keywords defines library adding:
 ruby_add_library = Str('require')
+# One line comment symbol:
 ruby_start_comment_symb = Str('#')
+# 2 lines comments symbols:
 ruby_comment_start = Str('=begin')
 ruby_comment_end = Str('=end')
 ruby_escape_string_character = Str("\'")
 ruby_func_def = Str('def')
 
 # -----------------------------------------------------------------------------------------------------------
+languages_statements = {"Java": java_statements,
+                        "Python": python_statements,
+                        "Ruby": ruby_statements}
+
 languages_keywords = {"Java": java_keywords,
                       "Python": python_keywords,
                       "Ruby": ruby_keywords}

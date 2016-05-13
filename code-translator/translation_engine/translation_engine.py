@@ -89,6 +89,11 @@ class TranslationEngine():
         else:
             return None
 
+    def classify_keywords(self, keyword, word_type):
+        if word_type == KEYWORD and keyword in languages_statements[self.language]:
+            return STATEMENT
+        return KEYWORD
+
     def google_search(self, keyword, word_type, site=True):
         """
         Search in google for keyword, returns first url of website with answer.
@@ -99,18 +104,18 @@ class TranslationEngine():
         """
         key = "AIzaSyDM_PtVl-yhPmhgft6Si02vMJmOCatFK_w"
         _id = "000167123881013238899:uys_fzjgaby"
-        google_search_url = "https://www.googleapis.com/customsearch/v1?"
 
+        word_type = self.classify_keywords(keyword, word_type)
         if site:
             search_string = self.language + " " + keyword + " " + word_type + " site:" + default_urls[self.language]
         else:
             search_string = self.language + " " + keyword + " " + word_type
         logging.info("search in google: " + search_string)
         service = build("customsearch", "v1",
-                    developerKey=key)
+                        developerKey=key)
         res_json = service.cse().list(
-          q=search_string,
-          cx=_id,
+            q=search_string,
+            cx=_id,
         ).execute()
         urls = []
         for i in res_json['items']:

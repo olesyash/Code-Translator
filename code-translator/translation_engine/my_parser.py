@@ -296,6 +296,7 @@ class Parser():
                 self.operations.append(token[1])
             elif token[0] == LITERAL:
                 self.literals.append(token[1])
+
             if token[0] is None:
                 break
             elif token[0] == "unrecognized":
