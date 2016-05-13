@@ -9,6 +9,9 @@ class DAL():
     #  User treatment functions
     # ----------------------------
 
+    def __init__(self):
+        pass
+
     @staticmethod
     def add_new_user(firstname, lastname, nickname, password, email, user_role):
         """
@@ -128,6 +131,21 @@ class DAL():
             return create_dict(res.language, res.keyword, res.type, res.link, res.translation, str(res.approved))
         else:
             raise DataNotExistException
+
+    @staticmethod
+    def set_approved(keyword, language, approved):
+        """
+        This function get keyword, language, approved and set approved to be approved
+        :param email:
+        :param role:
+        :except UserNotExistException
+        """
+        _qry = LanguagesData.find_keyword(keyword, language)
+        if _qry:
+            _qry.approved = approved
+            _qry.put()
+        else:
+            raise UserNotExistException()
 
 
 def create_dict(language, keyword, type, link, translation, approved):

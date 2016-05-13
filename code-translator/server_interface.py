@@ -20,11 +20,10 @@ This Class will perform the connection between web to server.
 """
 
 import webapp2
-import logging
 import jinja2
 from translation_engine.translation_engine import *
-from engine.result_parser import *
-from translation_engine.languages_specific_features import *
+from contribution_engine.contribution_engine import *
+import logging
 
 
 
@@ -45,6 +44,16 @@ class MainHandler(webapp2.RequestHandler):
         pass
 
 
+class ContributionHandler(webapp2.RequestHandler):
+    def get(self):
+        template_values = {}
+        template = JINJA_ENVIRONMENT.get_template('contribution_page.html')
+        self.response.write(template.render(template_values))
+
+    def post(self):
+        pass
+
+
 class GetTranslation(webapp2.RequestHandler):
     def get(self):
         json_response = json.dumps(languages)
@@ -52,11 +61,11 @@ class GetTranslation(webapp2.RequestHandler):
         self.response.write(json_response)
 
     def post(self):
-        code_text = self.request.body
-        dic = json.loads(code_text)
+        all_request = self.request.body
+        dic = json.loads(all_request)
         te = TranslationEngine(dic['language'])
-        response_list = []
         translated_text, final_code_text = te.get_translation((dic["text"]).encode('utf8'))
+        response_list = []
         logging.info("in server interface " + final_code_text)
         response_list.append(final_code_text)
         response_list.append(translated_text)
@@ -65,8 +74,27 @@ class GetTranslation(webapp2.RequestHandler):
         self.response.write(json_response)
 
 
+class Contribute(webapp2.RequestHandler):
+    def get(self):
+        pass
+
+    def post(self):
+        dic = json.loads(self.request.body)
+        keyword = dic['keyword']
+        language = dic['language']
+        ce = ContributionEngine(language, keyword)
+        res = ce.contribute()
+        logging.info("result " + res)
+        response = {}
+        response['response'] = res
+        json_response = json.dumps(response)
+        self.response.headers['Content-Type'] = 'application/json'
+        self.response.write(json_response)
+
 
 app = webapp2.WSGIApplication([
     ('/gettranslation', GetTranslation),
+    ('/contribute-page', ContributionHandler),
+    ('/contribute', Contribute),
     ('/', MainHandler)
 ], debug=True)

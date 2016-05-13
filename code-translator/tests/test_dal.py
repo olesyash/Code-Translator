@@ -30,7 +30,7 @@ class DALTest(unittest.TestCase):
         DAL.add_new_user("Olesya", "Shapira", "Oles_ka", "123", "olesya@list.ru", "admin")
         role = self.mydb.get_user_level("olesya@list.ru")
         print role
-        self.assertIsNotNone(role)
+        self.assertEqual(role, 'admin')
 
     def test_check_unique_user_exception_thrown_if_user_already_exist(self):
         """

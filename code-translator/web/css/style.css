@@ -6,6 +6,24 @@
  * Made By MaterializeCSS.com
  */
 
+#myrow {
+    position: relative !important;
+}
+
+#mycol {
+    position: absolute;
+    bottom: 15px;
+    left: 50%;
+}
+
+#keyword {
+    font-size: 19px;
+}
+
+#keyword-label{
+    font-size: 17px;
+}
+
 /*This class describing keywords - will be red*/
 .keyword {
     color: red;
@@ -101,9 +119,50 @@
 .loader,
 .loader:after {
     border-radius: 50%;
-    width: 10em;
-    height: 10em;
+    width: 5em;
+    height: 5em;
 }
+
+
+.loader2-text {
+    position: fixed;
+    z-index: 9999;
+    font-size: 25px;
+    color: #ffffff;
+    top: 36vh;
+    left: 30vw;
+}
+
+.loader2 {
+    margin: 60px auto;
+    font-size: 10px;
+    position: inherit;
+
+    z-index: 999;
+    top: 40vh;
+    left: 45vw;
+
+    text-indent: -9999em;
+    border-top: 1.1em solid #e0e0e0;
+    border-right: 1.1em solid #e0e0e0;
+    border-bottom: 1.1em solid #e0e0e0;
+    border-left: 1.1em solid #00838f;
+
+    -webkit-transform: translateZ(0);
+    -ms-transform: translateZ(0);
+    transform: translateZ(0);
+    -webkit-animation: load8 1.1s infinite linear;
+    animation: load8 1.1s infinite linear;
+}
+
+.loader2,
+.loader2:after {
+    border-radius: 50%;
+    width: 5em;
+    height: 5em;
+}
+
+
 
 @-webkit-keyframes load8 {
     0% {

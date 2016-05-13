@@ -22,7 +22,7 @@ class LanguagesAPI():
         try:
             result = urlfetch.fetch(url=url, deadline=30)
             return result.content, result.status_code
-        except urlfetch.InvalidURLError as e:
+        except:
             raise WrongURL
 
     def prepare_get_url(self, url, params):

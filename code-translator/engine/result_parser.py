@@ -35,7 +35,7 @@ class ResultParser():
 
     def find_by_id(self, html_data, given_id):
         """
-        This function get html text and return the content of specific class id that is given as paramrter
+        This function get html text and return the content of specific class id that is given as parameter
         :param html_data: html string
         :param given_id: string
         :return: string of the content by id or empty string if id not found in the html
@@ -73,8 +73,7 @@ class ResultParser():
         return strip_tags(html_text)
 
     def find_needed_info(self, plain_text, needed_info):
-        if needed_info in plain_text:
-            return True
+        return needed_info in plain_text
 
 
 '''

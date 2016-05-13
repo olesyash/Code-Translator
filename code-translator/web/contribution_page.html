@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no"/>
+    <title>Code-Translator</title>
+
+    <!-- CSS  -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="css/materialize.css" type="text/css" rel="stylesheet" media="screen,projection"/>
+    <link href="css/style.css" type="text/css" rel="stylesheet" media="screen,projection"/>
+    <link href=css/jquery-ui.css rel="stylesheet" type="text/css">
+</head>
+
+<body class=" light-blue lighten-5">
+<nav class="white" role="navigation">
+    <div class="nav-wrapper container">
+
+        <ul class="left">
+            <li><a id="logo-container" href="#" class="brand-logo center indigo-text text-darken-4">Welcome to Contribution Page!</a></li>
+        </ul>
+
+        <ul id="nav-mobile" class="side-nav">
+            <li><a href="#">Navbar Link</a>
+        </ul>
+
+    </div>
+</nav>
+
+<div id="index-banner" class="parallax-container">
+    <div class="section no-pad-bot">
+        <div class="container">
+            <br><br>
+
+            <div class="row center">
+            </div>
+            <br><br>
+        </div>
+    </div>
+    <div class="parallax"><img src="images/dontations-thank-you.jpg" alt="Unsplashed background img 1"></div>
+</div>
+
+<br><br>
+
+<div class="container ">
+    <div class="section">
+        <h5 class="row center">Please choose your language: </h5>
+        <ul id="languages" class="pagination offset-l4 center-align"></ul>
+        <br><br>
+    </div>
+
+    <div class="row" id="myrow">
+        <div class="input-field col s4 push-s2 ">
+          <input placeholder="keyword: for example 'while'" id="keyword" type="text" class="validate">
+          <label id="keyword-label" for="keyword">Keyword</label>
+        </div>
+        <div class="col s4 push-s2" id="mycol">
+            <div id="keywordBtn" class="waves-effect waves-light btn left-align">Check requirement</div>
+        </div>
+    </div>
+    <div class="loader2 hide"></div>
+
+    <div class="card hide" id="translation-card">
+        <div class="card-content">
+           <span class="card-title center">Current translation:</span></div>
+            <span id="content"></span>
+        <div class="card-action center-align">
+          <a href="#">Agree</a>
+          <a href="#">Disagree</a>
+        </div>
+    </div>
+
+
+</div>
+
+
+
+
+
+<!--  Scripts-->
+<script src="js/jquery-2.1.4.min.js"></script>
+<script src="js/jquery.lettering-0.6.1.min.js"></script>
+<script src="js/jquery-ui.min.js"></script>
+<script src="js/materialize.min.js"></script>
+<script src="js/main.js"></script>
+<script src="js/contribution.js"></script>
+
+
+</body>
+</html>

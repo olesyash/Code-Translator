@@ -2,12 +2,12 @@ __author__ = 'olesya'
 from my_parser import Parser
 from DAL import *
 import logging
+from apiclient.discovery import build
 from lib.pygoogle import pygoogle
 from languages_specific_features import *
 from engine.result_parser import *
 from engine.languages_API import *
-import re
-import time
+
 '''
 Getting code from web side and using 3 steps before giving result back to web side
 1. Use Parser to isolate which words should be "translated"
@@ -21,6 +21,7 @@ class TranslationEngine():
     def __init__(self, language):
         self.language = language
         self.parser_obj = Parser(self.language)
+        self.la = LanguagesAPI()
 
     def get_translation(self, code_text):
         """
@@ -53,7 +54,7 @@ class TranslationEngine():
         data['type'] = word_type
         data['link'] = ""
         data['translation'] = "It's probably user's function definition"
-        data['approved'] = "False"
+        data['approved'] = False
         return data
 
     def add_keyword(self, keyword, word_type):
@@ -64,13 +65,13 @@ class TranslationEngine():
         """
         url = self.google_search(keyword, word_type)
         logging.info("URL" + str(url))
-        la = LanguagesAPI()
+
         try:
-            result, code = la.http_request_using_urlfetch(http_url=url)
+            result, code = self.la.http_request_using_urlfetch(http_url=url)
         except WrongURL:
             url = self.google_search(keyword, word_type, site=False)
             try:
-                result, code = la.http_request_using_urlfetch(http_url=url)
+                result, code = self.la.http_request_using_urlfetch(http_url=url)
             except WrongURL:
                 result = None
         if result is not None:
@@ -96,15 +97,25 @@ class TranslationEngine():
         :return: url
         :rtype : string
         """
+        key = "AIzaSyDM_PtVl-yhPmhgft6Si02vMJmOCatFK_w"
+        _id = "000167123881013238899:uys_fzjgaby"
+        google_search_url = "https://www.googleapis.com/customsearch/v1?"
+
         if site:
             search_string = self.language + " " + keyword + " " + word_type + " site:" + default_urls[self.language]
         else:
             search_string = self.language + " " + keyword + " " + word_type
         logging.info("search in google: " + search_string)
-        g = pygoogle(search_string)
-        g.pages = 1
-        urls = g.get_urls()
-        print urls
+        service = build("customsearch", "v1",
+                    developerKey=key)
+        res_json = service.cse().list(
+          q=search_string,
+          cx=_id,
+        ).execute()
+        urls = []
+        for i in res_json['items']:
+            urls.append(i['link'])
+        logging.info("Urls: {urls}".format(urls=str(urls)))
         for url in urls:
             if "pdf" not in url:
                 return url
