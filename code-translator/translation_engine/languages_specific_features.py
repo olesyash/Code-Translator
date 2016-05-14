@@ -183,20 +183,6 @@ languages_function_call_must_char = {"Java": True,
 # Supported languages:
 languages = ["Java", "Python", "Ruby"]
 
-'''
-def get_statements(language):
-    if language == "Python":
-        return python_statements
-    elif language == "Java":
-        return java_statements
-    else:
-        return []
-
-
-python_statements = ['for', 'if', 'else', 'while']
-java_statements = ['for', 'if', 'else', 'while']
-'''
-
 python_symbols_url = "http://www.tutorialspoint.com/python/python_basic_operators.htm"
 java_symbols_url = "http://www.tutorialspoint.com/java/java_basic_operators.htm"
 ruby_symbols_url = "http://www.tutorialspoint.com/ruby/ruby_operators.htm"
@@ -208,8 +194,21 @@ ruby_symbols_url = "http://www.tutorialspoint.com/ruby/ruby_operators.htm"
 default_urls = {
     "Python": "https://wiki.python.org",
     "Java": "https://docs.oracle.com",
-    "Ruby": "http://ruby-doc.org/"
+    "Ruby": "http://www.tutorialspoint.com/"
+}
+
+possible_id = {
+    "Python": 'content',
+    "Java": 'PageContent'
+}
+possible_class = {
+    "Ruby": "col-md-7 middle-col"
 }
 
 
+default_result_parsing = {
+    "Python": "id",
+    "Java": "id",
+    "Ruby": "class"
+}
 

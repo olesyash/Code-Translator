@@ -116,10 +116,8 @@ function showTranslation(res) {
     var j;
 
     var text = res[0];
-    text = text.replace(/\n/g, "<br/>");
-    //text = text.replace(/ /g, "&nbsp");
-
-    //"&nbsp"
+    //text = text.replace(/\n/g, "<br/>");
+    text = text.replace(/(?:\r\n|\r|\n)/g, '<br />');
 
     $('#translation-card').html(text);
     response = res[1];

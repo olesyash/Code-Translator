@@ -88,6 +88,23 @@ class TranslationEngineTest(unittest.TestCase):
             print "error"
         self.assertIsNotNone(data)
 
+    def test_add_keyword_ruby(self):
+        """
+        Test add keyword for language = ruby, make sure the data is saved in db
+        """
+        self.l = "Ruby"
+        self.t = TranslationEngine(self.l)
+        self.t.add_keyword("for", "keyword")
+        data = None
+        try:
+            data = DAL.get_data_from_db("for", "Ruby")
+            print 20*"-"
+            print data
+        except DataNotExistException:
+            print "error"
+        self.assertIsNotNone(data['translation'])
+
+
     def test_get_translation_java_code(self):
         """
         Test all way from giving code text to getting response

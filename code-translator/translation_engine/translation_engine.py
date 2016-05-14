@@ -2,9 +2,7 @@ __author__ = 'olesya'
 from my_parser import Parser
 from DAL import *
 import logging
-from apiclient.discovery import build
-from lib.pygoogle import pygoogle
-from languages_specific_features import *
+from lib.googleapiclient.discovery import build
 from engine.result_parser import *
 from engine.languages_API import *
 
@@ -75,11 +73,7 @@ class TranslationEngine():
             except WrongURL:
                 result = None
         if result is not None:
-            rp = ResultParser(self.language)
-            translation = rp.find_by_default_id(result)
-            if not translation:
-                translation = rp.strip_text_from_html(result)
-
+            translation = self.parse_result(result)
             try:
                 data = DAL.save_data_in_db(self.language, keyword, word_type, url, translation, approved=False)
                 logging.info("Saving in DB new translation")
@@ -88,6 +82,19 @@ class TranslationEngine():
                 logging.info("Data already saved in db")
         else:
             return None
+
+    def parse_result(self, result):
+        rp = ResultParser(self.language)
+        _type = default_result_parsing[self.language]
+        translation = None
+        if _type == "id":
+            translation = rp.find_by_default_id(result)
+            if not translation:
+                translation = rp.strip_text_from_html(result)
+        elif _type == "class":
+            translation = rp.find_by_class(result, possible_class[self.language])
+        logging.debug("Translation" + translation)
+        return translation
 
     def classify_keywords(self, keyword, word_type):
         if word_type == KEYWORD and keyword in languages_statements[self.language]:

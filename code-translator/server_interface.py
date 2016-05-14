@@ -26,7 +26,6 @@ from contribution_engine.contribution_engine import *
 import logging
 
 
-
 JINJA_ENVIRONMENT = jinja2.Environment(
     loader=jinja2.FileSystemLoader("web"),
     extensions=['jinja2.ext.autoescape'],

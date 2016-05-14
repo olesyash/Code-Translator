@@ -36,5 +36,5 @@ libraries:
 - name: jinja2
   version: latest
 
-- name: googleapiclient
-  version: latest
+- name: ssl
+  version: "2.7.11"
