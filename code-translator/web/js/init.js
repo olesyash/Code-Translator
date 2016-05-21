@@ -1,21 +1,8 @@
 var sendData;
 var pressed = true;
-var cardCounter = 0;
 var response = [];
 
-function changePage(i) {
-    selected = i;
-    $("#input_text").val("");
-    addPagination();
-    clearCards();//Clear cards list
 
-}
-
-function clearCards() //Clear cards list
-{
-    cardCounter = 0;
-    $(".response-card").remove();
-}
 //Translate button listener
 $("#tranalslateBtn").click(
     function () {

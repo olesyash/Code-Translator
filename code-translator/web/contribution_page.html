@@ -49,10 +49,10 @@
         <br><br>
     </div>
 
-    <div class="row" id="myrow">
+    <div class="row myrow">
         <div class="input-field col s4 push-s2 ">
-          <input placeholder="keyword: for example 'while'" id="keyword" type="text" class="validate">
-          <label id="keyword-label" for="keyword">Keyword</label>
+          <input placeholder="keyword: for example 'while'" id="keyword" type="text" class="validate headline-font">
+          <label class="label-font" id="keyword-label" for="keyword">Keyword</label>
         </div>
         <div class="col s4 push-s2" id="mycol">
             <div id="keywordBtn" class="waves-effect waves-light btn left-align">Check requirement</div>
@@ -60,20 +60,77 @@
     </div>
     <div class="loader2 hide"></div>
 
+    <h5 id="header" class="row center hide">Please insert contribution details:</h5>
+
     <div class="card hide" id="translation-card">
-        <div class="card-content">
-           <span class="card-title center">Current translation:</span></div>
+        <div class="card-content"></div>
             <span id="content"></span>
         <div class="card-action center-align">
-          <a href="#">Agree</a>
-          <a href="#">Disagree</a>
+          <a id="agree">Agree</a>
+          <a id= "disagree">Disagree</a>
         </div>
     </div>
 
+     <div class="card hide" id="temp-translation-card">
+        <div class="card-content"></div>
+            <span id="content-of-card"></span>
+        <div class="card-action center-align">
+          <a id="yes">Yes</a>
+          <a id= "no">No</a>
+        </div>
+    </div>
 
+     <div class="row myrow">
+         <div id="keyword-type" class="input-field col s8 push-s2 headline-font hide">
+            <select id="select-keyword-type">
+              <option value="" id="initial" disabled selected>Choose your option</option>
+              <option value="keyword">Keyword</option>
+              <option value="function">Function</option>
+              <option value="library">Library</option>
+              <option value="operation">Operator</option>
+            </select>
+            <label class="label-font">Keyword Type</label>
+        </div>
+     </div>
+
+     <div class="row myrow">
+        <div id ="url" class="input-field col s8 push-s2 hide">
+          <input placeholder="URL" id="url-insert" type="text" class="validate headline-font">
+          <label class="label-font" for="url-insert">URL</label>
+        </div>
+    </div>
+
+     <div class="row myrow">
+      <div id="option-choose" class="input-field col s8 push-s2 headline-font hide">
+        <select id="select-option"  onchange="select_listener()">
+          <option value="" disabled selected>Choose your option</option>
+          <optgroup label="By specific tag">
+            <option value="p">p</option>
+            <option value="id">id</option>
+            <option value="class">class</option>
+          </optgroup>
+          <optgroup label="Whole page">
+            <option value="nothing">With html</option>
+            <option value="clear">Without html</option>
+          </optgroup>
+        </select>
+        <label class="label-font">Options</label>
+      </div>
+     </div>
+
+     <div class="row myrow">
+        <div id ="name" class="input-field col s8 push-s2 hide">
+          <input placeholder="Name" id="name-insert" type="text" class="validate headline-font">
+          <label class="label-font" for="name-insert">Name</label>
+        </div>
+    </div>
+
+    <div class="row myrow center">
+         <div class="col s4 push-s7">
+                <div id="submit" class="waves-effect waves-light btn left-align hide">Submit</div>
+         </div>
+    </div>
 </div>
-
-
 
 
 

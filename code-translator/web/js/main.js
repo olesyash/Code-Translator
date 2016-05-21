@@ -18,6 +18,7 @@ var start = 0;
 var MAX = 5;
 var languages_response = ["Java", "Python", "Ruby"];
 var selected = 0;
+var cardCounter = 0;
 
 
 function get_languages() {
@@ -106,4 +107,18 @@ function prevPage() {
         selected = start;
         addPagination();
     }
+}
+
+function changePage(i) {
+    selected = i;
+    $("#input_text").val("");
+    addPagination();
+    clearCards();//Clear cards list
+
+}
+
+function clearCards() //Clear cards list
+{
+    cardCounter = 0;
+    $(".response-card").remove();
 }

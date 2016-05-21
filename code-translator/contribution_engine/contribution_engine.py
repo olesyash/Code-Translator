@@ -4,6 +4,11 @@ from engine.result_parser import *
 from engine.languages_API import *
 import logging
 
+# encoding=utf8
+import sys
+reload(sys)
+sys.setdefaultencoding('utf8')
+
 class ContributionEngine():
     def __init__(self, language, keyword):
         self.THANKS_BUT_NO_THANKS = "Thank you, but the keyword already translated"
@@ -16,8 +21,21 @@ class ContributionEngine():
         self.keyword = keyword
         self.dal = DAL()
         self.res_parser = ResultParser(self.language)
+        self.function_mapper = {"id": self.res_parser.find_by_id,
+                                "class": self.res_parser.find_by_class,
+                                "p": self.res_parser.find_by_p,
+                                "clear": self.res_parser.strip_text_from_html,
+                                "nothing": lambda html: html}
 
     def contribute(self):
+        """
+        Contribution act on keyword:
+         if exist in DB and approved - say thank you
+         if exist in DB and not approved - ask for approval
+         if do not exist in DB - ask for contribution
+        :return: String describing the next step
+        """
+        logging.info("Got keyword: {}, language: {}".format(self.keyword, self.language))
         res = self.check_keyword_exist()
         if not res:
             return self.get_contribution()
@@ -28,6 +46,10 @@ class ContributionEngine():
                 return self.show_existing_translation(res)
 
     def user_approve(self, approve):
+        """
+        If contributor approved keyword, send thanks you,
+        else ask for new contribution
+        """
         if approve:
             self.set_approved(True)
             return self.THANKS_FOR_APPROVE
@@ -54,29 +76,69 @@ class ContributionEngine():
         return eval(res['approved']) if res else False
 
     def get_contribution(self):
+        """
+        Return final String asking to contribute
+        :return:
+        """
         return self.GET_CONTRIBUTION
 
     def show_existing_translation(self, res):
+        """
+        Return existing translation of saved keyword in DB
+        :param res: Dictionary of keyword saved in DB
+        :return: String - the transaltion
+        """
         return res['translation']
 
     def set_approved(self, approved):
+        """
+        Change entry in DB of approved
+        :param approved: new value to set to
+        """
         self.dal.set_approved(self.keyword, self.language, approved)
 
     def run_check_on_contribution(self, translation):
+        """
+        Check if the text describing the keyword
+        :param translation: String that supposed to describe the keyword
+        :rtype Boolean
+        :return: Is the text describing the keyword
+        """
         res = self.res_parser.strip_text_from_html(translation)
         return self.res_parser.find_needed_info(res, self.keyword)
 
-    def get_translation_by_id(self, word_type, link, html_id):
+    def get_translation(self, word_type, link, translation_type, name=None):
+        """
+        This function get information from contributor:
+        which url to access
+        which element to look for with the given name
+        Using this rules executing the relevant function on html to get the needed translation.
+        If translation pass the check, add it to DB
+        :param word_type: keyword type (keyword, function .... )
+        :param link: url to try to get info from
+        :param translation_type: which function to call
+        :param name: the name of element e.g id=name
+        :return: return thankful message with new translation or error
+        """
         la = LanguagesAPI()
         try:
             result, code = la.http_request_using_urlfetch(http_url=link)
         except WrongURL:
             return self.WRONG_URL
-        translation = self.res_parser.find_by_id(result, html_id)
+
+        func = self.function_mapper.get(translation_type)
+        if name:
+            translation = func(result, name)
+        else:
+            translation = func(result)
+        logging.info("Translation is {}".format(translation))
 
         if not self.run_check_on_contribution(translation):
             return self.WRONG_TRANSLATION
 
+        return translation
+
+    def save_in_db(self, word_type, link, translation):
         # TODO: check user's level, if admin save in DB, if not save in contribution db
         try:
             DAL.save_data_in_db(self.language, self.keyword, word_type, link, translation, approved=True)
@@ -84,6 +146,9 @@ class ContributionEngine():
             return self.THANKS_FOR_CONTRIBUTION
         except DataExistException:
             logging.info("Data already saved in db")
+            return "error"
+
+
 
 
 

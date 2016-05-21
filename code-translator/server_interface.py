@@ -73,10 +73,7 @@ class GetTranslation(webapp2.RequestHandler):
         self.response.write(json_response)
 
 
-class Contribute(webapp2.RequestHandler):
-    def get(self):
-        pass
-
+class CheckKeyword(webapp2.RequestHandler):
     def post(self):
         dic = json.loads(self.request.body)
         keyword = dic['keyword']
@@ -84,16 +81,64 @@ class Contribute(webapp2.RequestHandler):
         ce = ContributionEngine(language, keyword)
         res = ce.contribute()
         logging.info("result " + res)
-        response = {}
+        response = dict()
         response['response'] = res
         json_response = json.dumps(response)
         self.response.headers['Content-Type'] = 'application/json'
         self.response.write(json_response)
 
 
+class Contribute(webapp2.RequestHandler):
+    def post(self):
+        dic = json.loads(self.request.body)
+        save = dic['save']
+        keyword = dic['keyword']
+        language = dic['language']
+        url = dic['url']
+        word_type = dic['word_type']
+        translation_type = dic['option']
+        try:
+            name = dic["name"]
+        except KeyError:
+            name = None
+        ce = ContributionEngine(language, keyword)
+        res = ce.get_translation(word_type, url, translation_type, name)
+        if eval(save):
+            res = ce.save_in_db(word_type, url, res)
+        logging.info("result " + str(res))
+        response = dict()
+        response['response'] = res
+        json_response = json.dumps(response)
+        self.response.headers['Content-Type'] = 'application/json'
+        self.response.write(json_response)
+
+#
+# class SaveContribution(webapp2.RequestHandler):
+#     def post(self):
+#         dic = json.loads(self.request.body)
+#         keyword = dic['keyword']
+#         language = dic['language']
+#         url = dic['url']
+#         word_type = dic['word_type']
+#         translation_type = dic['option']
+#         try:
+#             name = dic["name"]
+#         except KeyError:
+#             name = None
+#         ce = ContributionEngine(language, keyword)
+#
+#         logging.info("result " + str(res))
+#         response = dict()
+#         response['response'] = res
+#         json_response = json.dumps(response)
+#         self.response.headers['Content-Type'] = 'application/json'
+#         self.response.write(json_response)
+
 app = webapp2.WSGIApplication([
     ('/gettranslation', GetTranslation),
-    ('/contribute-page', ContributionHandler),
+    ('/contribution-page', ContributionHandler),
+    ('/check-keyword', CheckKeyword),
     ('/contribute', Contribute),
+    # ('save-contribution', SaveContribution),
     ('/', MainHandler)
 ], debug=True)
