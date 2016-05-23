@@ -12,11 +12,13 @@ sys.setdefaultencoding('utf8')
 class ContributionEngine():
     def __init__(self, language, keyword):
         self.THANKS_BUT_NO_THANKS = "Thank you, but the keyword already translated"
-        self.THANKS_FOR_APPROVE = "Thank you for keyword approve"
+        self.THANKS_FOR_APPROVE = "Thank you for the keyword approve!"
         self.THANKS_FOR_CONTRIBUTION = "Thank you for your contribution!"
         self.GET_CONTRIBUTION = "Please insert contribution details: "
         self.WRONG_URL = "We could not use this URL. Please recheck spelling"
         self.WRONG_TRANSLATION = "Are you sure this link describing the keyword?"
+        self.ERROR_CODE = -1
+        self.OK_CODE = 0
         self.language = language
         self.keyword = keyword
         self.dal = DAL()
@@ -45,16 +47,13 @@ class ContributionEngine():
             else:
                 return self.show_existing_translation(res)
 
-    def user_approve(self, approve):
+    def user_approve(self):
         """
         If contributor approved keyword, send thanks you,
         else ask for new contribution
         """
-        if approve:
-            self.set_approved(True)
-            return self.THANKS_FOR_APPROVE
-        else:
-            self.get_contribution()
+        self.set_approved(True)
+        return self.THANKS_FOR_APPROVE
 
     def check_keyword_exist(self):
         """
@@ -124,7 +123,7 @@ class ContributionEngine():
         try:
             result, code = la.http_request_using_urlfetch(http_url=link)
         except WrongURL:
-            return self.WRONG_URL
+            return self.WRONG_URL, self.ERROR_CODE
 
         func = self.function_mapper.get(translation_type)
         if name:
@@ -134,19 +133,20 @@ class ContributionEngine():
         logging.info("Translation is {}".format(translation))
 
         if not self.run_check_on_contribution(translation):
-            return self.WRONG_TRANSLATION
+            return self.WRONG_TRANSLATION, self.ERROR_CODE
 
-        return translation
+        return translation, self.OK_CODE
 
     def save_in_db(self, word_type, link, translation):
         # TODO: check user's level, if admin save in DB, if not save in contribution db
         try:
             DAL.save_data_in_db(self.language, self.keyword, word_type, link, translation, approved=True)
             logging.info("Saving in DB new contributed translation")
-            return self.THANKS_FOR_CONTRIBUTION
         except DataExistException:
-            logging.info("Data already saved in db")
-            return "error"
+            logging.info("Updating data in DB")
+            DAL.update_data_in_db(self.language, self.keyword, word_type, link, translation)
+        return self.THANKS_FOR_CONTRIBUTION
+
 
 
 

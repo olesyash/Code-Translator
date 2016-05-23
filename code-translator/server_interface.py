@@ -102,43 +102,36 @@ class Contribute(webapp2.RequestHandler):
         except KeyError:
             name = None
         ce = ContributionEngine(language, keyword)
-        res = ce.get_translation(word_type, url, translation_type, name)
+        res, rc = ce.get_translation(word_type, url, translation_type, name)
         if eval(save):
             res = ce.save_in_db(word_type, url, res)
         logging.info("result " + str(res))
+        response = dict()
+        response['response'] = res
+        response['rc'] = rc
+        json_response = json.dumps(response)
+        self.response.headers['Content-Type'] = 'application/json'
+        self.response.write(json_response)
+
+
+class Approve(webapp2.RequestHandler):
+    def post(self):
+        dic = json.loads(self.request.body)
+        keyword = dic['keyword']
+        language = dic['language']
+        ce = ContributionEngine(language, keyword)
+        res = ce.user_approve()
         response = dict()
         response['response'] = res
         json_response = json.dumps(response)
         self.response.headers['Content-Type'] = 'application/json'
         self.response.write(json_response)
 
-#
-# class SaveContribution(webapp2.RequestHandler):
-#     def post(self):
-#         dic = json.loads(self.request.body)
-#         keyword = dic['keyword']
-#         language = dic['language']
-#         url = dic['url']
-#         word_type = dic['word_type']
-#         translation_type = dic['option']
-#         try:
-#             name = dic["name"]
-#         except KeyError:
-#             name = None
-#         ce = ContributionEngine(language, keyword)
-#
-#         logging.info("result " + str(res))
-#         response = dict()
-#         response['response'] = res
-#         json_response = json.dumps(response)
-#         self.response.headers['Content-Type'] = 'application/json'
-#         self.response.write(json_response)
-
 app = webapp2.WSGIApplication([
     ('/gettranslation', GetTranslation),
     ('/contribution-page', ContributionHandler),
     ('/check-keyword', CheckKeyword),
     ('/contribute', Contribute),
-    # ('save-contribution', SaveContribution),
+    ('/approve', Approve),
     ('/', MainHandler)
 ], debug=True)

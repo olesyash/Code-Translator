@@ -116,6 +116,30 @@ class DAL():
         else:
             raise DataExistException()
 
+    @staticmethod
+    def update_data_in_db(language, keyword, word_type, link, translation):
+        """
+        This function save new data to DB
+        :param language: string
+        :param keyword: string
+        :param word_type: string
+        :param link: string
+        :param translation: text
+        :param approved: boolean
+        :except DataExistException
+        """
+        res = LanguagesData.find_keyword(keyword, language)
+        if res:
+            _newData = LanguagesData()
+            _newData.language = language
+            _newData.keyword = keyword
+            _newData.type = word_type
+            _newData.link = link
+            _newData.translation = translation
+            _newData.approved = True
+            _newData.put()
+        else:
+            raise DataNotExistException()
 
     @staticmethod
     def get_data_from_db(keyword, language):
@@ -138,14 +162,14 @@ class DAL():
         This function get keyword, language, approved and set approved to be approved
         :param email:
         :param role:
-        :except UserNotExistException
+        :except DataNotExistException
         """
         _qry = LanguagesData.find_keyword(keyword, language)
         if _qry:
             _qry.approved = approved
             _qry.put()
         else:
-            raise UserNotExistException()
+            raise DataNotExistException()
 
 
 def create_dict(language, keyword, type, link, translation, approved):

@@ -12,6 +12,7 @@ var url;
 var name = "";
 var GET = "Please insert contribution details: ";
 var NO_THANKS = "Thank you, but the keyword already translated";
+var THANKS_FOR_CONTRIBUTION = "Thank you for your contribution!";
 var options_list = ["class", "id"];
 
 $(document).ready(function () {
@@ -28,7 +29,7 @@ function select_listener() {
     console.log("select pressed");
     var e2 = document.getElementById("select-option");
     //Because of the disabled option there is shift of one (+1)
-    selected_option = e2.options[e2.selectedIndex + 1].value;
+    selected_option = e2.options[e2.selectedIndex ].value;
 
     if (options_list.indexOf(selected_option) != -1) {
         $("#name").removeClass("hide").show();
@@ -77,12 +78,16 @@ $("#no").click(
 //Agree button listener
 $("#agree").click(
     function () {
+        approve();
     }
 );
 
 //Disagree button listener
 $("#disagree").click(
     function () {
+        $("#translation-card").addClass("hide");
+        $("#header").html(GET);
+        showGetTranslation();
     }
 );
 
@@ -99,29 +104,31 @@ function init() {
 
     $('#url-insert').val("");
     $('#name-insert').val("");
-    $("#header").html("Please insert contribution details:")
+    $("#header").html(GET).removeClass("red-text text-accent-4");
 }
 
-//Submit contribution getting all info from user and sending to server using send_contribution fuction
+//Submit contribution getting all info from user and sending to server using send_contribution function
 function submit_contribution() {
     //Keyword type
     var e = document.getElementById("select-keyword-type");
     selected_type = e.options[e.selectedIndex].value;
+    console.log(selected_type);
     if (selected_type == "") {
         alert("Please choose keyword type");
         return;
     }
-    console.log(selected_type);
+
 
     //Option
     var e2 = document.getElementById("select-option");
     //Because of the disabled option there is shift of one (+1)
-    selected_option = e2.options[e2.selectedIndex + 1].value;
+    selected_option = e2.options[e2.selectedIndex].value;
+    console.log("selected option " + selected_option);
     if (selected_option == "") {
         alert("Please choose an option");
         return;
     }
-    console.log(selected_option);
+
 
     //Url
     url = $('#url-insert').val();
@@ -180,15 +187,21 @@ function send_contribution(selected_type, url, selected_option, name, save) {
 
 //Show translation to user and make sure this is what he meant
 function treatTranslation(response) {
-    hideAll();
-    $("#header").html("Is it your suggested translation?").removeClass("hide").show();
     var text = response.response;
-    $("#temp-translation-card").removeClass("hide").show();
-    console.log(text);
-    $("#content-of-card").html(text);
+    if (response.rc == 0) {
+        hideAll();
+        $("#header").html("Is it your suggested translation?").removeClass("hide").removeClass("red-text text-accent-4").show();
+        $("#temp-translation-card").removeClass("hide").show();
+        console.log(text);
+        $("#content-of-card").html(text);
+    }
+    else
+    {
+        $("#header").html(text).removeClass("hide").addClass("red-text text-accent-4").show();
+    }
 }
 
-//Show thank you message to uer
+//Show thank you message to user
 function showThankYou(response) {
     var text = response.response;
     $("#header").html(text).removeClass("hide").show();
@@ -239,10 +252,41 @@ function TreatResponse(response) {
         $("#header").html(NO_THANKS).removeClass("hide").show();
     }
     else {
+        $("#header").html("This is the current translation. Do you approve?").removeClass("hide").show();
         $("#translation-card").removeClass("hide").show();
         console.log(text);
         $("#content").html(text);
     }
+}
+
+function approve()
+{
+     var dict = {"keyword": keyword, "language": languages_response[selected]};
+    var json = JSON.stringify(dict);
+
+    //Show loader (spinner) while waiting for server response
+    $(".loader2").removeClass("hide").show();
+    $.ajax({
+        url: '/approve',
+        type: "POST",
+        data: json,
+        contentType: "json",
+        dataType: "json",
+        statusCode: {
+            400: function () {
+            },
+            500: function () {
+                $(".loader2").hide(); //stop spinner
+                alert("Sorry, there is some error in the server side =(")
+            }
+        },
+        success: function (response, message, jq) {
+            console.log(response);
+            $(".loader2").hide(); //stop spinner
+            $("#translation-card").addClass("hide");
+            showThankYou(response);
+        }
+    });
 }
 
 //Show all elements needed to get contribution information from user
