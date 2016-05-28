@@ -9,26 +9,6 @@ class ResultParser():
     def __init__(self, language):
         self.language = language
 
-    def find_by_default_id(self, html_data):
-        """
-        This function get html text and return the content of specific class id that is defined for each language
-        :param html_data: html string
-        :return: string of the content by id or empty string if id not found in the html
-        """
-        soup = BeautifulSoup(html_data, 'html.parser')
-        id_text = possible_id[self.language]
-
-        found_needed_data = soup.find(id=id_text)
-        try:
-            str(found_needed_data)
-        except RuntimeError as e:
-            found_needed_data = None
-        print(found_needed_data)
-        if found_needed_data is not None:
-            return str(found_needed_data)
-        else:
-            return ""
-
     def find_by_id(self, html_data, given_id):
         """
         This function get html text and return the content of specific class id that is given as parameter

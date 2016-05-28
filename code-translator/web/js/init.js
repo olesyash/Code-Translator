@@ -95,6 +95,7 @@ $(document).on("mouseover", ".operation", showCards);
 $(document).on("mouseover", ".library", showCards);
 $(document).on("mouseover", ".comment", showCards);
 $(document).on("mouseover", ".string", showCards);
+$(document).on("mouseover", ".literal", showCards);
 
 function showTranslation(res) {
     $('.input-field').hide();

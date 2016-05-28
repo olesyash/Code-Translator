@@ -2,7 +2,7 @@ __author__ = 'olesya'
 
 import unittest
 from translation_engine.translation_engine import TranslationEngine
-from translation_engine.languages_specific_features import *
+from engine.languages_API import LanguagesAPI
 from google.appengine.ext import testbed
 from DAL import *
 from translation_engine.my_parser import *
@@ -34,8 +34,8 @@ class TranslationEngineTest(unittest.TestCase):
         """
         self.l = "Java"
         self.t = TranslationEngine(self.l)
-        url = self.t.google_search("for", "statement")
-        self.assertIn(default_urls[self.l], url)
+        url = self.t.url_search("for", "keyword")
+        self.assertEqual("https://docs.oracle.com/javase/tutorial/java/nutsandbolts/for.html", url)
 
     def test_google_search_while_python_get_default_url(self):
         """
@@ -43,8 +43,8 @@ class TranslationEngineTest(unittest.TestCase):
         """
         self.l = "Python"
         self.t = TranslationEngine(self.l)
-        url = self.t.google_search("while", "statement")
-        self.assertIn(default_urls[self.l], url)
+        url = self.t.url_search("while", "keyword")
+        self.assertIn("http://www.tutorialspoint.com/python/python_while_loop.htm", url)
 
     def test_google_search_if_python_get_default_url(self):
         """
@@ -52,25 +52,36 @@ class TranslationEngineTest(unittest.TestCase):
         """
         self.l = "Python"
         self.t = TranslationEngine(self.l)
-        url = self.t.google_search("if", "statement")
+        url = self.t.url_search("if", "keyword")
         print url
-        self.assertIn(default_urls[self.l], url)
+        self.assertIn("https://docs.python.org/3/tutorial/controlflow.html", url)
 
-    def test_add_keyword_python(self):
+    def test_google_search_second_page_java_goto(self):
+        """
+        Test google search for language = java, make sure url is from the chosen site from second page
+        """
+        self.l = "Java"
+        self.t = TranslationEngine(self.l)
+        url = self.t.url_search("goto", "keyword")
+        print url
+        self.assertIn("http://docs.oracle.com/javase/tutorial/java/nutsandbolts/_keywords.html", url)
+
+    def test_add_keyword_python_return(self):
         """
         Test add keyword for language = python, make sure the data is saved in db
         """
         self.l = "Python"
         self.t = TranslationEngine(self.l)
-        self.t.add_keyword("while", "statement")
+        self.t.add_keyword("return", "keyword")
         data = None
         try:
-            data = DAL.get_data_from_db("while", "Python")
+            data = DAL.get_data_from_db("return", "Python")
             print 20*"-"
             print data
         except DataNotExistException:
             print "error"
-        self.assertIsNotNone(data)
+        expected = '<div class="section" id="simple-statements">'
+        self.assertEqual(expected, data["translation"].split('\n')[0])
 
     def test_add_keyword_java(self):
         """
@@ -78,7 +89,7 @@ class TranslationEngineTest(unittest.TestCase):
         """
         self.l = "Java"
         self.t = TranslationEngine(self.l)
-        self.t.add_keyword("while", "statement")
+        self.t.add_keyword("while", "keyword")
         data = None
         try:
             data = DAL.get_data_from_db("while", "Java")
@@ -86,7 +97,8 @@ class TranslationEngineTest(unittest.TestCase):
             print data
         except DataNotExistException:
             print "error"
-        self.assertIsNotNone(data)
+        expected = '<div id="PageContent">'
+        self.assertEqual(expected, data["translation"].split('\n')[0])
 
     def test_add_keyword_ruby(self):
         """
@@ -102,8 +114,8 @@ class TranslationEngineTest(unittest.TestCase):
             print data
         except DataNotExistException:
             print "error"
-        self.assertIsNotNone(data['translation'])
-
+        expected = '<div class="col-md-7 middle-col">'
+        self.assertTrue(expected, data['translation'].split('\n')[0])
 
     def test_get_translation_java_code(self):
         """
@@ -116,6 +128,15 @@ class TranslationEngineTest(unittest.TestCase):
         transaltion_list, final_code_text = self.t.get_translation(code_text)
         print(transaltion_list)
         self.assertEqual(len(transaltion_list), 3)
+
+    def test_parse_result_python_for(self):
+        self.l = "Python"
+        self.t = TranslationEngine(self.l)
+        url = self.t.url_search("for", "keyword")
+        la = LanguagesAPI()
+        result, code = la.http_request_using_urlfetch(http_url=url)
+        res = self.t.parse_result(result)
+        self.assertEqual(res.split('\n')[0], '<div class="col-md-7 middle-col">')
 
     def test_get_translation_python_comment(self):
         """

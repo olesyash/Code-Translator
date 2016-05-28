@@ -54,6 +54,10 @@
     color: green;
 }
 
+.literal {
+    color: #b9151b;
+}
+
 #translation-card {
     width: inherit;
     word-wrap: break-word;

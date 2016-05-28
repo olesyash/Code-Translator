@@ -24,17 +24,6 @@ class JavaTest(unittest.TestCase):
 
         self.testbed.init_urlfetch_stub()
 
-    def test_find_by_default_id_for_statement_java(self):
-        """
-        Test getting translation for "for statement" in java from html by default id
-        """
-        a = LanguagesAPI()
-        cntb = "for"  # code needed to be translated
-        result, code = a.http_request_using_urlfetch("https://docs.oracle.com/javase/tutorial/java/nutsandbolts/for.html", {})
-        b = ResultParser("Java")
-        res = b.find_by_default_id(result)
-        self.assertTrue(cntb in res)
-
     def test_find_by_id_get_for_statement_python(self):
         """
         Test getting translation for "for statement" in python from html by given id

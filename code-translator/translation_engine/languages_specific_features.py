@@ -10,6 +10,9 @@ OPERATION = "operation"
 FUNCTION = "function"
 COMMENT = "comment"
 STRING = "string"
+DATA_TYPE = "data type"
+OPERATOR = "operator"
+EXPRESSION = "expression"
 
 symbols = Str(',', '.', '_', '!', '/', '(', ')', ':', '-', '[', ']', '{', '}', '@', '%', '^', '&', '*', '=', '`', '$',
               '+', '|', '\\', '?', '<', '>')
@@ -39,6 +42,10 @@ python_boolean = Str('True', 'False', 'None')
 python_operations = Str('<', '<=', '>', '>=', '=', '==', '!=', '+', '-', '*', '**', '/', '//', '%', '<>', '+=', '-=',
                         '*=', '/=', '%=', '**=', '//=', '&', '|', '^', '~', '<<', '>>')
 
+python_data_type = []
+python_operator = ['is', 'and', 'or', 'not', 'in']
+python_expression = ['print', 'yield', 'lambda']
+
 # The keywords defines library adding:
 python_add_library = Str('import', 'from')
 # One line comment symbol:
@@ -61,14 +68,24 @@ java_keywords = Str('abstract',	'continue',	'for', 'new', 'switch', 'assert', 'd
                     'finally', 'long', 'strictfp',  'volatile', 'const', 'float', 'native', 'super',
                     'while')
 # Statements
-java_statements = ['for', 'if', 'else', 'while', 'break', 'continue', 'return', 'switch', 'case', 'do']
+java_statements = ['for', 'if', 'else', 'while', 'break', 'continue', 'return', 'switch', 'case', 'do', 'new',
+                   'assert', 'default', 'do', 'throw', 'throws', 'catch', 'try', 'void', 'finally']
+# Data types
+java_data_type = ['double', 'int', 'char', 'boolean', 'float', 'long', 'byte', 'short', 'enum']
+
+# Operators
+java_operator = ['instanceof']
 
 # Literals:
 java_boolean = Str('true', 'false', 'null')
+
 # Operations:
 java_operations = Str('+', '-', '*', '/', '%', '++', '--',  '==', '!=', '<', '<=', '>', '>=', '=', '&', '|', '^', '~',
                       '<<', '>>', '>>>', '&&', '||', '!', '+=', '-=', '*=', '/=', '%=', '<<=', '>>=', '&=', '^=', '|=',
                       '?', ':')
+
+java_expressions = []
+
 # The keywords defines library adding:
 java_add_library = Str('import')
 # One line comment symbol:
@@ -90,13 +107,18 @@ ruby_keywords = Str('BEGIN', 'do', 'next', 'then', 'END', 'else', 'alias', 'elsi
                     'in', 'self', '__FILE__', 'defined?', 'module', 'super', '__LINE__', '__ENCODING__',
                     'yield', '__END__')
 # Statements
-ruby_statements = ['for', 'if', 'else', 'unless', 'case', 'when', 'while', 'until', 'break', 'next', 'redo', 'retry', ]
+ruby_statements = ['for', 'if', 'else', 'unless', 'case', 'when', 'while', 'until', 'break', 'next', 'redo', 'retry']
 # Literals:
 ruby_boolean = Str('true', 'false', 'nil')
 # Operations:
 ruby_operations = Str('+', '-', '*', '/', '%', '**', '=~', '!~', '==', '.eql?', '!=', '<', '<=', '>', '>=', '=', '<=>',
                       '===', '|', '^', '~', '<<', '>>', '&&', '||', '!', '+=', '-=', '*=', '/=', '%=', '|=', '<<=',
                       '**=', 'equal?', '&', '?', ':', '..', '...', '::', '>>=')
+
+ruby__data_type = []
+ruby_operator = []
+ruby_expressions = []
+
 # The keywords defines library adding:
 ruby_add_library = Str('require')
 # One line comment symbol:
@@ -112,6 +134,13 @@ languages_statements = {"Java": java_statements,
                         "Python": python_statements,
                         "Ruby": ruby_statements}
 
+languages_data_types = {"Java": java_data_type,
+                        "Python": python_data_type,
+                        "Ruby": ruby__data_type}
+languages_operators = {"Java": java_operator,
+                       "Python": python_operator,
+                       "Ruby": ruby_operator}
+
 languages_keywords = {"Java": java_keywords,
                       "Python": python_keywords,
                       "Ruby": ruby_keywords}
@@ -119,6 +148,10 @@ languages_keywords = {"Java": java_keywords,
 languages_literals = {"Java": java_boolean,
                       "Python": python_boolean,
                       "Ruby": ruby_boolean}
+
+languages_expressions = {"Java": java_expressions,
+                         "Python": python_expression,
+                         "Ruby": ruby_expressions}
 
 languages_operations = {"Java": java_operations,
                         "Python": python_operations,
@@ -187,28 +220,15 @@ python_symbols_url = "http://www.tutorialspoint.com/python/python_basic_operator
 java_symbols_url = "http://www.tutorialspoint.com/java/java_basic_operators.htm"
 ruby_symbols_url = "http://www.tutorialspoint.com/ruby/ruby_operators.htm"
 
-#python_symbols_url = "https://docs.python.org/2/library/stdtypes.html#index-9"
-#java_symbols_url = "https://docs.oracle.com/javase/tutorial/java/nutsandbolts/opsummary.html"
 
+default_urls = {"Python":["https://wiki.python.org", "http://www.tutorialspoint.com/python", "https://docs.python.org/"],
+                "Java": ["https://docs.oracle.com/javase/", "http://www.tutorialspoint.com/java/",
+                         "http://www.codejava.net/", "http://docs.oracle.com/javase/"],
+                "Ruby": ["http://www.tutorialspoint.com/"]}
 
-default_urls = {
-    "Python": "https://wiki.python.org",
-    "Java": "https://docs.oracle.com",
-    "Ruby": "http://www.tutorialspoint.com/"
-}
-
-possible_id = {
-    "Python": 'content',
-    "Java": 'PageContent'
-}
-possible_class = {
-    "Ruby": "col-md-7 middle-col"
-}
-
-
-default_result_parsing = {
-    "Python": "id",
-    "Java": "id",
-    "Ruby": "class"
-}
-
+url_info = {"https://wiki.python.org": {"id": "content"},
+            "http://www.tutorialspoint.com": {"class": "col-md-7 middle-col"},
+            "http://docs.oracle.com/javase/": {"id": "PageContent"},
+            "https://docs.python.org/": {"class": "section"},
+            "https://docs.oracle.com/javase/": {"id": "PageContent"},
+            "http://www.codejava.net/": {"id": "content"}}

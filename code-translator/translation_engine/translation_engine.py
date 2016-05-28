@@ -15,11 +15,14 @@ Getting code from web side and using 3 steps before giving result back to web si
 
 
 class TranslationEngine():
-
     def __init__(self, language):
         self.language = language
         self.parser_obj = Parser(self.language)
         self.la = LanguagesAPI()
+        self.url = ""
+        self.rp = ResultParser(self.language)
+        self.function_mapper = {"id": self.rp.find_by_id,
+                                "class": self.rp.find_by_class}
 
     def get_translation(self, code_text):
         """
@@ -61,13 +64,13 @@ class TranslationEngine():
         :param keyword: string
         :param word_type: string
         """
-        url = self.google_search(keyword, word_type)
+        url = self.url_search(keyword, word_type)
         logging.info("URL" + str(url))
 
         try:
             result, code = self.la.http_request_using_urlfetch(http_url=url)
         except WrongURL:
-            url = self.google_search(keyword, word_type, site=False)
+            url = self.url_search(keyword, word_type)
             try:
                 result, code = self.la.http_request_using_urlfetch(http_url=url)
             except WrongURL:
@@ -84,24 +87,32 @@ class TranslationEngine():
             return None
 
     def parse_result(self, result):
-        rp = ResultParser(self.language)
-        _type = default_result_parsing[self.language]
-        translation = None
-        if _type == "id":
-            translation = rp.find_by_default_id(result)
-            if not translation:
-                translation = rp.strip_text_from_html(result)
-        elif _type == "class":
-            translation = rp.find_by_class(result, possible_class[self.language])
+        _type = ""
+        name = ""
+        for key in url_info:
+            if key in self.url:
+                _type, name = url_info[key].items()[0]
+
+        func = self.function_mapper.get(_type)
+        translation = func(result, name)
         logging.debug("Translation" + translation)
         return translation
 
     def classify_keywords(self, keyword, word_type):
-        if word_type == KEYWORD and keyword in languages_statements[self.language]:
-            return STATEMENT
-        return KEYWORD
+        if word_type == KEYWORD:
+            if keyword in languages_statements[self.language]:
+                return STATEMENT
+            elif keyword in languages_data_types[self.language]:
+                return DATA_TYPE
+            elif keyword in languages_expressions[self.language]:
+                return EXPRESSION
+            elif keyword in languages_operators[self.language]:
+                return OPERATOR
+            return KEYWORD
+        else:
+            return word_type
 
-    def google_search(self, keyword, word_type, site=True):
+    def url_search(self, keyword, word_type):
         """
         Search in google for keyword, returns first url of website with answer.
         Search in google using "site:" option, making google to search in specific site
@@ -109,28 +120,38 @@ class TranslationEngine():
         :return: url
         :rtype : string
         """
+        counter = 1
+        word_type = self.classify_keywords(keyword, word_type)
+
+        language_url_list = default_urls[self.language]
+        search_string = self.language + " " + keyword + " " + word_type
+
+        while counter < 30:
+            logging.info("search in google: " + search_string)
+            logging.info("counter " + str(counter))
+            urls = self.custom_google_search(search_string, counter)
+            for url in urls:
+                for i in language_url_list:
+                    if i in url and "pdf" not in url:
+                        self.url = url
+                        return url
+            counter += 10
+
+    def custom_google_search(self, search_string, index=1):
         key = "AIzaSyDM_PtVl-yhPmhgft6Si02vMJmOCatFK_w"
         _id = "000167123881013238899:uys_fzjgaby"
-
-        word_type = self.classify_keywords(keyword, word_type)
-        if site:
-            search_string = self.language + " " + keyword + " " + word_type + " site:" + default_urls[self.language]
-        else:
-            search_string = self.language + " " + keyword + " " + word_type
-        logging.info("search in google: " + search_string)
         service = build("customsearch", "v1",
                         developerKey=key)
         res_json = service.cse().list(
             q=search_string,
             cx=_id,
+            start=index
         ).execute()
         urls = []
         for i in res_json['items']:
             urls.append(i['link'])
         logging.info("Urls: {urls}".format(urls=str(urls)))
-        for url in urls:
-            if "pdf" not in url:
-                return url
+        return urls
 
     def reformat_parsed_text(self, code_text, parsed_list):
         """

@@ -271,19 +271,19 @@ class MyScanner(Scanner):
 class Parser():
     def __init__(self, lan):
         self.language = lan
+        self.keywords = []
+        self.operations = []
+        self.literals = []
+        self.full_list = {}
+        self.list_of_tuples = []
+
 
     def run_parser(self, code_text):
         """
         This internal function is used in all tests to read tokens using parser
         """
         stream = io.TextIOWrapper(io.BytesIO(code_text), encoding="utf8")
-
         self.scanner = MyScanner(stream, self.language)
-        self.keywords = []
-        self.operations = []
-        self.literals = []
-        self.full_list = {}
-        self.list_of_tuples = []
         self.scanner.libraries = []
 
         while 1:

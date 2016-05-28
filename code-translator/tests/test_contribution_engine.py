@@ -53,47 +53,48 @@ class ContributionTest(unittest.TestCase):
 
     def test_user_approve_true(self):
         self.mydb.save_data_in_db("java", "for", "statement", "https://docs....", "the for statement is ...", approved=False)
-        res = self.ce.user_approve(True)
-        self.assertEqual(res, "Thank you for keyword approve")
+        res = self.ce.user_approve()
+        self.assertEqual(res, "Thank you for the keyword approve!")
         data = self.mydb.get_data_from_db("for", "java")
         self.assertTrue(data['approved'])
 
     def test_get_translation_by_id_wrong_url(self):
         url = "https://docs.pyth"
         _id = 'the-for-statement'
-        res = self.ce.get_translation("keyword", url, "id", _id)
+        res, rc = self.ce.get_translation("keyword", url, "id", _id)
         self.assertEqual(res, "We could not use this URL. Please recheck spelling")
 
     def test_get_translation_by_id_wrong_transaltion(self):
         url = "https://github.com/olesyash/Code-Translator/issues/21"
         _id = 'start-of-content'
         self.ce = ContributionEngine("python", "yield")
-        res = self.ce.get_translation("keyword", url, "id", _id)
+        res, rc = self.ce.get_translation("keyword", url, "id", _id)
         self.assertEqual(res, "Are you sure this link describing the keyword?")
 
     def test_get_translation_by_id(self):
         url = "https://docs.python.org/2/reference/compound_stmts.html#the-for-statement"
         _id = 'the-for-statement'
-        res = self.ce.get_translation("keyword", url, "id", _id)
-        self.assertEqual(res, "Thank you for your contribution!")
+        res, rc = self.ce.get_translation("keyword", url, "id", _id)
+        self.assertEqual(rc, 0)
 
     def test_get_translation_by_class(self):
         url = "https://docs.python.org/2/reference/compound_stmts.html#the-for-statement"
         name = 'section'
-        res = self.ce.get_translation("keyword", url, "class", name)
-        self.assertEqual(res, "Thank you for your contribution!")
+        res, rc = self.ce.get_translation("keyword", url, "class", name)
+        self.assertEqual(rc, 0)
 
     def test_get_translation_by_p_get_wrong_translation(self):
         url = "https://docs.python.org/2/reference/compound_stmts.html#the-for-statement"
-        res = self.ce.get_translation("keyword", url, "p")
+        res, rc = self.ce.get_translation("keyword", url, "p")
         self.assertEqual(res, "Are you sure this link describing the keyword?")
 
     def test_get_translation_clear(self):
         url = "https://docs.python.org/2/reference/compound_stmts.html#the-for-statement"
-        res = self.ce.get_translation("keyword", url, "clear")
-        self.assertEqual(res, "Thank you for your contribution!")
+        res, rc = self.ce.get_translation("keyword", url, "clear")
+        self.assertEqual(rc, 0)
 
     def test_get_translation_nothing(self):
         url = "https://docs.python.org/2/reference/compound_stmts.html#the-for-statement"
-        res = self.ce.get_translation("keyword", url, "nothing")
-        self.assertEqual(res, "Thank you for your contribution!")
+        res, rc = self.ce.get_translation("keyword", url, "nothing")
+        self.assertEqual(rc, 0)
+

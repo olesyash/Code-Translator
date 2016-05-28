@@ -90,16 +90,6 @@ class MyParserPythonTest(unittest.TestCase):
         expected_keywords = []
         self.assertListEqual(expected_keywords, self.p.keywords)
 
-    def test_run_real_code(self):
-        """
-        This test is testing parser for finding all keywords in real python code
-        """
-        self.filename = "parser_tests/test_result_parser.py"
-        expected_keywords = ['import', 'from', 'import', 'from', 'import', 'from', 'import', 'from',
-                             'import', 'class', 'def', 'def', 'in', 'def', 'def', 'print', 'in', 'def']
-        self.run_parser()
-        self.assertListEqual(expected_keywords, self.p.keywords)
-
     def test_keywords_in_function(self):
         """
         This test is testing parser for finding all keywords including inside function call in python code
