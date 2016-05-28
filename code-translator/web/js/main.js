@@ -16,7 +16,7 @@ var counter = 0;
 var minPage, maxPage;
 var start = 0;
 var MAX = 5;
-var languages_response = ["Java", "Python", "Ruby"];
+var languages_response = ["Java", "Python", "Ruby-1.9"];
 var selected = 0;
 var cardCounter = 0;
 

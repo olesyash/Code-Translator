@@ -22,7 +22,8 @@ class TranslationEngine():
         self.url = ""
         self.rp = ResultParser(self.language)
         self.function_mapper = {"id": self.rp.find_by_id,
-                                "class": self.rp.find_by_class}
+                                "class": self.rp.find_by_class,
+                                "all": lambda html, _: html}
 
     def get_translation(self, code_text):
         """
@@ -65,18 +66,27 @@ class TranslationEngine():
         :param word_type: string
         """
         url = self.url_search(keyword, word_type)
-        logging.info("URL" + str(url))
+        logging.info("URL: " + str(url))
 
         try:
             result, code = self.la.http_request_using_urlfetch(http_url=url)
         except WrongURL:
-            url = self.url_search(keyword, word_type)
-            try:
-                result, code = self.la.http_request_using_urlfetch(http_url=url)
-            except WrongURL:
-                result = None
+            result = None
+
         if result is not None:
             translation = self.parse_result(result)
+            if translation == "":
+                logging.info("Could not parse the result")
+                new_url = self.rp.try_frame(result)
+                self.url += new_url
+                try:
+                    result, code = self.la.http_request_using_urlfetch(http_url=self.url)
+                    translation = self.parse_result(result)
+                    if translation == "":
+                        translation = result
+                except WrongURL:
+                    return result
+
             try:
                 data = DAL.save_data_in_db(self.language, keyword, word_type, url, translation, approved=False)
                 logging.info("Saving in DB new translation")
@@ -92,10 +102,12 @@ class TranslationEngine():
         for key in url_info:
             if key in self.url:
                 _type, name = url_info[key].items()[0]
+                break
 
         func = self.function_mapper.get(_type)
+        logging.info("parsing using " + str(func))
         translation = func(result, name)
-        logging.debug("Translation" + translation)
+        logging.debug("Translation " + translation)
         return translation
 
     def classify_keywords(self, keyword, word_type):
@@ -130,15 +142,17 @@ class TranslationEngine():
             logging.info("search in google: " + search_string)
             logging.info("counter " + str(counter))
             urls = self.custom_google_search(search_string, counter)
-            for url in urls:
-                for i in language_url_list:
+
+            for i in language_url_list:
+                for url in urls:
                     if i in url and "pdf" not in url:
                         self.url = url
                         return url
             counter += 10
 
     def custom_google_search(self, search_string, index=1):
-        key = "AIzaSyDM_PtVl-yhPmhgft6Si02vMJmOCatFK_w"
+        #key = "AIzaSyDM_PtVl-yhPmhgft6Si02vMJmOCatFK_w"
+        key = "AIzaSyD9ufY0LcUPB8UO4RA4FVB8rJdZC12pKKc"
         _id = "000167123881013238899:uys_fzjgaby"
         service = build("customsearch", "v1",
                         developerKey=key)

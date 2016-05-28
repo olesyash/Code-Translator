@@ -107,7 +107,8 @@ ruby_keywords = Str('BEGIN', 'do', 'next', 'then', 'END', 'else', 'alias', 'elsi
                     'in', 'self', '__FILE__', 'defined?', 'module', 'super', '__LINE__', '__ENCODING__',
                     'yield', '__END__')
 # Statements
-ruby_statements = ['for', 'if', 'else', 'unless', 'case', 'when', 'while', 'until', 'break', 'next', 'redo', 'retry']
+ruby_statements = ['for', 'if', 'else', 'unless', 'case', 'when', 'while', 'until', 'break', 'next', 'redo', 'retry',
+                   'do', 'then', 'END', 'alias', 'undef', 'return', 'yield']
 # Literals:
 ruby_boolean = Str('true', 'false', 'nil')
 # Operations:
@@ -116,7 +117,7 @@ ruby_operations = Str('+', '-', '*', '/', '%', '**', '=~', '!~', '==', '.eql?', 
                       '**=', 'equal?', '&', '?', ':', '..', '...', '::', '>>=')
 
 ruby__data_type = []
-ruby_operator = []
+ruby_operator = ['not', 'or', 'and']
 ruby_expressions = []
 
 # The keywords defines library adding:
@@ -214,21 +215,25 @@ languages_function_call_must_char = {"Java": True,
                                      "Ruby": False}
 
 # Supported languages:
-languages = ["Java", "Python", "Ruby"]
+languages = ["Java", "Python", "Ruby-1.9"]
 
 python_symbols_url = "http://www.tutorialspoint.com/python/python_basic_operators.htm"
 java_symbols_url = "http://www.tutorialspoint.com/java/java_basic_operators.htm"
 ruby_symbols_url = "http://www.tutorialspoint.com/ruby/ruby_operators.htm"
 
 
-default_urls = {"Python":["https://wiki.python.org", "http://www.tutorialspoint.com/python", "https://docs.python.org/"],
-                "Java": ["https://docs.oracle.com/javase/", "http://www.tutorialspoint.com/java/",
-                         "http://www.codejava.net/", "http://docs.oracle.com/javase/"],
-                "Ruby": ["http://www.tutorialspoint.com/"]}
+default_urls = {"Python": ["https://docs.python.org/", "https://wiki.python.org", "http://www.tutorialspoint.com/python"],
+                "Java": ["https://docs.oracle.com/javase/", "http://docs.oracle.com/javase/",
+                         "http://www.tutorialspoint.com/java/", "http://www.codejava.net/", ],
+                "Ruby": ["http://www.tutorialspoint.com/", "http://ruby-doc.org/docs/keywords/1.9/Object.html",
+                         "http://ruby-doc.org/docs/", "http://docs.ruby-lang.org/"]}
 
 url_info = {"https://wiki.python.org": {"id": "content"},
             "http://www.tutorialspoint.com": {"class": "col-md-7 middle-col"},
             "http://docs.oracle.com/javase/": {"id": "PageContent"},
             "https://docs.python.org/": {"class": "section"},
             "https://docs.oracle.com/javase/": {"id": "PageContent"},
-            "http://www.codejava.net/": {"id": "content"}}
+            "http://www.codejava.net/": {"id": "content"},
+            "http://ruby-doc.org/docs/keywords/1.9/Object.html": {"class": "documentation-section"},
+            "http://ruby-doc.org/docs/keywords/1.9/": {"id": "section"},
+            "http://docs.ruby-lang.org/": {"all": ""}}

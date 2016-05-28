@@ -5,6 +5,7 @@ from lib.bs4 import BeautifulSoup
 from translation_engine.languages_specific_features import *
 import logging
 
+
 class ResultParser():
     def __init__(self, language):
         self.language = language
@@ -22,6 +23,16 @@ class ResultParser():
         if found_needed_data is not None:
             return str(found_needed_data)
         else:
+            return ""
+
+    def try_frame(self, html_data):
+        soup = BeautifulSoup(html_data, 'html.parser')
+        frames = soup.find_all('frame')
+        try:
+            new_url = frames[-1].get('src')
+            print "new url " + new_url
+            return new_url
+        except:
             return ""
 
     def find_by_p(self, html_data):

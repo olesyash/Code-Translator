@@ -62,7 +62,9 @@ class GetTranslation(webapp2.RequestHandler):
     def post(self):
         all_request = self.request.body
         dic = json.loads(all_request)
-        te = TranslationEngine(dic['language'])
+        lang = dic['language']
+        lang = "Ruby" if lang == "Ruby-1.9" else lang
+        te = TranslationEngine(lang)
         translated_text, final_code_text = te.get_translation((dic["text"]).encode('utf8'))
         response_list = []
         logging.info("in server interface " + final_code_text)

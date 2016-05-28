@@ -83,6 +83,20 @@ class TranslationEngineTest(unittest.TestCase):
         expected = '<div class="section" id="simple-statements">'
         self.assertEqual(expected, data["translation"].split('\n')[0])
 
+    def test_parse_result_ruby_begin(self):
+        self.l = "Ruby"
+        self.t = TranslationEngine(self.l)
+        self.t.add_keyword("begin", "keyword")
+        data = None
+        try:
+            data = DAL.get_data_from_db("begin", "Ruby")
+            print 20*"-"
+            print data
+        except DataNotExistException:
+            print "error"
+        expected = '<div id="section">'
+        self.assertEqual(expected, data["translation"].split('\n')[0])
+
     def test_add_keyword_java(self):
         """
         Test add keyword for language = java, make sure the data is saved in db
