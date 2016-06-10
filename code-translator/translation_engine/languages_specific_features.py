@@ -1,6 +1,7 @@
 __author__ = 'olesya'
 
 from lib.plex import *
+from DAL import DAL
 
 # ----------------------------------------- Main -----------------------------------------------------------
 KEYWORD = "keyword"
@@ -30,8 +31,8 @@ default_function_call_char = '('
 # ----------------------------------------- Python -----------------------------------------------------------
 # Keywords:
 python_keywords = Str('as', 'assert', 'del', 'elif', 'else', 'except', 'exec', 'finally', 'global', 'is', 'lambda',
-                      'and', 'or', 'not', 'print', 'raise', 'try', 'with', 'yield', 'in','for', 'if', 'while', 'break',
-                      'continue', 'pass', 'return')
+                      'and', 'or', 'not', 'print', 'raise', 'try', 'with', 'yield', 'in', 'for', 'if', 'while',
+                      'break', 'continue', 'pass', 'return')
 
 # Statements
 python_statements = ['for', 'if', 'else', 'while', 'break', 'continue', 'pass', 'return']
@@ -138,6 +139,7 @@ languages_statements = {"Java": java_statements,
 languages_data_types = {"Java": java_data_type,
                         "Python": python_data_type,
                         "Ruby": ruby__data_type}
+
 languages_operators = {"Java": java_operator,
                        "Python": python_operator,
                        "Ruby": ruby_operator}
@@ -224,7 +226,7 @@ ruby_symbols_url = "http://www.tutorialspoint.com/ruby/ruby_operators.htm"
 
 default_urls = {"Python": ["https://docs.python.org/", "https://wiki.python.org", "http://www.tutorialspoint.com/python"],
                 "Java": ["https://docs.oracle.com/javase/", "http://docs.oracle.com/javase/",
-                         "http://www.tutorialspoint.com/java/", "http://www.codejava.net/", ],
+                         "http://www.tutorialspoint.com/java/", "http://www.codejava.net/"],
                 "Ruby": ["http://www.tutorialspoint.com/", "http://ruby-doc.org/docs/keywords/1.9/Object.html",
                          "http://ruby-doc.org/docs/", "http://docs.ruby-lang.org/"]}
 
@@ -237,3 +239,38 @@ url_info = {"https://wiki.python.org": {"id": "content"},
             "http://ruby-doc.org/docs/keywords/1.9/Object.html": {"class": "documentation-section"},
             "http://ruby-doc.org/docs/keywords/1.9/": {"id": "section"},
             "http://docs.ruby-lang.org/": {"all": ""}}
+
+classifications = ["keywords", "expressions", "statements", "data_types"]
+
+
+def prepare_for_lexicon(language, title):
+    try:
+        return eval("languages_" + title)[language]
+    except KeyError:
+        print "need to search in DB"
+        dal = DAL()
+        res = dal.get_language_details(language, title)
+        if title == "function_call_must_char":
+            return eval(res[0])
+        if title in ["str_symbol1", "str_symbol2", "function_call_char"]:
+            return res[0]
+        return my_str(res)
+
+
+def keyword_is_title(language, keyword, title):
+    try:
+        return keyword in eval("languages_" + title)[language]
+    except KeyError:
+        print "need to search in DB"
+        dal = DAL()
+        return keyword in dal.get_language_details(language, title)
+
+
+def keyword_in_other(language, keyword):
+    dal = DAL()
+    all_data = dal.get_language_details(language)
+    dict_of_others = all_data["others"]
+    for k, val in dict_of_others.iteritems():
+        if keyword in val:
+            return k
+

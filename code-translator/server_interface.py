@@ -24,6 +24,7 @@ import jinja2
 from translation_engine.translation_engine import *
 from contribution_engine.contribution_engine import *
 import logging
+import json
 
 
 JINJA_ENVIRONMENT = jinja2.Environment(
@@ -129,11 +130,27 @@ class Approve(webapp2.RequestHandler):
         self.response.headers['Content-Type'] = 'application/json'
         self.response.write(json_response)
 
+
+class AddLanguage(webapp2.RequestHandler):
+    def post(self):
+        dic = json.loads(self.request.body)
+        language = dic['language']
+        all_data = dic['all_data']
+        ce = ContributionEngine(language, "")
+        res = ce.add_new_language(all_data)
+        response = dict()
+        response['response'] = res
+        json_response = json.dumps(response)
+        self.response.headers['Content-Type'] = 'application/json'
+        self.response.write(json_response)
+
+               
 app = webapp2.WSGIApplication([
     ('/gettranslation', GetTranslation),
     ('/contribution-page', ContributionHandler),
     ('/check-keyword', CheckKeyword),
     ('/contribute', Contribute),
     ('/approve', Approve),
+    ('/add-language', AddLanguage),
     ('/', MainHandler)
 ], debug=True)

@@ -9,6 +9,7 @@ import sys
 reload(sys)
 sys.setdefaultencoding('utf8')
 
+
 class ContributionEngine():
     def __init__(self, language, keyword):
         self.THANKS_BUT_NO_THANKS = "Thank you, but the keyword already translated"
@@ -146,6 +147,29 @@ class ContributionEngine():
             logging.info("Updating data in DB")
             DAL.update_data_in_db(self.language, self.keyword, word_type, link, translation)
         return self.THANKS_FOR_CONTRIBUTION
+
+    def add_new_language(self, data):
+
+        self.dal.save_language_details(self.language, "keywords", data['keywords'])
+        self.dal.save_language_details(self.language, "str_symbol1", data['str_symbol1'])
+        self.dal.save_language_details(self.language, "str_symbol2", data['str_symbol2'])
+        self.dal.save_language_details(self.language, "operations", data['operations'])
+        self.dal.save_language_details(self.language, "add_library", data['add_library'])
+        self.dal.save_language_details(self.language, "literals", data['literals'])
+        self.dal.save_language_details(self.language, "start_comment_symb", data['start_comment_symb'])
+        self.dal.save_language_details(self.language, "comment_start1", data['comment_start1'])
+        self.dal.save_language_details(self.language, "comment_start2", data['comment_start2'])
+        self.dal.save_language_details(self.language, "func_def", data['func_def'])
+        self.dal.save_language_details(self.language, "class_keyword", data['class_keyword'])
+        self.dal.save_language_details(self.language, "escape_character", data['escape_character'])
+        self.dal.save_language_details(self.language, "func_start", data['func_start'])
+        self.dal.save_language_details(self.language, "function_call_char", data['function_call_char'])
+        self.dal.save_language_details(self.language, "function_call_must_char", data['function_call_must_char'])
+        other_list = data['other']
+        for key, value in other_list.iteritems():
+            self.dal.save_language_details(self.language, key, value)
+
+
 
 
 

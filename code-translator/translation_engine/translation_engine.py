@@ -20,6 +20,8 @@ class TranslationEngine():
         self.parser_obj = Parser(self.language)
         self.la = LanguagesAPI()
         self.url = ""
+        self.MAX_RESULTS = 30
+        self.possible_urls = []
         self.rp = ResultParser(self.language)
         self.function_mapper = {"id": self.rp.find_by_id,
                                 "class": self.rp.find_by_class,
@@ -112,39 +114,47 @@ class TranslationEngine():
 
     def classify_keywords(self, keyword, word_type):
         if word_type == KEYWORD:
-            if keyword in languages_statements[self.language]:
+            if keyword_is_title(self.language, keyword, "statements"):
                 return STATEMENT
-            elif keyword in languages_data_types[self.language]:
+            elif keyword_is_title(self.language, keyword, "data_types"):
                 return DATA_TYPE
-            elif keyword in languages_expressions[self.language]:
+            elif keyword_is_title(self.language, keyword, "expressions"):
                 return EXPRESSION
-            elif keyword in languages_operators[self.language]:
+            elif keyword_is_title(self.language, keyword, "operators"):
                 return OPERATOR
-            return KEYWORD
+            res = keyword_in_other(self.language, keyword)
+            if res:
+                return res
+            else:
+                return KEYWORD
         else:
             return word_type
 
     def url_search(self, keyword, word_type):
         """
-        Search in google for keyword, returns first url of website with answer.
-        Search in google using "site:" option, making google to search in specific site
+        Search in google for keyword, returns first url of approved website,
+        Try max 30 google search results
         :param keyword: string
         :return: url
         :rtype : string
         """
         counter = 1
+        # Classify keyword to get better search accuracy
         word_type = self.classify_keywords(keyword, word_type)
 
+        # Get approved urls list depending on language
         language_url_list = default_urls[self.language]
         search_string = self.language + " " + keyword + " " + word_type
 
-        while counter < 30:
+        self.url = None
+        while counter < self.MAX_RESULTS:
             logging.info("search in google: " + search_string)
             logging.info("counter " + str(counter))
             urls = self.custom_google_search(search_string, counter)
-
-            for i in language_url_list:
-                for url in urls:
+            if not self.url:
+                self.url = urls[0]  # Save default url to be the first one
+            for url in urls:
+                for i in language_url_list:
                     if i in url and "pdf" not in url:
                         self.url = url
                         return url

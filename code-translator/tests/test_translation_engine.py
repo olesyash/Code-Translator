@@ -226,3 +226,27 @@ class TranslationEngineTest(unittest.TestCase):
         expected = '"<span class="string">is a string for test</span>"'
         res = self.t.reformat_parsed_text(code_text, parsed)
         self.assertEqual(expected, res)
+
+    def test_classification_statement(self):
+        self.l = "Python"
+        self.t = TranslationEngine(self.l)
+        res = self.t.classify_keywords("for", KEYWORD)
+        self.assertEqual(STATEMENT, res)
+
+    def test_classification_expression(self):
+        self.l = "Python"
+        self.t = TranslationEngine(self.l)
+        res = self.t.classify_keywords("lambda", KEYWORD)
+        self.assertEqual(EXPRESSION, res)
+
+    def test_classification_data_type(self):
+        self.l = "Java"
+        self.t = TranslationEngine(self.l)
+        res = self.t.classify_keywords("double", KEYWORD)
+        self.assertEqual(DATA_TYPE, res)
+
+    def test_classification_operator(self):
+        self.l = "Java"
+        self.t = TranslationEngine(self.l)
+        res = self.t.classify_keywords("instanceof", KEYWORD)
+        self.assertEqual(OPERATOR, res)

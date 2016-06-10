@@ -132,23 +132,23 @@ class MyScanner(Scanner):
 
     def def_lexicon(self):
         try:
-            all_keywords = languages_keywords[self.language]
-            str_symbol1 = languages_str_symbol1[self.language]
-            str_symbol2 = languages_str_symbol2[self.language]
-            operations = languages_operations[self.language]
-            add_library = languages_add_library[self.language]
-            literals = languages_literals[self.language]
-            start_comment_symb = languages_start_comment_symb[self.language]
-            comment_start1 = languages_comment_start1[self.language]
-            comment_start2 = languages_comment_start2[self.language]
-            comment_end1 = languages_comment_end1[self.language]
-            comment_end2 = languages_comment_end2[self.language]
-            func_def = languages_func_def[self.language]
-            class_keyword = languages_class_keyword[self.language]
-            escape_character = languages_escape_character[self.language]
-            self.func_start = languages_func_start[self.language]
-            self.func_call_char = languages_function_call_char[self.language]
-            self.must_func_call_char = languages_function_call_must_char[self.language]
+            all_keywords = prepare_for_lexicon(self.language, "keywords")
+            str_symbol1 = prepare_for_lexicon(self.language, "str_symbol1")
+            str_symbol2 = prepare_for_lexicon(self.language, "str_symbol2")
+            operations = prepare_for_lexicon(self.language, "operations")
+            add_library = prepare_for_lexicon(self.language, "add_library")
+            literals = prepare_for_lexicon(self.language, "literals")
+            start_comment_symb = prepare_for_lexicon(self.language, "start_comment_symb")
+            comment_start1 = prepare_for_lexicon(self.language, "comment_start1")
+            comment_start2 = prepare_for_lexicon(self.language, "comment_start2")
+            comment_end1 = prepare_for_lexicon(self.language, "comment_end1")
+            comment_end2 = prepare_for_lexicon(self.language, "comment_end2")
+            func_def = prepare_for_lexicon(self.language, "func_def")
+            class_keyword = prepare_for_lexicon(self.language, "class_keyword")
+            escape_character = prepare_for_lexicon(self.language, "escape_character")
+            self.func_start = prepare_for_lexicon(self.language, "func_start")
+            self.func_call_char = prepare_for_lexicon(self.language, "function_call_char")
+            self.must_func_call_char = prepare_for_lexicon(self.language, "function_call_must_char")
             self.need_func_start = self.func_start != ""
         except KeyError:
             print "Language not defined well"
@@ -276,7 +276,6 @@ class Parser():
         self.literals = []
         self.full_list = {}
         self.list_of_tuples = []
-
 
     def run_parser(self, code_text):
         """

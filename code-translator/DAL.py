@@ -1,7 +1,6 @@
 __author__ = 'olesya'
 
 from models.models import *
-import json
 
 
 class DAL():
@@ -170,6 +169,47 @@ class DAL():
             _qry.put()
         else:
             raise DataNotExistException()
+
+    @staticmethod
+    def save_language_details(language, title, keywords_list):
+        """
+        This function get language, list of keywords and a title for the list and saves it in DB
+        :param language
+        :param title
+        :param keywords_list
+        """
+        _newData = LanguagesParsingData()
+        _newData.language = language
+        _newData.list_of_keywords = keywords_list
+        _newData.type = title
+        _newData.put()
+
+    @staticmethod
+    def get_language_details(language, _type=None):
+        """
+        This function get language and return all associated information in DB for this language
+        :param language:
+        :return: dictionary of all data
+        """
+        _newData = LanguagesParsingData()
+        if _type:
+            qrys = _newData.find_language_by_type(language, _type)
+        else:
+            qrys = _newData.find_language(language)
+        all_data = {}
+        print qrys
+        if not qrys.get():
+            return []
+        dict_of_others = {}
+        for q in qrys:
+            if _type:
+                return q.list_of_keywords
+            all_data["language"] = q.language
+            string_of_keywords = q.list_of_keywords
+            print string_of_keywords
+            dict_of_others[q.type] = string_of_keywords
+        all_data["others"] = dict_of_others
+        return all_data
 
 
 def create_dict(language, keyword, type, link, translation, approved):

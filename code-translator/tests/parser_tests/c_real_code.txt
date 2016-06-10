@@ -1,0 +1,13 @@
+#include "HashTable.h"
+
+void freeTable(Table *table)
+{
+    int i;
+    if (table == NULL)
+        return;
+    for (i = 0; i < table->currentSize; i++) //Free all the objects in array
+        freeList(table->arr[i], table->dataType); //Free the linked list of objects
+    free(table->arr); // Free the array
+    free(table);
+}
+

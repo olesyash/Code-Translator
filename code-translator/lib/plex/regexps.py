@@ -481,6 +481,18 @@ def Str(*strs):
         return result
 
 
+def my_str(strs):
+    """
+    Str(s) is an RE which matches the literal string |s|.
+    Str(s1, s2, s3, ...) is an RE which matches any of |s1| or |s2| or |s3|...
+    """
+    if len(strs) == 1:
+        return Str1(strs[0])
+    else:
+        result = apply(Alt, tuple(map(Str1, strs)))
+        result.str = "Str(%s)" % string.join(map(repr, strs), ",")
+        return result
+
 def Any(s):
     """
     Any(s) is an RE which matches any character in the string |s|.

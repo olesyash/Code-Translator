@@ -53,7 +53,7 @@ class ResultParser():
 
     def find_by_class(self, html_data, claas_name):
         soup = BeautifulSoup(html_data, 'html.parser')
-        found_needed_data = soup.find("div", class_= claas_name)
+        found_needed_data = soup.find("div", class_=claas_name)
         if found_needed_data is not None:
             return str(found_needed_data)
         else:

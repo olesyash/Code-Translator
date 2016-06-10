@@ -46,3 +46,36 @@ class LanguagesData(ndb.Model):
             return q
         else:
             return False
+
+
+class LanguagesParsingData(ndb.Model):
+    language = ndb.StringProperty()
+    list_of_keywords = ndb.TextProperty(repeated=True)
+    type = ndb.StringProperty()
+
+
+    @staticmethod
+    def find_language(language):
+        """
+        This function find data in DB by keyword and language
+        :param word, language:
+        :return: list of LanguagesParsingData Objects if found in DB, false if not
+        """
+        q = LanguagesParsingData.query(LanguagesParsingData.language == language)
+        if q:
+            return q
+        else:
+            return False
+
+    @staticmethod
+    def find_language_by_type(language, _type):
+        """
+        This function find data in DB by keyword and language
+        :param word, language:
+        :return: list of LanguagesParsingData Objects if found in DB, false if not
+        """
+        q = LanguagesParsingData.query(LanguagesParsingData.language == language, LanguagesParsingData.type == _type)
+        if q:
+            return q
+        else:
+            return False
