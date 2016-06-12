@@ -57,19 +57,14 @@ class DALTest(unittest.TestCase):
         self.assertRaises(DataExistException, DAL.save_data_in_db, "java", "for", "statement", "https://docs....",
                           "the for statement is ...", True)
 
-    def test_save_and_read_new_language_java_statements(self):
+    def test_save_and_read_new_language_c_statements(self):
+        """
+        Test save in DB details for new language c
+        """
+        ndb.get_context().clear_cache()
         stmtns = ["for", "if", "else"]
-        DAL.save_language_details("Java", "statements", stmtns)
-        res = DAL.get_language_details("Java")
-        l_res = res["statements"]
-        print l_res
-        self.assertEqual(stmtns, l_res)
-
-    def test_save_and_read_new_language_python_statements(self):
-        stmtns = ["for", "if", "else"]
-        DAL.save_language_details("Python", "statements", stmtns)
-        res = DAL.get_language_details("Python", "statements")
-        print res
+        DAL.save_language_details("C", "statements", stmtns)
+        res = DAL.get_language_details("C", "statements")
         self.assertEqual(stmtns, res)
 
     def tearDown(self):

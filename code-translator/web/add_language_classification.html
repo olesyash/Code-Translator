@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no"/>
+    <title>Code-Translator</title>
+
+    <!-- CSS  -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="css/materialize.css" type="text/css" rel="stylesheet" media="screen,projection"/>
+    <link href="css/style.css" type="text/css" rel="stylesheet" media="screen,projection"/>
+    <link href=css/jquery-ui.css rel="stylesheet" type="text/css">
+</head>
+
+<body class=" light-blue lighten-5">
+<nav class="white" role="navigation">
+    <div class="nav-wrapper container">
+
+        <ul class="left">
+            <li><a id="logo-container" href="#" class="brand-logo center indigo-text text-darken-4">Welcome to Contribution Page!</a></li>
+        </ul>
+
+        <ul id="nav-mobile" class="side-nav">
+            <li><a href="#">Navbar Link</a>
+        </ul>
+
+    </div>
+</nav>
+
+<div id="index-banner" class="parallax-container">
+    <div class="section no-pad-bot">
+        <div class="container">
+            <br><br>
+
+            <div class="row center">
+            </div>
+            <br><br>
+        </div>
+    </div>
+    <div class="parallax"><img src="images/dontations-thank-you.jpg" alt="Unsplashed background img 1"></div>
+</div>
+
+<br><br>
+
+
+<div class="container ">
+
+    <!-- Modal Structure -->
+    <div id="modal1" class="modal">
+        <div class="modal-content">
+            <h4 id="modal-header"></h4>
+            <p id="modal-text"></p>
+        </div>
+        <div class="modal-footer">
+            <a href="#" class=" modal-action modal-close waves-effect waves-green btn-flat">Close</a>
+        </div>
+    </div>
+
+     <form id="info-form">
+
+        <div class="row myrow">
+            <div id="statements" class="input-field col s8 push-s2">
+                <i id="statements-info" data-tooltip="click for info" data-position="left" class="mi material-icons prefix tooltipped">info_outline</i>
+                <input placeholder="Statements" id="input-statements" type="text" class="validate headline-font">
+                <label  class="active label-font" for="input-statements">Statements</label>
+            </div>
+        </div>
+
+        <div class="row myrow">
+            <div id="data_types" class="input-field col s8 push-s2">
+                <i id="data_types-info" data-tooltip="click for info" data-position="left" class="mi material-icons prefix tooltipped">info_outline</i>
+                <input placeholder="Data types" id="input-data_types" type="text" class="validate headline-font">
+                <label class="active label-font" for="input-data_types">Data-types</label>
+            </div>
+        </div>
+
+        <div class="row myrow">
+            <div id="expressions" class="input-field col s8 push-s2">
+                <i id="expressions-info" data-tooltip="click for info" data-position="left" class="mi material-icons prefix tooltipped">info_outline</i>
+                <input placeholder="Expressions" id="input-expressions" type="text" class="validate headline-font">
+                <label  class="active label-font" for="input-expressions">Expressions</label>
+            </div>
+        </div>
+
+        <div class="row myrow">
+            <div id="operators" class="input-field col s8 push-s2">
+                <i id="operators-info" data-tooltip="click for info" data-position="left" class="mi material-icons prefix tooltipped">info_outline</i>
+                <input placeholder="Operators" id="input-operators" type="text" class="validate headline-font">
+                <label  class="active label-font" for="input-expressions">Operators</label>
+            </div>
+        </div>
+        <div class="row myrow">
+            <div class="col s8 push-s2">
+                <i id="add-other-info" data-tooltip="click for info" data-position="left" class="mi material-icons small tooltipped">info_outline</i>
+            To add other group<i id="add-other" style="cursor: pointer" class="material-icons small">add</i>
+            </div>
+        </div>
+         <span id="other-container">
+         </span>
+
+        <div class="row myrow center">
+            <div class="col s2 push-s8" id="mycol">
+                <div id="nextBtn" class="waves-effect waves-light btn left-align">Next</div>
+            </div>
+        </div>
+    </form>
+</div>
+
+
+
+
+<!--  Scripts-->
+<script src="js/jquery-2.1.4.min.js"></script>
+<script src="js/jquery.lettering-0.6.1.min.js"></script>
+<script src="js/jquery-ui.min.js"></script>
+<script src="js/materialize.min.js"></script>
+<script src="js/add_language_classification.js"></script>
+
+</body>
+
+</html>

@@ -16,6 +16,7 @@ Getting code from web side and using 3 steps before giving result back to web si
 
 class TranslationEngine():
     def __init__(self, language):
+        self.res_parser = ResultParser()
         self.language = language
         self.parser_obj = Parser(self.language)
         self.la = LanguagesAPI()
@@ -25,6 +26,7 @@ class TranslationEngine():
         self.rp = ResultParser(self.language)
         self.function_mapper = {"id": self.rp.find_by_id,
                                 "class": self.rp.find_by_class,
+                                "clear": self.res_parser.strip_text_from_html,
                                 "all": lambda html, _: html}
 
     def get_translation(self, code_text):
@@ -143,7 +145,7 @@ class TranslationEngine():
         word_type = self.classify_keywords(keyword, word_type)
 
         # Get approved urls list depending on language
-        language_url_list = default_urls[self.language]
+        language_url_list = get_urls_for_language(self.language)
         search_string = self.language + " " + keyword + " " + word_type
 
         self.url = None

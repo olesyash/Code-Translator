@@ -57,7 +57,9 @@
 .literal {
     color: #b9151b;
 }
-
+.mi{
+    cursor: pointer;
+}
 #translation-card {
     width: inherit;
     word-wrap: break-word;

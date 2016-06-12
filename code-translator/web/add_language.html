@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no"/>
+    <title>Code-Translator</title>
+
+    <!-- CSS  -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="css/materialize.css" type="text/css" rel="stylesheet" media="screen,projection"/>
+    <link href="css/style.css" type="text/css" rel="stylesheet" media="screen,projection"/>
+    <link href=css/jquery-ui.css rel="stylesheet" type="text/css">
+</head>
+<body class=" light-blue lighten-5">
+<nav class="white" role="navigation">
+    <div class="nav-wrapper container">
+
+        <ul class="left">
+            <li><a id="logo-container" href="#" class="brand-logo center indigo-text text-darken-4">Welcome to Contribution Page!</a></li>
+        </ul>
+
+        <ul id="nav-mobile" class="side-nav">
+            <li><a href="#">Navbar Link</a>
+        </ul>
+
+    </div>
+</nav>
+
+<div id="index-banner" class="parallax-container">
+    <div class="section no-pad-bot">
+        <div class="container">
+            <br><br>
+
+            <div class="row center">
+            </div>
+            <br><br>
+        </div>
+    </div>
+    <div class="parallax"><img src="images/dontations-thank-you.jpg" alt="Unsplashed background img 1"></div>
+</div>
+
+<br><br>
+
+
+<div class="container ">
+
+    <!-- Modal Structure -->
+    <div id="modal1" class="modal">
+        <div class="modal-content">
+            <h4 id="modal-header"></h4>
+            <p id="modal-text"></p>
+        </div>
+        <div class="modal-footer">
+            <a href="#" class=" modal-action modal-close waves-effect waves-green btn-flat">Close</a>
+        </div>
+    </div>
+    <form id="info-form">
+        <div class="row myrow">
+            <div id="language" class="input-field col s4 push-s4">
+                <i id="language-info" data-tooltip="click for info" data-position="left" class="mi material-icons prefix tooltipped">info_outline</i>
+                <input placeholder="Language" id="input-language" type="text" class="validate headline-font">
+                <label  class="active label-font" for="input-language">Language</label>
+            </div>
+        </div>
+        <div class="row myrow">
+            <div id ="keywords" class="input-field col s8 push-s2 ">
+                <i id="keywords-info" data-tooltip="click for info" data-position="left" class="mi material-icons prefix tooltipped">info_outline</i>
+                <input placeholder="Keywords" id="input-keywords" type="text" class="validate headline-font ">
+                <label  class="active label-font" for="input-keywords">Keywords</label>
+            </div>
+        </div>
+         <div class="row myrow">
+            <div id ="literals" class="input-field col s8 push-s2 ">
+                <i id="literals-info" data-tooltip="click for info" data-position="left" class="mi material-icons prefix tooltipped">info_outline</i>
+                <input placeholder="Keywords" id="input-literals" type="text" class="validate headline-font ">
+                <label  class="active label-font" for="input-literals">Literals</label>
+            </div>
+        </div>
+        <div class="row myrow">
+            <div id ="operations" class="input-field col s8 push-s2 ">
+                <i id="operations-info" data-tooltip="click for info" data-position="left" class="mi material-icons prefix tooltipped">info_outline</i>
+                <input placeholder="Operations" id="input-operations" type="text" class="validate headline-font">
+                <label class="active label-font" for="input-operations">Operations</label>
+            </div>
+        </div>
+        <div class="row myrow">
+            <div id ="str_symbol1" class="input-field col s4 push-s2 ">
+                <i id="str_symbol1-info" data-tooltip="click for info" data-position="left"  class="mi material-icons prefix tooltipped">info_outline</i>
+                <input placeholder="String symbol 1" id="input-str_symbol1" type="text" class="validate headline-font">
+                <label class="active label-font" for="input-str_symbol1">First string symbol</label>
+            </div>
+            <div id ="str_symbol2" class="input-field col s4 push-s2 ">
+                <i id="str_symbol2-info" data-tooltip="click for info" data-position="left"  class="mi material-icons prefix tooltipped">info_outline</i>
+                <input placeholder="String symbol 2" id="input-str_symbol2" type="text" class="validate headline-font">
+                <label class="active label-font" for="input-str_symbol2">Second string symbol</label>
+            </div>
+        </div>
+
+
+        <div class="row myrow">
+            <div id ="escape_character" class="input-field col s4 push-s2 ">
+                <i id="escape_character-info" data-tooltip="click for info" data-position="left" class="mi material-icons prefix tooltipped">info_outline</i>
+                <input placeholder="Escape character" id="input-escape_character" type="text" class="validate headline-font">
+                <label class="active label-font" for="input-escape_character">Escape character</label>
+            </div>
+            <div id ="start_comment_symb" class="input-field col s4 push-s2 ">
+                <i id="start_comment_symb-info" data-tooltip="click for info" data-position="left"  class="mi material-icons prefix tooltipped">info_outline</i>
+                <input placeholder="Start comment symbol" id="input-start_comment_symb" type="text" class="validate headline-font">
+                <label class="active label-font" for="input-start_comment_symb">Start comment symbol</label>
+            </div>
+        </div>
+        <div class="row myrow">
+            <div id ="comment_start1" class="input-field col s4 push-s2 ">
+                <i id="comment_start1-info" data-tooltip="click for info" data-position="left" class="mi material-icons prefix tooltipped">info_outline</i>
+                <input placeholder="Comment start 1" id="input-comment_start1" type="text" class="validate headline-font">
+                <label class="active label-font" for="input-comment_start1">Comment start 1</label>
+            </div>
+            <div id ="comment_end1" class="input-field col s4 push-s2 ">
+                <i id="comment_end1-info" data-tooltip="click for info" data-position="left" class="mi material-icons prefix tooltipped">info_outline</i>
+                <input placeholder="Comment end 1" id="input-comment_end1" type="text" class="validate headline-font">
+                <label class="active label-font" for="input-comment_end1">Comment end 1</label>
+            </div>
+        </div>
+
+        <div class="row myrow">
+            <div id ="comment_start2" class="input-field col s4 push-s2 ">
+                <i id="comment_start2-info" data-tooltip="click for info" data-position="left"  class="mi material-icons prefix tooltipped">info_outline</i>
+                <input placeholder="Comment end 1" id="input-comment_start2" type="text" class="validate headline-font">
+                <label class="active label-font" for="input-comment_start2">Comment end 1</label>
+            </div>
+
+            <div id ="comment_end2" class="input-field col s4 push-s2 ">
+                <i id="comment_end2-info" data-tooltip="click for info" data-position="left"  class="mi material-icons prefix tooltipped">info_outline</i>
+                <input placeholder="Comment end 2" id="input-comment_end2" type="text" class="validate headline-font">
+                <label class="active label-font" for="input-comment_end2">Comment end 2</label>
+            </div>
+        </div>
+
+        <div class="row myrow">
+            <div id ="add_library" class="input-field col s4 push-s4 ">
+                <i  id="add_library-info" data-tooltip="click for info" data-position="left"  class="mi material-icons prefix tooltipped">info_outline</i>
+                <input placeholder="Add library" id="input-add_library" type="text" class="validate headline-font">
+                <label class="active label-font" for="input-add_library">Add library</label>
+            </div>
+        </div>
+
+        <div class="row myrow">
+            <div id ="func_def" class="input-field col s4 push-s2 ">
+                <i id="func_def-info" data-tooltip="click for info" data-position="left"  class="mi material-icons prefix tooltipped">info_outline</i>
+                <input placeholder="Function definition" id="input-func_def" type="text" class="validate headline-font">
+                <label class="active label-font" for="input-func_def">Function definition</label>
+            </div>
+            <div id ="func_start" class="input-field col s4 push-s2 ">
+                <i id="func_start-info" data-tooltip="click for info" data-position="left" class="mi material-icons prefix tooltipped">info_outline</i>
+                <input placeholder="Function start" id="input-func_start" type="text" class="validate headline-font">
+                <label class="active label-font" for="input-func_start">Function start</label>
+            </div>
+        </div>
+
+        <div class="row myrow">
+             <div id ="class_keyword" class="input-field col s4 push-s2 ">
+                <i id="class_keyword-info" data-tooltip="click for info" data-position="left" class="mi material-icons prefix tooltipped">info_outline</i>
+                <input placeholder="Class keyword" id="input-class_keyword" type="text" class="validate headline-font">
+                <label class="active label-font" for="input-class_keyword">Class keyword</label>
+            </div>
+            <div id ="function_call_char" class="input-field col s4 push-s2 ">
+                <i id="function_call_char-info" data-tooltip="click for info" data-position="left" class="mi material-icons prefix tooltipped">info_outline</i>
+                <input placeholder="Function call character" id="input-function_call_char" type="text" class="validate headline-font">
+                <label class="active label-font" for="input-function_call_char">Function call character</label>
+            </div>
+        </div>
+    </form>
+        <div class="row myrow">
+            <div class="col s2 push-s2">
+            <i id="function_call_must_char-info" data-tooltip="click for info" data-position="left" class="mi material-icons small prefix tooltipped">info_outline</i>
+            </div>
+             <div id="function_call_must_char" class="input-field col s4 push-s2 headline-font">
+                 <select id="select-function_call_must_char">
+                  <option value="True">True</option>
+                  <option value="False">False</option>
+                </select>
+                 <label for="select-function_call_must_char" class="label-font">Function call must character</label>
+             </div>
+        </div>
+
+        <div class="row myrow center">
+            <div class="col s2 push-s8" id="mycol">
+                <div id="nextBtn" class="waves-effect waves-light btn left-align">Next</div>
+            </div>
+        </div>
+
+</div>
+
+
+
+
+<!--  Scripts-->
+<script src="js/jquery-2.1.4.min.js"></script>
+<script src="js/jquery.lettering-0.6.1.min.js"></script>
+<script src="js/jquery-ui.min.js"></script>
+<script src="js/materialize.min.js"></script>
+<script src="js/add_language.js"></script>
+
+</body>
+
+
+</html>

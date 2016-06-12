@@ -28,7 +28,6 @@ document.getElementById("select-option").addEventListener("change", select_liste
 function select_listener() {
     console.log("select pressed");
     var e2 = document.getElementById("select-option");
-    //Because of the disabled option there is shift of one (+1)
     selected_option = e2.options[e2.selectedIndex ].value;
 
     if (options_list.indexOf(selected_option) != -1) {
@@ -40,7 +39,7 @@ function select_listener() {
     }
 }
 
-//Translate button listener
+//Check keyword button listener
 $("#keywordBtn").click(
     function () {
         console.log("button pressed");

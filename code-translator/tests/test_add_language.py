@@ -30,20 +30,32 @@ class AddNewLanguageTest(unittest.TestCase):
         self.mydb = DAL()
 
     def test_prepare_for_lexicon_python_keywords(self):
+        """
+        Test prepare for lexicon function, for existing in code language - Python
+        """
         res = prepare_for_lexicon("Python", "keywords")
         self.assertEqual(python_keywords, res)
 
     def test_get_prepare_for_lexicon_C_empty(self):
+        """
+        Test prepare for lexicon function, for new language - C,  with empty DB
+        """
         res = prepare_for_lexicon("C", "keywords")
         self.assertIsInstance(res, Alt)
 
     def test_prepare_for_lexicon_C_not_empty(self):
+        """
+        Test prepare for lexicon function, for new language - C,  after saving in DB
+        """
         stmtns = ["for", "if", "else"]
         DAL.save_language_details("C", "keywords", stmtns)
         res = prepare_for_lexicon("C", "keywords")
         self.assertIsInstance(res, Alt)
 
     def test_cllasify_c(self):
+        """
+        Test classification after saving in DB for new language C
+        """
         tr = TranslationEngine("C")
         ndb.get_context().clear_cache()
         stmtns = ["for", "if", "else"]
@@ -52,6 +64,9 @@ class AddNewLanguageTest(unittest.TestCase):
         self.assertEqual(STATEMENT, res)
 
     def test_keyword_in_other(self):
+        """
+        Test keyword_in_other function, after saving in DB DB for new language C
+        """
         definition = ["ifdef"]
         DAL.save_language_details("C", "example", ["stam"])
         DAL.save_language_details("C", "definition", definition)
@@ -59,6 +74,9 @@ class AddNewLanguageTest(unittest.TestCase):
         self.assertEqual(res, "definition")
 
     def test_callsify_keyword_in_other(self):
+        """
+        Test classification in others, after saving in DB for new language C
+        """
         definition = ["ifdef"]
         tr = TranslationEngine("C")
         DAL.save_language_details("C", "example", ["stam"])
@@ -67,10 +85,13 @@ class AddNewLanguageTest(unittest.TestCase):
         self.assertEqual(res, "definition")
 
     def test_add_new_language_C_check_real_code(self):
+        """
+        Test add new language function, add new language c and run parser on it
+        """
         ndb.get_context().clear_cache()
         data = dict()
         ce = ContributionEngine("C", "")
-        data['keywords'] = ["auto", "else", "long", "switch", "break", "enum", "register", "typedef", "case",	"extern",
+        data['keywords'] = ["auto", "else", "long", "switch", "break", "enum", "register", "typedef", "case", "extern",
                             "char", "float", "short", "unsigned", "const", "for", "signed", "continue", "goto", 'void',
                             "volatile", "default", "if", "static", "while", "do", "int", "struct", "_Packed", "double",
                             "return", "union",  "sizeof"]
@@ -85,7 +106,9 @@ class AddNewLanguageTest(unittest.TestCase):
         data['literals'] = []
         data['start_comment_symb'] = ['//']
         data['comment_start1'] = ['/*']
-        data['comment_start2'] = ['*/']
+        data['comment_end1'] = ['*/']
+        data['comment_start2'] = ['/*']
+        data['comment_end2'] = ['*/']
         data['func_def'] = []
         data['class_keyword'] = []
         data['escape_character'] = []
@@ -101,8 +124,8 @@ class AddNewLanguageTest(unittest.TestCase):
         expected_lib = ['HashTable.h']
         expected_keywords = ['include', 'void', 'int', 'if', 'return', 'for']
         expected_functions_calls = ['freeTable', 'freeList', 'free', 'free']
-        # self.assertEqual(expected_keywords, self.p.keywords)
-        # self.assertEqual(expected_functions_calls, self.p.scanner.functions_calls)
+        self.assertEqual(expected_keywords, self.p.keywords)
+        self.assertEqual(expected_functions_calls, self.p.scanner.functions_calls)
         self.assertEqual(expected_lib, self.p.scanner.libraries)
 
     def run_parser(self):
@@ -114,4 +137,55 @@ class AddNewLanguageTest(unittest.TestCase):
         self.p = Parser("C")
         self.p.run_parser(output)
 
+    def test_get_all_urls_for_python(self):
+        """
+        Test get_all_urls function, for existing in code language - python
+        """
+        expected = ["https://docs.python.org/", "https://wiki.python.org", "http://www.tutorialspoint.com/python"]
+        res = get_urls_for_language("Python")
+        self.assertEqual(expected, res)
 
+    def test_get_urls_for_c_empty(self):
+        """
+        Test get_all_urls function, for new language - c, when the DB is empty
+        """
+        res = get_urls_for_language("C")
+        self.assertEqual(res, [])
+
+    def test_save_and_retrieve_all_urls_for_c(self):
+        """
+        Test get_all_urls function, for new language - c, after adding it to DB
+        """
+        data = {"urls": ["c_url1", "c_url2"], "c_url1": {"type": "class", "name": "section"},
+                                              "c_url2": {"type": "id", "name": "content"}}
+        ce = ContributionEngine("C", "")
+        ce.add_urls_for_language(data)
+        res = get_urls_for_language("C")
+        self.assertEqual(data["urls"], res)
+
+    def test_save_and_retrieve_all_details_for_url_c(self):
+        """
+        Test get all details about url, after saving it in DB using 'add_urls_for_language' function
+        """
+        data = {"urls": ["c_url1", "c_url2"], "c_url1": {"type": "class", "name": "section"},
+                                              "c_url2": {"type": "id", "name": "content"}}
+        ce = ContributionEngine("C", "")
+        ce.add_urls_for_language(data)
+        _type, name = get_details_about_url("c_url1")
+        self.assertEqual(_type, "class")
+        self.assertEqual(name, "section")
+        _type, name = get_details_about_url("c_url2")
+        self.assertEqual(_type, "id")
+        self.assertEqual(name, "content")
+
+    def test_add_classification_for_language_classify(self):
+        """
+        Test add_classification_for_language function, use classify function to test
+        """
+        data = {"statements": ["for", "if", "else"], "operators": [], "data_types": ["int", "long", "float", "char",
+                "double"], "expressions": [], "other": []}
+        tr = TranslationEngine("C")
+        ce = ContributionEngine("C")
+        ce.add_classification_for_language(data)
+        self.assertEqual("statement", tr.classify_keywords("for", "keyword"))
+        self.assertEqual("data type", tr.classify_keywords("int", "keyword"))

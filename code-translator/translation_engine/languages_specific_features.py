@@ -244,6 +244,13 @@ classifications = ["keywords", "expressions", "statements", "data_types"]
 
 
 def prepare_for_lexicon(language, title):
+    """
+    This function prepares dta for parser lexicon. If exist in code, return it as it
+    If not exist in the code, pull it from db and convert to suitable type for lexicon if needed
+    :param language: language
+    :param title: the title of words, for example keywords, operations, string character, etc
+    :return: return compatible type for lexicon
+    """
     try:
         return eval("languages_" + title)[language]
     except KeyError:
@@ -258,6 +265,13 @@ def prepare_for_lexicon(language, title):
 
 
 def keyword_is_title(language, keyword, title):
+    """
+    Check if keyword defined by a title
+    :param language: string
+    :param keyword: string
+    :param title: string
+    :return: True if keyword defined by a title, false if not
+    """
     try:
         return keyword in eval("languages_" + title)[language]
     except KeyError:
@@ -267,6 +281,12 @@ def keyword_is_title(language, keyword, title):
 
 
 def keyword_in_other(language, keyword):
+    """
+    Check if keyword defined by a another title, not predefined one
+    :param language: string
+    :param keyword: string
+    :return: return the title for the keyword
+    """
     dal = DAL()
     all_data = dal.get_language_details(language)
     dict_of_others = all_data["others"]
@@ -274,3 +294,28 @@ def keyword_in_other(language, keyword):
         if keyword in val:
             return k
 
+
+def get_urls_for_language(language):
+    """
+    This function return all defined urls for language
+    If exist in code, return it as it. If not exist in the code, pull it from db
+    :param language:
+    :return:
+    """
+    try:
+        return default_urls[language]
+    except KeyError:
+        print "need to search in DB"
+        dal = DAL()
+        urls = dal.get_language_details(language, "urls")
+        return urls
+
+
+def get_details_about_url(url):
+    for key in url_info:
+        if key in url:
+            return url_info[key].items()[0]
+    else:
+        print "need to search in DB"
+        dal = DAL()
+        return dal.get_url_details(url)

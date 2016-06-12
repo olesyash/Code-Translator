@@ -11,7 +11,7 @@ sys.setdefaultencoding('utf8')
 
 
 class ContributionEngine():
-    def __init__(self, language, keyword):
+    def __init__(self, language, keyword=None):
         self.THANKS_BUT_NO_THANKS = "Thank you, but the keyword already translated"
         self.THANKS_FOR_APPROVE = "Thank you for the keyword approve!"
         self.THANKS_FOR_CONTRIBUTION = "Thank you for your contribution!"
@@ -149,27 +149,64 @@ class ContributionEngine():
         return self.THANKS_FOR_CONTRIBUTION
 
     def add_new_language(self, data):
+        """
+        This function get all parsing data of a new language in dictionary and saves it in DB
+        :param data: dictionary
+        :return: True if all saved, False if there were errors in saving
+        """
+        try:
+            self.dal.save_language_details(self.language, "keywords", data['keywords'])
+            self.dal.save_language_details(self.language, "str_symbol1", data['str_symbol1'])
+            self.dal.save_language_details(self.language, "str_symbol2", data['str_symbol2'])
+            self.dal.save_language_details(self.language, "operations", data['operations'])
+            self.dal.save_language_details(self.language, "add_library", data['add_library'])
+            self.dal.save_language_details(self.language, "literals", data['literals'])
+            self.dal.save_language_details(self.language, "start_comment_symb", data['start_comment_symb'])
+            self.dal.save_language_details(self.language, "comment_start1", data['comment_start1'])
+            self.dal.save_language_details(self.language, "comment_start2", data['comment_start2'])
+            self.dal.save_language_details(self.language, "comment_end1", data['comment_end1'])
+            self.dal.save_language_details(self.language, "comment_end2", data['comment_end2'])
+            self.dal.save_language_details(self.language, "func_def", data['func_def'])
+            self.dal.save_language_details(self.language, "class_keyword", data['class_keyword'])
+            self.dal.save_language_details(self.language, "escape_character", data['escape_character'])
+            self.dal.save_language_details(self.language, "func_start", data['func_start'])
+            self.dal.save_language_details(self.language, "function_call_char", data['function_call_char'])
+            self.dal.save_language_details(self.language, "function_call_must_char", data['function_call_must_char'])
+            return True
+        except Exception as e:
+            logging.error(e.message)
+            return False
 
-        self.dal.save_language_details(self.language, "keywords", data['keywords'])
-        self.dal.save_language_details(self.language, "str_symbol1", data['str_symbol1'])
-        self.dal.save_language_details(self.language, "str_symbol2", data['str_symbol2'])
-        self.dal.save_language_details(self.language, "operations", data['operations'])
-        self.dal.save_language_details(self.language, "add_library", data['add_library'])
-        self.dal.save_language_details(self.language, "literals", data['literals'])
-        self.dal.save_language_details(self.language, "start_comment_symb", data['start_comment_symb'])
-        self.dal.save_language_details(self.language, "comment_start1", data['comment_start1'])
-        self.dal.save_language_details(self.language, "comment_start2", data['comment_start2'])
-        self.dal.save_language_details(self.language, "func_def", data['func_def'])
-        self.dal.save_language_details(self.language, "class_keyword", data['class_keyword'])
-        self.dal.save_language_details(self.language, "escape_character", data['escape_character'])
-        self.dal.save_language_details(self.language, "func_start", data['func_start'])
-        self.dal.save_language_details(self.language, "function_call_char", data['function_call_char'])
-        self.dal.save_language_details(self.language, "function_call_must_char", data['function_call_must_char'])
-        other_list = data['other']
-        for key, value in other_list.iteritems():
-            self.dal.save_language_details(self.language, key, value)
+    def add_urls_for_language(self, data):
+        """
+        Save in DB all data about languages urls
+        :param data: dictionary
+        :return: True if all saved, False if there were errors in saving
+        """
+        try:
+            self.dal.save_language_details(self.language, "urls", data["urls"])
+            for url in data["urls"]:
+                self.dal.set_url_details(url, data[url]['type'], data[url]['name'])
+            return True
+        except Exception as e:
+            logging.error(e)
+            return False
 
-
+    def add_classification_for_language(self, data):
+        try:
+            self.dal.save_language_details(self.language, "statements", data["statements"])
+            self.dal.save_language_details(self.language, "data_types", data["data_types"])
+            self.dal.save_language_details(self.language, "expressions", data["expressions"])
+            self.dal.save_language_details(self.language, "operators", data["operators"])
+            other_list = data['other']
+            for key, value in other_list.iteritems():
+                self.dal.save_language_details(self.language, key, value)
+            return True
+        except Exception as e:
+            logging.info(20*"*")
+            logging.info(e.message)
+            logging.info(e)
+            return False
 
 
 

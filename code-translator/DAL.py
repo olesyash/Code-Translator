@@ -211,6 +211,35 @@ class DAL():
         all_data["others"] = dict_of_others
         return all_data
 
+    @staticmethod
+    def set_url_details(url, _type, name):
+        """
+        This function save url details in DB only if not already exist
+        :param url: string
+        :param _type: string
+        :param name: string
+        :return:
+        """
+        _newData = LanguagesUrlsData()
+        res = _newData.find_url(url)
+        if not res:
+            _newData.url = url
+            _newData.type = _type
+            _newData.name = name
+            _newData.put()
+
+    @staticmethod
+    def get_url_details(url):
+        """
+        This function get url and return information about it from DB
+        :param url: the url that information needed about
+        :return: dictionary of all data
+        """
+        _newData = LanguagesUrlsData()
+        qry = _newData.find_url(url)
+        if qry:
+            return qry.type, qry.name
+
 
 def create_dict(language, keyword, type, link, translation, approved):
     """
@@ -240,9 +269,9 @@ class UserNotExistException(Exception):
 
 class DataExistException(Exception):
     def __init__(self):
-        self.message = "Data for this key word already exist!"
+        self.message = "Data for this keyword already exist!"
 
 
 class DataNotExistException(Exception):
     def __init__(self):
-        self.message = "Data for this key word not exist!"
+        self.message = "Data for this keyword not exist!"

@@ -40,9 +40,6 @@ class MainHandler(webapp2.RequestHandler):
         template = JINJA_ENVIRONMENT.get_template('index.html')
         self.response.write(template.render(template_values))
 
-    def post(self):
-        pass
-
 
 class ContributionHandler(webapp2.RequestHandler):
     def get(self):
@@ -50,8 +47,52 @@ class ContributionHandler(webapp2.RequestHandler):
         template = JINJA_ENVIRONMENT.get_template('contribution_page.html')
         self.response.write(template.render(template_values))
 
+
+class LanguageContributionHandler(webapp2.RequestHandler):
+    def get(self):
+        template_values = {}
+        template = JINJA_ENVIRONMENT.get_template('add_language.html')
+        self.response.write(template.render(template_values))
+
+
+class LanguageClassificationHandler(webapp2.RequestHandler):
+    def get(self):
+        template_values = {}
+        template = JINJA_ENVIRONMENT.get_template('add_language_classification.html')
+        self.response.write(template.render(template_values))
+
     def post(self):
-        pass
+        all_request = self.request.body
+        dic = json.loads(all_request)
+        language = dic['language']
+        all_data = dic['all_data']
+        ce = ContributionEngine(language)
+        res = ce.add_classification_for_language(all_data)
+        response = dict()
+        response['response'] = res
+        json_response = json.dumps(response)
+        self.response.headers['Content-Type'] = 'application/json'
+        self.response.write(json_response)
+
+
+class LanguageUrlsHandler(webapp2.RequestHandler):
+    def get(self):
+        template_values = {}
+        template = JINJA_ENVIRONMENT.get_template('add_language_urls.html')
+        self.response.write(template.render(template_values))
+
+    def post(self):
+        all_request = self.request.body
+        dic = json.loads(all_request)
+        language = dic['language']
+        all_data = dic['all_data']
+        ce = ContributionEngine(language)
+        res = ce.add_classification_for_language(all_data)
+        response = dict()
+        response['response'] = res
+        json_response = json.dumps(response)
+        self.response.headers['Content-Type'] = 'application/json'
+        self.response.write(json_response)
 
 
 class GetTranslation(webapp2.RequestHandler):
@@ -136,7 +177,7 @@ class AddLanguage(webapp2.RequestHandler):
         dic = json.loads(self.request.body)
         language = dic['language']
         all_data = dic['all_data']
-        ce = ContributionEngine(language, "")
+        ce = ContributionEngine(language)
         res = ce.add_new_language(all_data)
         response = dict()
         response['response'] = res
@@ -144,10 +185,13 @@ class AddLanguage(webapp2.RequestHandler):
         self.response.headers['Content-Type'] = 'application/json'
         self.response.write(json_response)
 
-               
+
 app = webapp2.WSGIApplication([
     ('/gettranslation', GetTranslation),
     ('/contribution-page', ContributionHandler),
+    ('/contribute-language', LanguageContributionHandler),
+    ('/add_language_classification', LanguageClassificationHandler),
+    ('/add_language_urls', LanguageUrlsHandler),
     ('/check-keyword', CheckKeyword),
     ('/contribute', Contribute),
     ('/approve', Approve),
