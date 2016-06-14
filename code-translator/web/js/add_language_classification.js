@@ -15,7 +15,7 @@ if (document.location.href.indexOf("language=") != -1) {
 }
 else {
     alert("Missing language parameter");
-    document.location.href = "/contribute-language"
+    document.location.href = "/add-language"
 }
 
 $(document).on("click", "#add-other", addOther);
@@ -137,24 +137,28 @@ function add_language(data) {
 
     var json = JSON.stringify(data);
     //Show loader (spinner) while waiting for server response
-    //$(".loader2").removeClass("hide").show();
+    $(".darken").removeClass("hide").show();
     $.ajax({
-        url: '/add_language_classification',
+        url: '/add-language-classification',
         type: "POST",
         data: json,
         contentType: "json",
         dataType: "json",
         statusCode: {
+            404: function () {
+                 $(".darken").hide(); //stop spinner
+            },
             400: function () {
+                 $(".darken").hide(); //stop spinner
             },
             500: function () {
-                //$(".loader2").hide(); //stop spinner
+                $(".darken").hide(); //stop spinner
                 alert("Sorry, there is some error in the server side =(")
             }
         },
         success: function (response, message, jq) {
             console.log(response);
-            //$(".loader2").hide(); //stop spinner
+            $(".darken").hide(); //stop spinner
             TreatResponse(response)
         }
     });
@@ -163,7 +167,7 @@ function add_language(data) {
 function TreatResponse(response) {
     console.log(response["response"]);
     if (response["response"])
-        document.location.href = "/add_language_urls?language=" + language;
+        document.location.href = "/add-language-urls?language=" + language;
     else {
         alert("Something went wrong")
     }

@@ -250,3 +250,12 @@ class TranslationEngineTest(unittest.TestCase):
         self.t = TranslationEngine(self.l)
         res = self.t.classify_keywords("instanceof", KEYWORD)
         self.assertEqual(OPERATOR, res)
+
+    def test_parse_result_unknown_url(self):
+        self.l = "Ruby"
+        self.t = TranslationEngine(self.l)
+        la = LanguagesAPI()
+        url = "http://ruby-doc.org/docs/ruby-doc-bundle/Manual/man-1.4/function.html"
+        result, code = la.http_request_using_urlfetch(http_url=url)
+        res = self.t.parse_result(result)
+        self.assertEqual(res, result)

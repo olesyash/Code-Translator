@@ -187,6 +187,7 @@ class ContributionEngine():
             self.dal.save_language_details(self.language, "urls", data["urls"])
             for url in data["urls"]:
                 self.dal.set_url_details(url, data[url]['type'], data[url]['name'])
+            self.dal.add_language(self.language)
             return True
         except Exception as e:
             logging.error(e)
@@ -199,8 +200,9 @@ class ContributionEngine():
             self.dal.save_language_details(self.language, "expressions", data["expressions"])
             self.dal.save_language_details(self.language, "operators", data["operators"])
             other_list = data['other']
-            for key, value in other_list.iteritems():
-                self.dal.save_language_details(self.language, key, value)
+            if other_list:
+                for key, value in other_list.iteritems():
+                    self.dal.save_language_details(self.language, key, value)
             return True
         except Exception as e:
             logging.info(20*"*")

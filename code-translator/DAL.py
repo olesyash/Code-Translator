@@ -1,6 +1,7 @@
 __author__ = 'olesya'
 
 from models.models import *
+import time
 
 
 class DAL():
@@ -179,10 +180,11 @@ class DAL():
         :param keywords_list
         """
         _newData = LanguagesParsingData()
-        _newData.language = language
-        _newData.list_of_keywords = keywords_list
-        _newData.type = title
-        _newData.put()
+        if not LanguagesParsingData.find_language_by_type(language, title):
+            _newData.language = language
+            _newData.list_of_keywords = keywords_list
+            _newData.type = title
+            _newData.put()
 
     @staticmethod
     def get_language_details(language, _type=None):
@@ -192,23 +194,29 @@ class DAL():
         :return: dictionary of all data
         """
         _newData = LanguagesParsingData()
+        print _type
         if _type:
             qrys = _newData.find_language_by_type(language, _type)
+            print qrys
         else:
             qrys = _newData.find_language(language)
         all_data = {}
-        print qrys
-        if not qrys.get():
+
+        if not qrys:
             return []
         dict_of_others = {}
+        print qrys.get()
         for q in qrys:
+            print "in for"
             if _type:
+                print "in if"
                 return q.list_of_keywords
             all_data["language"] = q.language
             string_of_keywords = q.list_of_keywords
             print string_of_keywords
             dict_of_others[q.type] = string_of_keywords
         all_data["others"] = dict_of_others
+        print all_data
         return all_data
 
     @staticmethod
@@ -239,6 +247,38 @@ class DAL():
         qry = _newData.find_url(url)
         if qry:
             return qry.type, qry.name
+        else:
+            return "all", ""
+
+    def add_language(self, language):
+        new = AllLanguages()
+        res = self.get_all_languages()
+        if not res:
+            if not isinstance(language, basestring):
+                new.languages = language
+            else:
+                new.languages = [language]
+            new.put()
+            return True
+
+        if language in res:
+            return False
+        else:
+            res.append(language)
+            _qry = AllLanguages.query().get()
+            _qry.languages = res
+            _qry.put()
+            return True
+
+    def get_all_languages(self):
+        _qry = AllLanguages.query()
+        q = _qry.get()
+        print q
+        if q:
+            print "q.languages" + str(q.languages)
+            return q.languages
+        else:
+            return []
 
 
 def create_dict(language, keyword, type, link, translation, approved):

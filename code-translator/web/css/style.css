@@ -57,7 +57,7 @@
 .literal {
     color: #b9151b;
 }
-.mi{
+.material-icons{
     cursor: pointer;
 }
 #translation-card {
@@ -262,6 +262,14 @@ p {
     height: auto;
     color: rgba(255, 255, 255, .9);
 }
+
+.pc {
+    min-height: 140px;
+    line-height: 0;
+    height: 140px;
+    color: rgba(255, 255, 255, .9);
+}
+
 
 .parallax-container .section {
     width: 100%;

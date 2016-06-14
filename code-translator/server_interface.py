@@ -54,6 +54,18 @@ class LanguageContributionHandler(webapp2.RequestHandler):
         template = JINJA_ENVIRONMENT.get_template('add_language.html')
         self.response.write(template.render(template_values))
 
+    def post(self):
+        dic = json.loads(self.request.body)
+        language = dic['language']
+        all_data = dic['all_data']
+        ce = ContributionEngine(language)
+        res = ce.add_new_language(all_data)
+        response = dict()
+        response['response'] = res
+        json_response = json.dumps(response)
+        self.response.headers['Content-Type'] = 'application/json'
+        self.response.write(json_response)
+
 
 class LanguageClassificationHandler(webapp2.RequestHandler):
     def get(self):
@@ -87,7 +99,7 @@ class LanguageUrlsHandler(webapp2.RequestHandler):
         language = dic['language']
         all_data = dic['all_data']
         ce = ContributionEngine(language)
-        res = ce.add_classification_for_language(all_data)
+        res = ce.add_urls_for_language(all_data)
         response = dict()
         response['response'] = res
         json_response = json.dumps(response)
@@ -97,7 +109,11 @@ class LanguageUrlsHandler(webapp2.RequestHandler):
 
 class GetTranslation(webapp2.RequestHandler):
     def get(self):
-        json_response = json.dumps(languages)
+        dal = DAL()
+        res = dal.get_all_languages()
+        if not res:
+            dal.add_language(languages)
+        json_response = json.dumps(get_all_languages())
         self.response.headers['Content-Type'] = 'application/json'
         self.response.write(json_response)
 
@@ -172,29 +188,14 @@ class Approve(webapp2.RequestHandler):
         self.response.write(json_response)
 
 
-class AddLanguage(webapp2.RequestHandler):
-    def post(self):
-        dic = json.loads(self.request.body)
-        language = dic['language']
-        all_data = dic['all_data']
-        ce = ContributionEngine(language)
-        res = ce.add_new_language(all_data)
-        response = dict()
-        response['response'] = res
-        json_response = json.dumps(response)
-        self.response.headers['Content-Type'] = 'application/json'
-        self.response.write(json_response)
-
-
 app = webapp2.WSGIApplication([
     ('/gettranslation', GetTranslation),
     ('/contribution-page', ContributionHandler),
-    ('/contribute-language', LanguageContributionHandler),
-    ('/add_language_classification', LanguageClassificationHandler),
-    ('/add_language_urls', LanguageUrlsHandler),
+    ('/add-language', LanguageContributionHandler),
+    ('/add-language-classification', LanguageClassificationHandler),
+    ('/add-language-urls', LanguageUrlsHandler),
     ('/check-keyword', CheckKeyword),
     ('/contribute', Contribute),
     ('/approve', Approve),
-    ('/add-language', AddLanguage),
     ('/', MainHandler)
 ], debug=True)

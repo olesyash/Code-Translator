@@ -12,7 +12,6 @@ var url;
 var name = "";
 var GET = "Please insert contribution details: ";
 var NO_THANKS = "Thank you, but the keyword already translated";
-var THANKS_FOR_CONTRIBUTION = "Thank you for your contribution!";
 var options_list = ["class", "id"];
 
 $(document).ready(function () {
@@ -290,7 +289,7 @@ function approve()
 
 //Show all elements needed to get contribution information from user
 function showGetTranslation() {
-    $("#header").removeClass("hide").show();
+    $("#header").html(GET).removeClass("hide").show();
     $("#keyword-type").removeClass("hide").show();
     $("#url").removeClass("hide").show();
     $("#option-choose").removeClass("hide").show();
@@ -305,4 +304,11 @@ function hideAll() {
     $("#option-choose").hide();
     $("#submit").hide();
     $("#name").addClass('hide');
+}
+
+
+function changePage(i) {
+    selected = i;
+    hideAll();
+    addPagination();
 }

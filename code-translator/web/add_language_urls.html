@@ -13,12 +13,12 @@
     <link href=css/jquery-ui.css rel="stylesheet" type="text/css">
 </head>
 
-<body class=" light-blue lighten-5">
+<body class="light-blue lighten-5">
 <nav class="white" role="navigation">
     <div class="nav-wrapper container">
 
         <ul class="left">
-            <li><a id="logo-container" href="#" class="brand-logo center indigo-text text-darken-4">Welcome to
+            <li><a id="logo-container" href="#" class="brand-logo center indigo-text text-darken-4">Welcome to Language
                 Contribution Page!</a></li>
         </ul>
 
@@ -44,6 +44,10 @@
 
 <br><br>
 
+  <div class="darken hide">
+        <p class="loader-text">Please wait while we sending the contribution to server...</p>
+        <div class="loader" id="loader-container"></div>
+  </div>
 
 <div class="container ">
 
@@ -55,21 +59,26 @@
             <p id="modal-text"></p>
         </div>
         <div class="modal-footer">
-            <a href="#" class=" modal-action modal-close waves-effect waves-green btn-flat">Close</a>
+            <a href="#!" class=" modal-action modal-close waves-effect waves-green btn-flat">Close</a>
         </div>
     </div>
 
-    <div class="row myrow">
-        <div class="col s1 push-s2 ">
-            <i id="url-info" data-tooltip="click for info" data-position="left"
-               class="mi material-icons small prefix tooltipped col ">info_outline</i>
-        </div>
-        <div class="col s2 push-s2 ">
-            <h5>Add Urls:</h5>
-        </div>
-    </div>
+    <h4 id="header" class="center #1a237e indigo-text text-darken-4">Step 3/3, last effort!</h4>
+      <h5 id="greetings"><i>You almost done! In this section, you need to add the language urls. We need to collect few default sites
+          to pull information from</i></h5>
+
+    <br><br>
+
     <form id="info-form">
-
+        <div class="row myrow">
+            <div class="col s1 push-s2 ">
+                <i id="url-info" data-tooltip="click for info" data-position="left"
+                   class="mi material-icons small prefix tooltipped col ">info_outline</i>
+            </div>
+            <div class="col s2 push-s2 ">
+                <h5>Add Urls:</h5>
+            </div>
+        </div>
         <!--First url-->
         <div class="row myrow">
             <div id="url1" class="input-field col s8 push-s2 ">
@@ -104,6 +113,7 @@
         <!--Second url-->
         <div class="hide" id="2">
             <br><br>
+
             <div class="row myrow ">
                 <div id="url2" class="input-field col s8 push-s2">
                     <input placeholder="Url" id="input-url2" type="text" class="validate headline-font">
@@ -140,6 +150,7 @@
         <!--Third Url-->
         <div class="hide" id="3">
             <br><br>
+
             <div class="row myrow">
                 <div id="url3" class="input-field col s8 push-s2">
                     <input placeholder="Url" id="input-url3" type="text" class="validate headline-font">
@@ -149,14 +160,14 @@
             <div class="row myrow">
                 <div id="option-choose3" class="input-field col s8 push-s2 headline-font">
                     <select id="select-option3">
-                    <optgroup label="By specific tag">
-                        <option value="id">id</option>
-                        <option value="class">class</option>
-                    </optgroup>
-                    <optgroup label="Whole page">
-                        <option value="all" selected>With html</option>
-                        <option value="clear">Without html</option>
-                    </optgroup>
+                        <optgroup label="By specific tag">
+                            <option value="id">id</option>
+                            <option value="class">class</option>
+                        </optgroup>
+                        <optgroup label="Whole page">
+                            <option value="all" selected>With html</option>
+                            <option value="clear">Without html</option>
+                        </optgroup>
                     </select>
                     <label class="label-font">Options</label>
                 </div>
@@ -172,10 +183,10 @@
 
         <div class="row myrow">
             <div class="col s1 push-s2">
-                <i id="add-other" class="mi material-icons small">add</i>
+                <i id="add-other" class="material-icons small">add</i>
             </div>
             <div class="col s1 push-s2">
-                <i id="remove-other" class="mi material-icons">remove</i>
+                <i id="remove-other" class="material-icons">remove</i>
             </div>
         </div>
          <span id="other-container">
@@ -186,6 +197,7 @@
                 <div id="addLanguageBtn" class="waves-effect waves-light btn left-align">Finish</div>
             </div>
         </div>
+
     </form>
 </div>
 

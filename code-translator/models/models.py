@@ -74,9 +74,10 @@ class LanguagesParsingData(ndb.Model):
         :param word, language:
         :return: list of LanguagesParsingData Objects if found in DB, false if not
         """
-        q = LanguagesParsingData.query(LanguagesParsingData.language == language, LanguagesParsingData.type == _type)
+        qrys  = LanguagesParsingData.query(LanguagesParsingData.language == language, LanguagesParsingData.type == _type)
+        q = qrys.get()
         if q:
-            return q
+            return qrys
         else:
             return False
 
@@ -99,3 +100,7 @@ class LanguagesUrlsData(ndb.Model):
             return q
         else:
             return False
+
+
+class AllLanguages(ndb.Model):
+    languages = ndb.StringProperty(repeated=True)

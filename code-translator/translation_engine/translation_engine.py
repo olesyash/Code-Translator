@@ -16,8 +16,8 @@ Getting code from web side and using 3 steps before giving result back to web si
 
 class TranslationEngine():
     def __init__(self, language):
-        self.res_parser = ResultParser()
         self.language = language
+        self.res_parser = ResultParser(self.language)
         self.parser_obj = Parser(self.language)
         self.la = LanguagesAPI()
         self.url = ""
@@ -27,7 +27,7 @@ class TranslationEngine():
         self.function_mapper = {"id": self.rp.find_by_id,
                                 "class": self.rp.find_by_class,
                                 "clear": self.res_parser.strip_text_from_html,
-                                "all": lambda html, _: html}
+                                "all": lambda html: html}
 
     def get_translation(self, code_text):
         """
@@ -71,6 +71,8 @@ class TranslationEngine():
         """
         url = self.url_search(keyword, word_type)
         logging.info("URL: " + str(url))
+        if not url:
+            return None
 
         try:
             result, code = self.la.http_request_using_urlfetch(http_url=url)
@@ -101,16 +103,13 @@ class TranslationEngine():
             return None
 
     def parse_result(self, result):
-        _type = ""
-        name = ""
-        for key in url_info:
-            if key in self.url:
-                _type, name = url_info[key].items()[0]
-                break
-
+        _type, name = get_details_about_url(self.url)
         func = self.function_mapper.get(_type)
         logging.info("parsing using " + str(func))
-        translation = func(result, name)
+        if name:
+            translation = func(result, name)
+        else:
+            translation = func(result)
         logging.debug("Translation " + translation)
         return translation
 
@@ -124,11 +123,11 @@ class TranslationEngine():
                 return EXPRESSION
             elif keyword_is_title(self.language, keyword, "operators"):
                 return OPERATOR
+
             res = keyword_in_other(self.language, keyword)
             if res:
                 return res
-            else:
-                return KEYWORD
+            return KEYWORD
         else:
             return word_type
 
@@ -153,6 +152,8 @@ class TranslationEngine():
             logging.info("search in google: " + search_string)
             logging.info("counter " + str(counter))
             urls = self.custom_google_search(search_string, counter)
+            if not urls:
+                return []
             if not self.url:
                 self.url = urls[0]  # Save default url to be the first one
             for url in urls:
@@ -174,10 +175,14 @@ class TranslationEngine():
             start=index
         ).execute()
         urls = []
-        for i in res_json['items']:
-            urls.append(i['link'])
-        logging.info("Urls: {urls}".format(urls=str(urls)))
-        return urls
+        logging.info("custom google search result: " + str(res_json))
+        try:
+            for i in res_json['items']:
+                urls.append(i['link'])
+            logging.info("Urls: {urls}".format(urls=str(urls)))
+            return urls
+        except KeyError:
+            return []
 
     def reformat_parsed_text(self, code_text, parsed_list):
         """

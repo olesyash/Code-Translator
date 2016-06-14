@@ -289,10 +289,17 @@ def keyword_in_other(language, keyword):
     """
     dal = DAL()
     all_data = dal.get_language_details(language)
-    dict_of_others = all_data["others"]
-    for k, val in dict_of_others.iteritems():
-        if keyword in val:
-            return k
+    print "all_data"
+    print all_data
+    if not all_data:
+        return None
+    try:
+        dict_of_others = all_data["others"]
+        for k, val in dict_of_others.iteritems():
+            if keyword in val:
+                return k
+    except KeyError:
+        return None
 
 
 def get_urls_for_language(language):
@@ -319,3 +326,8 @@ def get_details_about_url(url):
         print "need to search in DB"
         dal = DAL()
         return dal.get_url_details(url)
+
+
+def get_all_languages():
+    dal = DAL()
+    return dal.get_all_languages()

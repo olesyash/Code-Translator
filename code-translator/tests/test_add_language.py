@@ -182,6 +182,7 @@ class AddNewLanguageTest(unittest.TestCase):
         """
         Test add_classification_for_language function, use classify function to test
         """
+        ndb.get_context().clear_cache()
         data = {"statements": ["for", "if", "else"], "operators": [], "data_types": ["int", "long", "float", "char",
                 "double"], "expressions": [], "other": []}
         tr = TranslationEngine("C")

@@ -5,6 +5,7 @@ from DAL import *
 from models.models import *
 from google.appengine.ext import ndb
 from google.appengine.ext import testbed
+from translation_engine.languages_specific_features import *
 
 
 class DALTest(unittest.TestCase):
@@ -66,6 +67,31 @@ class DALTest(unittest.TestCase):
         DAL.save_language_details("C", "statements", stmtns)
         res = DAL.get_language_details("C", "statements")
         self.assertEqual(stmtns, res)
+
+    def test_save_new_language_get_all_languages(self):
+        """
+        Test save in DB new language and retrieve ist of languages from DB
+        """
+        dal = DAL()
+        ndb.get_context().clear_cache()
+        res = dal.add_language("C")
+        get = dal.get_all_languages()
+        self.assertEqual(True, res)
+        self.assertEqual(["C"], get)
+
+    def test_add_few_languages(self):
+        dal = DAL()
+        dal.add_language(languages)
+        res = dal.get_all_languages()
+        self.assertEqual(languages, res)
+
+    def test_add_existing_language_get_false(self):
+        dal = DAL()
+        for l in languages:
+            print "dal add language" + str(dal.add_language(l))
+            print "dal get all languages" + str(dal.get_all_languages())
+        res = dal.add_language(languages[0])
+        self.assertFalse(res)
 
     def tearDown(self):
         self.testbed.deactivate()

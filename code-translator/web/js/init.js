@@ -74,7 +74,7 @@ var showCards = function()
             }
             else
             {
-                 var card = createCard(translation, response[i].link, i);
+                 var card = createCard(word,translation, response[i].link, i);
                 cards.appendChild(card);
                 $('.response-card')
                 .draggable()
@@ -114,7 +114,7 @@ function showTranslation(res) {
     $(".darken").hide(); // Stop spinner
 }
 
-function createCard(translatedText, link, i) {
+function createCard(word ,translatedText, link, i) {
     var card = document.createElement("div"); // <div class="card-panel response-card">
     card.className = "card response-card";
     card.setAttribute("id", "card" + i);
@@ -133,7 +133,7 @@ function createCard(translatedText, link, i) {
     img.className = "exit";
     var text_el = document.createElement("div"); //<div class="black-text" id="result-card"></div>
     text_el.setAttribute("class", "card-content result-card");
-    text_el.innerHTML = translatedText;
+    text_el.innerHTML = "<h4>"+ word +"</h4>" +translatedText;
     var action = document.createElement("div");
     action.className = "card-action";
 
@@ -147,7 +147,7 @@ function createCard(translatedText, link, i) {
     var l2 = document.createElement("a");
     var linkText2 = document.createTextNode("Wrong?");
     l2.title = "#!";
-    l2.href = "#!";
+    l2.href = "/contribution-page";
     l2.appendChild(linkText2);
 
     action.appendChild(l1);

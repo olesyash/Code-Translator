@@ -9,6 +9,8 @@
         $('.parallax').parallax();
         addPagination();
         get_languages();
+          // Initialize collapse button
+        $(".button-collapse").sideNav();
     }); // end of document ready
 })(jQuery); // end of jQuery name space
 
