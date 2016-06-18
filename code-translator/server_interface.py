@@ -59,7 +59,7 @@ class LanguageContributionHandler(webapp2.RequestHandler):
         language = dic['language']
         all_data = dic['all_data']
         ce = ContributionEngine(language)
-        res = ce.add_new_language(all_data)
+        res = ce.add_new_language_json(all_data)
         response = dict()
         response['response'] = res
         json_response = json.dumps(response)
@@ -121,6 +121,7 @@ class GetTranslation(webapp2.RequestHandler):
         all_request = self.request.body
         dic = json.loads(all_request)
         lang = dic['language']
+        logging.info("got request from web, with language = " + lang)
         lang = "Ruby" if lang == "Ruby-1.9" else lang
         te = TranslationEngine(lang)
         translated_text, final_code_text = te.get_translation((dic["text"]).encode('utf8'))
@@ -162,7 +163,7 @@ class Contribute(webapp2.RequestHandler):
         except KeyError:
             name = None
         ce = ContributionEngine(language, keyword)
-        res, rc = ce.get_translation(word_type, url, translation_type, name)
+        res, rc = ce.get_translation(url, translation_type, name)
         if eval(save):
             res = ce.save_in_db(word_type, url, res)
         logging.info("result " + str(res))
@@ -187,7 +188,6 @@ class Approve(webapp2.RequestHandler):
         self.response.headers['Content-Type'] = 'application/json'
         self.response.write(json_response)
 
-
 app = webapp2.WSGIApplication([
     ('/gettranslation', GetTranslation),
     ('/contribution-page', ContributionHandler),
@@ -198,4 +198,7 @@ app = webapp2.WSGIApplication([
     ('/contribute', Contribute),
     ('/approve', Approve),
     ('/', MainHandler)
+
 ], debug=True)
+
+
