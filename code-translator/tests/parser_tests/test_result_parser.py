@@ -52,4 +52,3 @@ class JavaTest(unittest.TestCase):
         b = ResultParser("Python")
         res = b.strip_text_from_html(result)
         self.assertNotIn("<", res, "The result contains tags!")
-

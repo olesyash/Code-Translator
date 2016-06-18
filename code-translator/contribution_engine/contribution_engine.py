@@ -50,7 +50,7 @@ class ContributionEngine():
 
     def user_approve(self):
         """
-        If contributor approved keyword, send thanks you,
+        If contributor approved keyword, send thank you,
         else ask for new contribution
         """
         self.set_approved(True)
@@ -107,7 +107,7 @@ class ContributionEngine():
         res = self.res_parser.strip_text_from_html(translation)
         return self.res_parser.find_needed_info(res, self.keyword)
 
-    def get_translation(self, word_type, link, translation_type, name=None):
+    def get_translation(self, link, translation_type, name=None):
         """
         This function get information from contributor:
         which url to access
@@ -148,30 +148,15 @@ class ContributionEngine():
             DAL.update_data_in_db(self.language, self.keyword, word_type, link, translation)
         return self.THANKS_FOR_CONTRIBUTION
 
-    def add_new_language(self, data):
+    def add_new_language_json(self, data):
         """
         This function get all parsing data of a new language in dictionary and saves it in DB
         :param data: dictionary
         :return: True if all saved, False if there were errors in saving
         """
+        dal = DAL()
         try:
-            self.dal.save_language_details(self.language, "keywords", data['keywords'])
-            self.dal.save_language_details(self.language, "str_symbol1", data['str_symbol1'])
-            self.dal.save_language_details(self.language, "str_symbol2", data['str_symbol2'])
-            self.dal.save_language_details(self.language, "operations", data['operations'])
-            self.dal.save_language_details(self.language, "add_library", data['add_library'])
-            self.dal.save_language_details(self.language, "literals", data['literals'])
-            self.dal.save_language_details(self.language, "start_comment_symb", data['start_comment_symb'])
-            self.dal.save_language_details(self.language, "comment_start1", data['comment_start1'])
-            self.dal.save_language_details(self.language, "comment_start2", data['comment_start2'])
-            self.dal.save_language_details(self.language, "comment_end1", data['comment_end1'])
-            self.dal.save_language_details(self.language, "comment_end2", data['comment_end2'])
-            self.dal.save_language_details(self.language, "func_def", data['func_def'])
-            self.dal.save_language_details(self.language, "class_keyword", data['class_keyword'])
-            self.dal.save_language_details(self.language, "escape_character", data['escape_character'])
-            self.dal.save_language_details(self.language, "func_start", data['func_start'])
-            self.dal.save_language_details(self.language, "function_call_char", data['function_call_char'])
-            self.dal.save_language_details(self.language, "function_call_must_char", data['function_call_must_char'])
+            dal.save_language_data(self.language, data)
             return True
         except Exception as e:
             logging.error(e.message)
@@ -194,15 +179,20 @@ class ContributionEngine():
             return False
 
     def add_classification_for_language(self, data):
+        """
+        Save in DB classification data for new language
+        :param data: dictionary
+        :return: True if all saved, False if there were errors in saving
+        """
         try:
-            self.dal.save_language_details(self.language, "statements", data["statements"])
-            self.dal.save_language_details(self.language, "data_types", data["data_types"])
-            self.dal.save_language_details(self.language, "expressions", data["expressions"])
-            self.dal.save_language_details(self.language, "operators", data["operators"])
+            self.dal.save_classification(self.language, "statement", data["statements"])
+            self.dal.save_classification(self.language, "data type", data["data_types"])
+            self.dal.save_classification(self.language, "expression", data["expressions"])
+            self.dal.save_classification(self.language, "operator", data["operators"])
             other_list = data['other']
             if other_list:
                 for key, value in other_list.iteritems():
-                    self.dal.save_language_details(self.language, key, value)
+                    self.dal.save_classification(self.language, key, value)
             return True
         except Exception as e:
             logging.info(20*"*")

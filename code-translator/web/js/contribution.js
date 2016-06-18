@@ -22,7 +22,6 @@ console.log("start");
 
 document.getElementById("select-option").addEventListener("change", select_listener, false);
 
-
 //Select option listener
 function select_listener() {
     console.log("select pressed");

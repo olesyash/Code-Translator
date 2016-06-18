@@ -5,12 +5,13 @@ import logging
 from models.models import *
 from google.appengine.ext import ndb
 from google.appengine.ext import testbed
-from translation_engine.my_parser import *
+from translation_engine.parser import *
 from translation_engine.translation_engine import TranslationEngine
 from contribution_engine.contribution_engine import ContributionEngine
 
 logger = logging.getLogger()
 logger.setLevel(logging.DEBUG)
+import json
 
 
 class AddNewLanguageTest(unittest.TestCase):
@@ -33,14 +34,16 @@ class AddNewLanguageTest(unittest.TestCase):
         """
         Test prepare for lexicon function, for existing in code language - Python
         """
-        res = prepare_for_lexicon("Python", "keywords")
+        dl = LanguagesSpecificFeatures("Python")
+        res = dl.prepare_for_lexicon("keywords")
         self.assertEqual(python_keywords, res)
 
     def test_get_prepare_for_lexicon_C_empty(self):
         """
         Test prepare for lexicon function, for new language - C,  with empty DB
         """
-        res = prepare_for_lexicon("C", "keywords")
+        dl = LanguagesSpecificFeatures("C")
+        res = dl.prepare_for_lexicon("keywords")
         self.assertIsInstance(res, Alt)
 
     def test_prepare_for_lexicon_C_not_empty(self):
@@ -48,8 +51,11 @@ class AddNewLanguageTest(unittest.TestCase):
         Test prepare for lexicon function, for new language - C,  after saving in DB
         """
         stmtns = ["for", "if", "else"]
-        DAL.save_language_details("C", "keywords", stmtns)
-        res = prepare_for_lexicon("C", "keywords")
+        dl = LanguagesSpecificFeatures("C")
+        data = {"statements": stmtns}
+        dal = DAL()
+        dal.save_language_data("C", data)
+        res = dl.prepare_for_lexicon("keywords")
         self.assertIsInstance(res, Alt)
 
     def test_cllasify_c(self):
@@ -59,7 +65,7 @@ class AddNewLanguageTest(unittest.TestCase):
         tr = TranslationEngine("C")
         ndb.get_context().clear_cache()
         stmtns = ["for", "if", "else"]
-        DAL.save_language_details("C", "statements", stmtns)
+        DAL.save_classification("C", "statement", stmtns)
         res = tr.classify_keywords("for", "keyword")
         self.assertEqual(STATEMENT, res)
 
@@ -68,56 +74,57 @@ class AddNewLanguageTest(unittest.TestCase):
         Test keyword_in_other function, after saving in DB DB for new language C
         """
         definition = ["ifdef"]
-        DAL.save_language_details("C", "example", ["stam"])
-        DAL.save_language_details("C", "definition", definition)
-        res = keyword_in_other("C", "ifdef")
+        DAL.save_classification("C", "example", ["stam"])
+        DAL.save_classification("C", "definition", definition)
+        res = get_keyword_classification("C", "ifdef")
         self.assertEqual(res, "definition")
 
-    def test_callsify_keyword_in_other(self):
+    def test_classify_keyword_in_other(self):
         """
         Test classification in others, after saving in DB for new language C
         """
         definition = ["ifdef"]
         tr = TranslationEngine("C")
-        DAL.save_language_details("C", "example", ["stam"])
-        DAL.save_language_details("C", "definition", definition)
+        DAL.save_classification("C", "example", ["stam"])
+        DAL.save_classification("C", "definition", definition)
         res = tr.classify_keywords("ifdef", "keyword")
         self.assertEqual(res, "definition")
 
-    def test_add_new_language_C_check_real_code(self):
+    def test_add_new_language_json_C_check_real_code(self):
         """
         Test add new language function, add new language c and run parser on it
         """
         ndb.get_context().clear_cache()
         data = dict()
-        ce = ContributionEngine("C", "")
+        ce = ContributionEngine("C")
         data['keywords'] = ["auto", "else", "long", "switch", "break", "enum", "register", "typedef", "case", "extern",
                             "char", "float", "short", "unsigned", "const", "for", "signed", "continue", "goto", 'void',
                             "volatile", "default", "if", "static", "while", "do", "int", "struct", "_Packed", "double",
                             "return", "union",  "sizeof"]
-
-        data['str_symbol1'] = ["'"]
-        data['str_symbol2'] = ['"']
+        data['str_symbol1'] = [str_symbol1]
+        data['str_symbol2'] = [str_symbol2]
         data['operations'] = ['+', '-', '*', '/', '%', '++', '--',  '==', '!=', '<', '<=', '>', '>=', '=', '&', '|', '^',
                               '<<', '>>', '&&', '||', '!', '+=', '-=', '*=', '/=', '%=', '<<=', '>>=', '&=', '^=',
                               '?', ':', '~', '|=']
-
         data['add_library'] = ["include"]
         data['literals'] = []
         data['start_comment_symb'] = ['//']
         data['comment_start1'] = ['/*']
         data['comment_end1'] = ['*/']
-        data['comment_start2'] = ['/*']
-        data['comment_end2'] = ['*/']
+        data['comment_start2'] = []
+        data['comment_end2'] = []
         data['func_def'] = []
         data['class_keyword'] = []
         data['escape_character'] = []
         data['func_start'] = []
         data['function_call_char'] = ['(']
-        data['function_call_must_char'] = ["True"]
+        data['function_call_must_char'] = "True"
         data['other'] = {}
-
-        ce.add_new_language(data)
+        json_data = json.dumps(data)
+        ce.add_new_language_json(json_data)
+        dal = DAL()
+        res = dal.get_all_data_for_language("C")
+        print res
         self.filename = "parser_tests/c_real_code.txt"
         self.run_parser()
 
@@ -127,6 +134,7 @@ class AddNewLanguageTest(unittest.TestCase):
         self.assertEqual(expected_keywords, self.p.keywords)
         self.assertEqual(expected_functions_calls, self.p.scanner.functions_calls)
         self.assertEqual(expected_lib, self.p.scanner.libraries)
+
 
     def run_parser(self):
         """
@@ -177,16 +185,23 @@ class AddNewLanguageTest(unittest.TestCase):
         _type, name = get_details_about_url("c_url2")
         self.assertEqual(_type, "id")
         self.assertEqual(name, "content")
+        _type, name = get_details_about_url("https://wiki.python.org")
+        self.assertEqual(_type, "id")
+        self.assertEqual(name, "content")
 
     def test_add_classification_for_language_classify(self):
         """
         Test add_classification_for_language function, use classify function to test
         """
         ndb.get_context().clear_cache()
-        data = {"statements": ["for", "if", "else"], "operators": [], "data_types": ["int", "long", "float", "char",
-                "double"], "expressions": [], "other": []}
+        data = {"statements": ["for", "if", "else"], "operators": ['signed'], "data_types": ["int", "long", "float", "char",
+                "double"], "expressions": ['sizeof'], "other": []}
         tr = TranslationEngine("C")
         ce = ContributionEngine("C")
         ce.add_classification_for_language(data)
         self.assertEqual("statement", tr.classify_keywords("for", "keyword"))
         self.assertEqual("data type", tr.classify_keywords("int", "keyword"))
+        self.assertEqual("expression", tr.classify_keywords("sizeof", "keyword"))
+        self.assertEqual("operator", tr.classify_keywords("signed", "keyword"))
+
+

@@ -2,12 +2,13 @@ __author__ = 'olesya'
 
 from lib.plex import *
 from DAL import DAL
+import logging
+import json
 
 # ----------------------------------------- Main -----------------------------------------------------------
 KEYWORD = "keyword"
 STATEMENT = "statement"
 LITERAL = "literal"
-OPERATION = "operation"
 FUNCTION = "function"
 COMMENT = "comment"
 STRING = "string"
@@ -113,7 +114,7 @@ ruby_statements = ['for', 'if', 'else', 'unless', 'case', 'when', 'while', 'unti
 # Literals:
 ruby_boolean = Str('true', 'false', 'nil')
 # Operations:
-ruby_operations = Str('+', '-', '*', '/', '%', '**', '=~', '!~', '==', '.eql?', '!=', '<', '<=', '>', '>=', '=', '<=>',
+ruby_operations = Str('+', '-', '*', '/', '%', '**', '=~', '!~', '==', '.e  ql?', '!=', '<', '<=', '>', '>=', '=', '<=>',
                       '===', '|', '^', '~', '<<', '>>', '&&', '||', '!', '+=', '-=', '*=', '/=', '%=', '|=', '<<=',
                       '**=', 'equal?', '&', '?', ':', '..', '...', '::', '>>=')
 
@@ -242,28 +243,6 @@ url_info = {"https://wiki.python.org": {"id": "content"},
 
 classifications = ["keywords", "expressions", "statements", "data_types"]
 
-
-def prepare_for_lexicon(language, title):
-    """
-    This function prepares dta for parser lexicon. If exist in code, return it as it
-    If not exist in the code, pull it from db and convert to suitable type for lexicon if needed
-    :param language: language
-    :param title: the title of words, for example keywords, operations, string character, etc
-    :return: return compatible type for lexicon
-    """
-    try:
-        return eval("languages_" + title)[language]
-    except KeyError:
-        print "need to search in DB"
-        dal = DAL()
-        res = dal.get_language_details(language, title)
-        if title == "function_call_must_char":
-            return eval(res[0])
-        if title in ["str_symbol1", "str_symbol2", "function_call_char"]:
-            return res[0]
-        return my_str(res)
-
-
 def keyword_is_title(language, keyword, title):
     """
     Check if keyword defined by a title
@@ -275,31 +254,26 @@ def keyword_is_title(language, keyword, title):
     try:
         return keyword in eval("languages_" + title)[language]
     except KeyError:
-        print "need to search in DB"
-        dal = DAL()
-        return keyword in dal.get_language_details(language, title)
+        return False
 
 
-def keyword_in_other(language, keyword):
+def get_keyword_classification(language, keyword):
     """
-    Check if keyword defined by a another title, not predefined one
+    This function classify the keywords to groups
     :param language: string
     :param keyword: string
-    :return: return the title for the keyword
+    :return: the group of the keyword e.g statement, data type and etc
     """
-    dal = DAL()
-    all_data = dal.get_language_details(language)
-    print "all_data"
-    print all_data
-    if not all_data:
-        return None
-    try:
-        dict_of_others = all_data["others"]
-        for k, val in dict_of_others.iteritems():
-            if keyword in val:
-                return k
-    except KeyError:
-        return None
+    if keyword_is_title(language, keyword, "statements"):
+        return STATEMENT
+    elif keyword_is_title(language, keyword, "data_types"):
+        return DATA_TYPE
+    elif keyword_is_title(language, keyword, "expressions"):
+        return EXPRESSION
+    elif keyword_is_title(language, keyword, "operators"):
+        return OPERATOR
+
+    return DAL.get_classification(language, keyword)
 
 
 def get_urls_for_language(language):
@@ -319,6 +293,12 @@ def get_urls_for_language(language):
 
 
 def get_details_about_url(url):
+    """
+    This function return url details to parse it in the best way
+    for example: type = id, name = content
+    :param url: string
+    :return: parsing type and name
+    """
     for key in url_info:
         if key in url:
             return url_info[key].items()[0]
@@ -328,6 +308,52 @@ def get_details_about_url(url):
         return dal.get_url_details(url)
 
 
+class LanguagesSpecificFeatures():
+    def __init__(self, language):
+        self.language = language
+        self.dal = DAL()
+        if self.language not in languages:
+            self.data = self.dal.get_all_data_for_language(self.language)
+            logging.info("self data:")
+            logging.info(self.data)
+            data_type = type(self.data)
+            logging.info(str(data_type))
+            if data_type == unicode:
+                print "converting from unicode to json"
+                json_load = json.loads(self.data)
+                logging.info("json loads data, new type: ")
+                logging.info(str(type(json_load)))
+                self.data = json_load
+
+    def prepare_for_lexicon(self, title):
+        try:
+            return eval("languages_" + title)[self.language]
+        except KeyError:
+            print "need to search in DB"
+            print "title " + title
+            if not self.data:
+                return Str()
+            res = self.data[title]
+            logging.info("res: ")
+            logging.info(res)
+            if title == "function_call_must_char":
+                return res == "True"
+            if title == "escape_character":
+                return ruby_escape_string_character
+            if title in ["str_symbol1", "str_symbol2", "function_call_char"]:
+                try:
+                    logging.info("prepare for lexicon title {} is ready: {}".format(title, res[0]))
+                    return res[0]
+                except IndexError:
+                    logging.info("in except index error")
+                    return my_str([])
+            logging.info("prepare for lexicon title {} is ready: {}".format(title, my_str(res)))
+            if res == [u'']:
+                return Str()
+            return my_str(res)
+
+
 def get_all_languages():
     dal = DAL()
     return dal.get_all_languages()
+

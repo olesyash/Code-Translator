@@ -29,7 +29,7 @@ var header =
     "class_keyword-info": ""
 };
 
-var empty_not_allowed = ['input-language', 'input-keywords', 'input-operations'];
+var empty_not_allowed = ['input-language', 'input-keywords', 'input-operations', 'input-str_symbol1', 'input-str_symbol2'];
 
 var information =
 {
@@ -88,6 +88,7 @@ function prepareSubmission() {
     var e = document.getElementById("select-function_call_must_char");
     all_data["function_call_must_char"] = [e.options[e.selectedIndex].value];
     info_dict["all_data"] = all_data;
+    console.log(info_dict);
     add_language(info_dict);
 }
 
@@ -109,7 +110,7 @@ function add_language(data) {
                $(".darken").hide(); //stop spinner
             },
             400: function () {
-                $(".darken").hide(); //stop spinner
+                $("2.darken").hide(); //stop spinner
             },
             500: function () {
                  $(".darken").hide(); //stop spinner

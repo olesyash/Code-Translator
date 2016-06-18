@@ -1,7 +1,7 @@
 __author__ = 'olesya'
 
 import unittest
-from translation_engine.my_parser import *
+from translation_engine.parser import *
 
 import logging
 logger = logging.getLogger()

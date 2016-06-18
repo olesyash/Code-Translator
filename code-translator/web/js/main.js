@@ -8,9 +8,9 @@
         $('.button-collapse').sideNav();
         $('.parallax').parallax();
         addPagination();
+        setData();
         get_languages();
-          // Initialize collapse button
-        $(".button-collapse").sideNav();
+
     }); // end of document ready
 })(jQuery); // end of jQuery name space
 
@@ -22,6 +22,22 @@ var languages_response = ["Java", "Python", "Ruby-1.9"];
 var selected = 0;
 var cardCounter = 0;
 
+function setData(){
+    if (document.location.href.indexOf("contribution-page") > -1 && document.location.href.indexOf("keyword") > -1) {
+            var ref = document.location.href.split("keyword=")[1];
+            var lang = ref.split("language=")[1];
+            ref = ref.split("&language=")[0];
+
+            console.log("lang= " + lang + " kw= " + ref);
+            $('#keyword').val(ref);
+            var enabled = 'waves-effect';
+            $('#java').attr("class", enabled);
+            var active = 'teal lighten-1 z-depth-1 waves-effect waves-light active';
+            $('#' + lang).attr("class", active);
+            selected = languages_response.indexOf(lang);
+
+        }
+}
 
 function get_languages() {
     $.ajax({
@@ -39,6 +55,7 @@ function get_languages() {
             maxPage = parseInt(response.length / MAX) - 1;
             if (response.length % MAX > 0)
                 maxPage++;
+            setData();
             addPagination();
 
         }
@@ -76,6 +93,7 @@ function addPagination() {
                 li.setAttribute("class", enabled);
             li.setAttribute("onclick", "changePage(" + i + ")");
             li.innerHTML = '<a>' + languages_response[i] + '</a>';
+            li.setAttribute("id", languages_response[i]);
             list.appendChild(li);
         }
     }

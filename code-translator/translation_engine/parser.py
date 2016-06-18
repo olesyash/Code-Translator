@@ -132,24 +132,43 @@ class MyScanner(Scanner):
 
     def def_lexicon(self):
         try:
-            all_keywords = prepare_for_lexicon(self.language, "keywords")
-            str_symbol1 = prepare_for_lexicon(self.language, "str_symbol1")
-            str_symbol2 = prepare_for_lexicon(self.language, "str_symbol2")
-            operations = prepare_for_lexicon(self.language, "operations")
-            add_library = prepare_for_lexicon(self.language, "add_library")
-            literals = prepare_for_lexicon(self.language, "literals")
-            start_comment_symb = prepare_for_lexicon(self.language, "start_comment_symb")
-            comment_start1 = prepare_for_lexicon(self.language, "comment_start1")
-            comment_start2 = prepare_for_lexicon(self.language, "comment_start2")
-            comment_end1 = prepare_for_lexicon(self.language, "comment_end1")
-            comment_end2 = prepare_for_lexicon(self.language, "comment_end2")
-            func_def = prepare_for_lexicon(self.language, "func_def")
-            class_keyword = prepare_for_lexicon(self.language, "class_keyword")
-            escape_character = prepare_for_lexicon(self.language, "escape_character")
-            self.func_start = prepare_for_lexicon(self.language, "func_start")
-            self.func_call_char = prepare_for_lexicon(self.language, "function_call_char")
-            self.must_func_call_char = prepare_for_lexicon(self.language, "function_call_must_char")
+            all_data = LanguagesSpecificFeatures(self.language)
+            all_keywords = all_data.prepare_for_lexicon("keywords")
+            str_symbol1 = all_data.prepare_for_lexicon("str_symbol1")
+            str_symbol2 = all_data.prepare_for_lexicon("str_symbol2")
+            operations = all_data.prepare_for_lexicon("operations")
+            add_library = all_data.prepare_for_lexicon("add_library")
+            literals = all_data.prepare_for_lexicon("literals")
+            start_comment_symb = all_data.prepare_for_lexicon("start_comment_symb")
+            comment_start1 = all_data.prepare_for_lexicon("comment_start1")
+            comment_start2 = all_data.prepare_for_lexicon("comment_start2")
+            comment_end1 = all_data.prepare_for_lexicon("comment_end1")
+            comment_end2 = all_data.prepare_for_lexicon("comment_end2")
+            func_def = all_data.prepare_for_lexicon("func_def")
+            class_keyword = all_data.prepare_for_lexicon("class_keyword")
+            escape_character = all_data.prepare_for_lexicon("escape_character")
+            self.func_start = all_data.prepare_for_lexicon("func_start")
+            self.func_call_char = all_data.prepare_for_lexicon("function_call_char")
+            self.must_func_call_char = all_data.prepare_for_lexicon("function_call_must_char")
             self.need_func_start = self.func_start != ""
+            if self.debug:
+                logging.info(all_keywords)
+                logging.info(str_symbol1)
+                logging.info(str_symbol2)
+                logging.info(operations)
+                logging.info(add_library)
+                logging.info(start_comment_symb)
+                logging.info(comment_start1)
+                logging.info(comment_start2)
+                logging.info(comment_end1)
+                logging.info(comment_end2)
+                logging.info(func_def)
+                logging.info(class_keyword)
+                logging.info(escape_character)
+                logging.info(self.func_start)
+                logging.info(self.func_call_char)
+                logging.info(self.must_func_call_char)
+                logging.info(self.need_func_start)
         except KeyError:
             print "Language not defined well"
             self.lexicon = Lexicon([])
@@ -207,7 +226,7 @@ class MyScanner(Scanner):
             (literals, LITERAL),
 
             # Find all operations
-            (operations, OPERATION),
+            (operations, OPERATOR),
 
             # Ignore symbols
             (terminate_line_symb, IGNORE),
@@ -256,6 +275,7 @@ class MyScanner(Scanner):
 
     def __init__(self, filename, language):
         self.language = language
+        self.debug = False
         self.def_lexicon()
         Scanner.__init__(self, self.lexicon, filename)
         self.libraries = []
@@ -286,12 +306,13 @@ class Parser():
         self.scanner.libraries = []
 
         while 1:
+            logging.info("in parser, starting while")
             token = self.scanner.read()
-            print token
-            print self.scanner.position()
+            logging.info("in run parser, token {}".format(token))
+            logging.info("in run parser, scanner position {}".format(self.scanner.position()))
             if token[0] == KEYWORD:
                 self.keywords.append(token[1])
-            elif token[0] == OPERATION:
+            elif token[0] == OPERATOR:
                 self.operations.append(token[1])
             elif token[0] == LITERAL:
                 self.literals.append(token[1])

@@ -5,7 +5,7 @@ from translation_engine.translation_engine import TranslationEngine
 from engine.languages_API import LanguagesAPI
 from google.appengine.ext import testbed
 from DAL import *
-from translation_engine.my_parser import *
+from translation_engine.parser import *
 
 import logging
 logger = logging.getLogger()

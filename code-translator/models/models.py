@@ -82,6 +82,22 @@ class LanguagesParsingData(ndb.Model):
             return False
 
 
+class LanguagesClassificationData(ndb.Model):
+    language = ndb.StringProperty()
+    keyword = ndb.StringProperty()
+    type = ndb.StringProperty()
+
+    @staticmethod
+    def find_keyword_classification(language, keyword):
+        _qry = LanguagesClassificationData.query(LanguagesClassificationData.language == language,
+                                                 LanguagesClassificationData.keyword == keyword)
+        q = _qry.get()
+        if q:
+            return q
+        else:
+            return False
+
+
 class LanguagesUrlsData(ndb.Model):
     url = ndb.StringProperty()
     type = ndb.StringProperty()
@@ -101,6 +117,10 @@ class LanguagesUrlsData(ndb.Model):
         else:
             return False
 
+
+class ParsingData(ndb.Model):
+    language = ndb.StringProperty()
+    data = ndb.JsonProperty()
 
 class AllLanguages(ndb.Model):
     languages = ndb.StringProperty(repeated=True)

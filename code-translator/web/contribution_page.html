@@ -16,7 +16,12 @@
 <nav class="white" role="navigation">
     <div class="nav-wrapper container">
         <ul class="left">
-            <li><a id="logo-container" href="#" class="brand-logo center indigo-text text-darken-4">Welcome to Contribution Page!</a></li>
+            <li><a id="logo-container" href="/" class="brand-logo center indigo-text text-darken-4">Welcome to
+                Contribution Page!</a></li>
+        </ul>
+        <ul class="right">
+        <li><a href="/" ><i data-tooltip="Go back to Code Translator" data-position="down"
+           class="mi material-icons medium prefix tooltipped ">replay</i></a></li>
         </ul>
     </div>
 </nav>
@@ -52,8 +57,8 @@
 
     <div class="row myrow">
         <div class="input-field col s4 push-s2 ">
-          <input placeholder="keyword: for example 'while'" id="keyword" type="text" class="validate headline-font">
-          <label class="label-font" id="keyword-label" for="keyword">Keyword</label>
+            <input placeholder="keyword: for example 'while'" id="keyword" type="text" class="validate headline-font">
+            <label class="label-font" id="keyword-label" for="keyword">Keyword</label>
         </div>
         <div class="col s4 push-s2" id="mycol">
             <div id="keywordBtn" class="waves-effect waves-light btn left-align">Check requirement</div>
@@ -65,73 +70,78 @@
 
     <div class="card hide" id="translation-card">
         <div class="card-content"></div>
-            <span id="content"></span>
+        <span id="content"></span>
+
         <div class="card-action center-align">
-          <a id="agree">Agree</a>
-          <a id= "disagree">Disagree</a>
+            <a id="agree">Agree</a>
+            <a id="disagree">Disagree</a>
         </div>
     </div>
 
-     <div class="card hide" id="temp-translation-card">
+    <div class="card hide" id="temp-translation-card">
         <div class="card-content"></div>
-            <span id="content-of-card"></span>
+        <span id="content-of-card"></span>
+
         <div class="card-action center-align">
-          <a id="yes">Yes</a>
-          <a id= "no">No</a>
+            <a id="yes">Yes</a>
+            <a id="no">No</a>
         </div>
     </div>
 
-     <div class="row myrow">
-         <div id="keyword-type" class="input-field col s8 push-s2 headline-font hide">
+    <div class="row myrow">
+        <div id="keyword-type" class="input-field col s8 push-s2 headline-font hide">
             <select id="select-keyword-type">
-              <option value="" id="initial" disabled selected>Choose your option</option>
-              <option value="keyword">Keyword</option>
-              <option value="function">Function</option>
-              <option value="library">Library</option>
-              <option value="operation">Operator</option>
+                <option value="" id="initial" disabled selected>Choose your option</option>
+                <option value="keyword">Keyword</option>
+                <option value="function">Function</option>
+                <option value="library">Library</option>
+                <option value="operation">Operator</option>
             </select>
             <label class="label-font">Keyword Type</label>
         </div>
-     </div>
+    </div>
 
-     <div class="row myrow">
-        <div id ="url" class="input-field col s8 push-s2 hide">
-          <input placeholder="URL" id="url-insert" type="text" class="validate headline-font">
-          <label class="label-font" for="url-insert">URL</label>
+    <div class="row myrow">
+        <div id="url" class="input-field col s8 push-s2 hide">
+            <input placeholder="URL" id="url-insert" type="text" class="validate headline-font">
+            <label class="label-font" for="url-insert">URL</label>
         </div>
     </div>
 
-     <div class="row myrow">
-      <div id="option-choose" class="input-field col s8 push-s2 headline-font hide">
-        <select id="select-option"  onchange="select_listener()">
-            <optgroup label="By specific tag">
-            <option value="p">p</option>
-            <option value="id">id</option>
-            <option value="class">class</option>
-          </optgroup>
-          <optgroup label="Whole page">
-            <option value="nothing" selected>With html </option>
-            <option value="clear">Without html</option>
-          </optgroup>
-        </select>
-        <label class="label-font">Options</label>
-      </div>
-     </div>
-
-     <div class="row myrow">
-        <div id ="name" class="input-field col s8 push-s2 hide">
-          <input placeholder="Name" id="name-insert" type="text" class="validate headline-font">
-          <label class="label-font" for="name-insert">Name</label>
+    <div class="row myrow">
+        <div id="option-choose" class="input-field col s8 push-s2 headline-font hide">
+            <select id="select-option" onchange="select_listener()">
+                <optgroup label="By specific tag">
+                    <option value="p">p</option>
+                    <option value="id">id</option>
+                    <option value="class">class</option>
+                </optgroup>
+                <optgroup label="Whole page">
+                    <option value="nothing" selected>With html</option>
+                    <option value="clear">Without html</option>
+                </optgroup>
+            </select>
+            <label class="label-font">Options</label>
         </div>
     </div>
 
+
+    <div class="row myrow">
+        <div id="name" class="input-field col s8 push-s2 hide">
+            <input placeholder="Name" id="name-insert" type="text" class="validate headline-font">
+            <label class="label-font" for="name-insert">Name</label>
+        </div>
+    </div>
     <div class="row myrow center">
-         <div class="col s4 push-s7">
-                <div id="submit" class="waves-effect waves-light btn left-align hide">Submit</div>
-         </div>
+        <a href="/" ><i id="url-info" data-tooltip="Go back to Code Translator" data-position="down"
+           class="mi material-icons medium prefix tooltipped ">replay</i></a>
+    </div>
+    <div class="row myrow center">
+        <div class="col s4 push-s7">
+            <div id="submit" class="waves-effect waves-light btn left-align hide">Submit</div>
+        </div>
     </div>
 </div>
-
 
 
 <!--  Scripts-->

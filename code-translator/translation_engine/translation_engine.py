@@ -1,10 +1,12 @@
 __author__ = 'olesya'
-from my_parser import Parser
+from parser import Parser
 from DAL import *
 import logging
 from lib.googleapiclient.discovery import build
 from engine.result_parser import *
 from engine.languages_API import *
+from lib.googleapiclient.http import HttpError
+
 
 '''
 Getting code from web side and using 3 steps before giving result back to web side
@@ -35,7 +37,7 @@ class TranslationEngine():
         :param code_text : text
         :returns translated_list : list
         """
-        logging.info("Got request from client " + code_text)
+        logging.info("Got request from client: " + code_text)
         translated_list = []
         keywords_list, parsed = self.parser_obj.run_parser(code_text)
         final_code_text = self.reformat_parsed_text(code_text, parsed)
@@ -115,19 +117,20 @@ class TranslationEngine():
 
     def classify_keywords(self, keyword, word_type):
         if word_type == KEYWORD:
-            if keyword_is_title(self.language, keyword, "statements"):
-                return STATEMENT
-            elif keyword_is_title(self.language, keyword, "data_types"):
-                return DATA_TYPE
-            elif keyword_is_title(self.language, keyword, "expressions"):
-                return EXPRESSION
-            elif keyword_is_title(self.language, keyword, "operators"):
-                return OPERATOR
+            # if keyword_is_title(self.language, keyword, "statements"):
+            #     return STATEMENT
+            # elif keyword_is_title(self.language, keyword, "data_types"):
+            #     return DATA_TYPE
+            # elif keyword_is_title(self.language, keyword, "expressions"):
+            #     return EXPRESSION
+            # elif keyword_is_title(self.language, keyword, "operators"):
+            #     return OPERATOR
+            return get_keyword_classification(self.language, keyword)
 
-            res = keyword_in_other(self.language, keyword)
-            if res:
-                return res
-            return KEYWORD
+            # res = keyword_in_other(self.language, keyword)
+            # if res:
+            #     return res
+            # return KEYWORD
         else:
             return word_type
 
@@ -162,18 +165,27 @@ class TranslationEngine():
                         self.url = url
                         return url
             counter += 10
+            return self.url
 
     def custom_google_search(self, search_string, index=1):
-        #key = "AIzaSyDM_PtVl-yhPmhgft6Si02vMJmOCatFK_w"
-        key = "AIzaSyD9ufY0LcUPB8UO4RA4FVB8rJdZC12pKKc"
+        keys = ["AIzaSyDM_PtVl-yhPmhgft6Si02vMJmOCatFK_w", "AIzaSyD9ufY0LcUPB8UO4RA4FVB8rJdZC12pKKc"]
         _id = "000167123881013238899:uys_fzjgaby"
-        service = build("customsearch", "v1",
-                        developerKey=key)
-        res_json = service.cse().list(
-            q=search_string,
-            cx=_id,
-            start=index
-        ).execute()
+        for i in range(0, 2):
+            try:
+                service = build("customsearch", "v1",
+                                developerKey=keys[i])
+                res_json = service.cse().list(
+                    q=search_string,
+                    cx=_id,
+                    start=index
+                ).execute()
+                break
+            except HttpError:
+                continue
+        else:
+            logging.error("Quota ended")
+            return []
+
         urls = []
         logging.info("custom google search result: " + str(res_json))
         try:

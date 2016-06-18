@@ -18,6 +18,8 @@ $("#tranalslateBtn").click(
 
             sendData = $('#input_text').val();
             var dict = {"text": sendData, "language": languages_response[selected]};
+            console.log("dict before sending");
+            console.log(dict);
             var json = JSON.stringify(dict);
             $.ajax({
                 url: '/gettranslation',
@@ -91,7 +93,7 @@ var showCards = function()
 
 $(document).on("mouseover", "span.keyword", showCards);
 $(document).on("mouseover", ".function", showCards);
-$(document).on("mouseover", ".operation", showCards);
+$(document).on("mouseover", ".operator", showCards);
 $(document).on("mouseover", ".library", showCards);
 $(document).on("mouseover", ".comment", showCards);
 $(document).on("mouseover", ".string", showCards);
@@ -147,7 +149,7 @@ function createCard(word ,translatedText, link, i) {
     var l2 = document.createElement("a");
     var linkText2 = document.createTextNode("Wrong?");
     l2.title = "#!";
-    l2.href = "/contribution-page";
+    l2.href = "/contribution-page?keyword="+word+"&language="+languages_response[selected];
     l2.appendChild(linkText2);
 
     action.appendChild(l1);

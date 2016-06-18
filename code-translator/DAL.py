@@ -1,7 +1,8 @@
 __author__ = 'olesya'
 
 from models.models import *
-import time
+import datetime
+import logging
 
 
 class DAL():
@@ -193,11 +194,11 @@ class DAL():
         :param language:
         :return: dictionary of all data
         """
+        logging.info("in get languages details, type {} time {} ".format(_type, str(datetime.datetime.now())))
         _newData = LanguagesParsingData()
-        print _type
+
         if _type:
             qrys = _newData.find_language_by_type(language, _type)
-            print qrys
         else:
             qrys = _newData.find_language(language)
         all_data = {}
@@ -205,11 +206,8 @@ class DAL():
         if not qrys:
             return []
         dict_of_others = {}
-        print qrys.get()
         for q in qrys:
-            print "in for"
             if _type:
-                print "in if"
                 return q.list_of_keywords
             all_data["language"] = q.language
             string_of_keywords = q.list_of_keywords
@@ -279,6 +277,38 @@ class DAL():
             return q.languages
         else:
             return []
+
+    @staticmethod
+    def save_classification(language, _type, list_of_keywords):
+        for keyword in list_of_keywords:
+            res = DAL.get_classification(language, keyword)
+            if res != "keyword":
+                continue
+            new_element = LanguagesClassificationData()
+            new_element.language = language
+            new_element.keyword = keyword
+            new_element.type = _type
+            new_element.put()
+
+
+    @staticmethod
+    def get_classification(language, keyword):
+        res = LanguagesClassificationData.find_keyword_classification(language, keyword)
+        return res.type if res else "keyword"
+
+
+    def save_language_data(self, language, data):
+        new = ParsingData()
+        new.language = language
+        new.data = data
+        new.put()
+
+    def get_all_data_for_language(self, language):
+        qry = ParsingData.query(ParsingData.language == language).get()
+        if qry:
+            return qry.data
+        # print qry.to_dict()
+        #return qry.to_dict()
 
 
 def create_dict(language, keyword, type, link, translation, approved):

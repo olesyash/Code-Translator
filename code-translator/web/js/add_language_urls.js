@@ -150,6 +150,8 @@ function TreatResponse(response) {
     {
         $('#header').html(THANKS_FOR_CONTRIBUTION);
         $('#greetings').hide();
+        console.log("removing hide");
+        $('#go-back').removeClass('hide');
     }
     else {
          $('#header').removeClass('hide').html("Something went wrong");

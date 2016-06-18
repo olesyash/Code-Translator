@@ -61,40 +61,40 @@ class ContributionTest(unittest.TestCase):
     def test_get_translation_by_id_wrong_url(self):
         url = "https://docs.pyth"
         _id = 'the-for-statement'
-        res, rc = self.ce.get_translation("keyword", url, "id", _id)
+        res, rc = self.ce.get_translation(url, "id", _id)
         self.assertEqual(res, "We could not use this URL. Please recheck spelling")
 
     def test_get_translation_by_id_wrong_transaltion(self):
         url = "https://github.com/olesyash/Code-Translator/issues/21"
         _id = 'start-of-content'
         self.ce = ContributionEngine("python", "yield")
-        res, rc = self.ce.get_translation("keyword", url, "id", _id)
+        res, rc = self.ce.get_translation(url, "id", _id)
         self.assertEqual(res, "Are you sure this link describing the keyword?")
 
     def test_get_translation_by_id(self):
         url = "https://docs.python.org/2/reference/compound_stmts.html#the-for-statement"
         _id = 'the-for-statement'
-        res, rc = self.ce.get_translation("keyword", url, "id", _id)
+        res, rc = self.ce.get_translation(url, "id", _id)
         self.assertEqual(rc, 0)
 
     def test_get_translation_by_class(self):
         url = "https://docs.python.org/2/reference/compound_stmts.html#the-for-statement"
         name = 'section'
-        res, rc = self.ce.get_translation("keyword", url, "class", name)
+        res, rc = self.ce.get_translation(url, "class", name)
         self.assertEqual(rc, 0)
 
     def test_get_translation_by_p_get_wrong_translation(self):
         url = "https://docs.python.org/2/reference/compound_stmts.html#the-for-statement"
-        res, rc = self.ce.get_translation("keyword", url, "p")
+        res, rc = self.ce.get_translation(url, "p")
         self.assertEqual(res, "Are you sure this link describing the keyword?")
 
     def test_get_translation_clear(self):
         url = "https://docs.python.org/2/reference/compound_stmts.html#the-for-statement"
-        res, rc = self.ce.get_translation("keyword", url, "clear")
+        res, rc = self.ce.get_translation(url, "clear")
         self.assertEqual(rc, 0)
 
     def test_get_translation_nothing(self):
         url = "https://docs.python.org/2/reference/compound_stmts.html#the-for-statement"
-        res, rc = self.ce.get_translation("keyword", url, "nothing")
+        res, rc = self.ce.get_translation(url, "nothing")
         self.assertEqual(rc, 0)
 
