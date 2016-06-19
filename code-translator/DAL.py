@@ -81,7 +81,7 @@ class DAL():
         _qry = Users.find_user_by_email(email)
         if _qry:
             if _qry.password == passwd:
-                return True
+                return _qry.nickname
             else:
                 return False
         else:
@@ -90,6 +90,7 @@ class DAL():
     # ----------------------------
     #  Data treatment functions
     # ----------------------------
+
 
     @staticmethod
     def save_data_in_db(language, keyword, word_type, link, translation, approved):
@@ -131,14 +132,13 @@ class DAL():
         """
         res = LanguagesData.find_keyword(keyword, language)
         if res:
-            _newData = LanguagesData()
-            _newData.language = language
-            _newData.keyword = keyword
-            _newData.type = word_type
-            _newData.link = link
-            _newData.translation = translation
-            _newData.approved = True
-            _newData.put()
+            res.language = language
+            res.keyword = keyword
+            res.type = word_type
+            res.link = link
+            res.translation = translation
+            res.approved = True
+            res.put()
         else:
             raise DataNotExistException()
 

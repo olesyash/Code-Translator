@@ -27,6 +27,7 @@ handlers:
   static_dir: web/font
 
 - url: /.*
+  secure: always
   script: server_interface.app
 
 libraries:

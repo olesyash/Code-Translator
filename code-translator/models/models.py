@@ -74,7 +74,7 @@ class LanguagesParsingData(ndb.Model):
         :param word, language:
         :return: list of LanguagesParsingData Objects if found in DB, false if not
         """
-        qrys  = LanguagesParsingData.query(LanguagesParsingData.language == language, LanguagesParsingData.type == _type)
+        qrys = LanguagesParsingData.query(LanguagesParsingData.language == language, LanguagesParsingData.type == _type)
         q = qrys.get()
         if q:
             return qrys

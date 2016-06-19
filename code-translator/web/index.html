@@ -21,24 +21,120 @@
 <nav class="white" role="navigation">
     <div class="nav-wrapper container">
         <ul class="right">
+            <li><a href="#modal1" id="loginbutton" class="modal-trigger tooltipped" data-delay="50"
+                   data-position="bottom" data-tooltip="Login"><i class="large material-icons ">perm_identity</i></a>
+            </li>
+
+            <li><a href="#modal2" id="regbutton" class="modal-trigger tooltipped" data-delay="50"
+                   data-position="bottom" data-tooltip="Register"><i class="material-icons ">assignment</i></a></li>
+
+            <li><a href="#!" id="logoutbutton" class=" tooltipped" style="display: none;" data-position="bottom"
+                   data-delay="50" data-tooltip="Logout" onclick="logout()"><i class="material-icons ">input</i></a>
+            </li>
             <li>
-                <a style="width: 70px;height: 50px;position: relative;margin: 7px auto;" href="/contribution-page">
+                <a id="contribute" style="width: 70px;height: 40px;position: relative;margin: 10px auto;">
                     <img class="tooltipped" data-position="bottom" data-tooltip="Contribute"
-                         src="images/contribute-sign.png" style="position: absolute;height: 100%;left: 0;">
+                         src="images/contribute-sign.png" onclick="contribute()"
+                         style="position: absolute;height: 90%;left: 0; top:4px">
                 </a>
             </li>
-            <!--<li><a href="#" id="loginbutton" class="modal-trigger tooltipped hide-on-med-and-down" data-delay="50"-->
-            <!--data-position="bottom" data-tooltip="Login"><i class="material-icons ">perm_identity</i></a></li>-->
-            <!--<li><a href="#" id="regbutton" class="modal-trigger tooltipped hide-on-med-and-down" data-delay="50"-->
-            <!--data-position="bottom" data-tooltip="Register"><i class="material-icons ">assignment</i></a></li>-->
+
         </ul>
 
         <ul class="left">
-            <li><a id="logo-container" href="#" class="brand-logo center indigo-text text-darken-4">Welcome to Code
+            <li><a id="logo-container" class="brand-logo center indigo-text text-darken-4">Welcome to Code
                 Translator!</a></li>
         </ul>
     </div>
 </nav>
+
+<div id="modal1" class="modal light-blue-text text-accent-3">
+    <form id="loginform">
+        <div class="modal-content">
+            <div class="row">
+                <div class="input-field">
+                    <input id="email" type="email" class="validate" name="email">
+                    <label for="email" data-error="Not an Email" data-success="OK">Email</label>
+                </div>
+            </div>
+            <div class="row">
+                <div class="input-field">
+                    <input id="password" type="password" class="validate" name="password">
+                    <label for="password" data-error="Do not leave empty" data-success="OK">Password</label>
+                </div>
+            </div>
+        </div>
+    </form>
+    <div class="modal-footer ">
+        <a id="login" class="waves-effect waves-light btn" onclick="login()">Agree
+        </a>
+    </div>
+</div>
+
+<!-- Modal2 Structure -->
+<div id="modal2" class="modal light-blue-text text-accent-3 ">
+    <form id="regform">
+        <div class="modal-content">
+            <div class="row">
+                <div class="col s4 push-s2">
+                    <div class="input-field ">
+                        <input  id="firstname" type="text" class="validate" name="firstname" >
+                        <label for="firstname" data-error="Do not leave empty" data-success="OK">First Name</label>
+                    </div>
+                </div>
+                <div class="col s4 push-s2">
+                    <div class="input-field">
+                        <input id="lastname" type="text" class="validate" name="lastname">
+                        <label for="lastname" data-error="Do not leave empty" data-success="OK">Last Name</label>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col s8 push-s2">
+                    <div class="input-field">
+                        <input id="email2" type="email" class="validate" name="email">
+                        <label for="email2" data-error="Not an Email" data-success="OK">Email</label>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col s4 push-s2">
+                    <div class="input-field">
+                        <input id="nickname" type="text" class="validate" name="nickname">
+                        <label for="nickname" data-error="Do not leave empty" data-success="OK">Nickname</label>
+                    </div>
+                </div>
+                <div class="col s4 push-s2">
+                    <div class="input-field">
+                        <input id="password2" type="password" pattern="([0-9A-Za-z]++)+" class="validate " name="password">
+                        <label for="password2" data-error="Do not leave empty" data-success="OK">Password</label>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer ">
+            <div class="row">
+                <!--<div class="col s4">-->
+                  <!--<h5 id="err-message"></h5>-->
+                <!--</div>-->
+                <div class="col s4 push-s6">
+                        <a onclick="register()" class=" waves-effect waves-light btn right-align" type="submit">
+                            <i class="small material-icons right">send</i>Submit</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+<div id="errormodal" class="modal">
+    <div class="modal-content">
+        <h5 class="center-align" id="errormessage"></h5>
+    </div>
+    <div class="modal-footer">
+        <button class="modal-action modal-close waves-effect btn-flat">OK</button>
+    </div>
+</div>
+
 
 <div id="index-banner" class="parallax-container">
     <div class="section no-pad-bot">
@@ -68,7 +164,7 @@
         <br><br>
         <!--   Code input box   -->
         <div class="row" id="search-container">
-            <div class="input-field ">
+            <div id="code-text-area" class="input-field ">
                 <i class="material-icons prefix">mode_edit</i>
                 <textarea id="input_text" class="materialize-textarea"></textarea>
                 <label for="input_text">Put your code here: </label>
@@ -102,7 +198,7 @@
                 <br><h4>Color Map: </h4>
 
                 <p class="mytext"><span style="color: red">Red</span> - Keywords
-                    <br><span style="color: #b9151b">Bourdeaux</span> - Literal
+                    <br><span style="color: #b9151b">Bourdeaux</span> - Literals
                     <br><span style="color: darkorange">Orange</span> - Function calls
                     <br><span style="color: blue">Blue</span> - Operators
                     <br><span style="color: purple">Purple</span> - Libraries
@@ -110,6 +206,7 @@
                     <br><span style="color: green">Green</span> - Strings
                 </p>
                 <br><h4>Want to help?</h4>
+
                 <p class="mytext">Please join our contribution community! Register to our site, and follow the
                     instructions </p>
             </div>

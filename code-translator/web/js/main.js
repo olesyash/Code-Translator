@@ -4,7 +4,7 @@
 
 (function ($) {
     $(function () {
-
+        $('.modal-trigger').leanModal();
         $('.button-collapse').sideNav();
         $('.parallax').parallax();
         addPagination();

@@ -98,3 +98,12 @@ class ContributionTest(unittest.TestCase):
         res, rc = self.ce.get_translation(url, "nothing")
         self.assertEqual(rc, 0)
 
+    def test_check_one_entry_on_update_keyword(self):
+        """
+        Test to check unique data saved in DB for each keyword
+        """
+        DAL.save_data_in_db("java", "for", "statement", "https://docs....", "the for statement is ...", approved=False)
+        self.ce.save_in_db("keyword", "link2", "the for statement is ...")
+        _qry = LanguagesData.query(LanguagesData.language == "java", LanguagesData.keyword == "for")
+        self.assertEqual(_qry.count(), 1)
+

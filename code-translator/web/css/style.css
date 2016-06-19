@@ -6,6 +6,10 @@
  * Made By MaterializeCSS.com
  */
 
+label[data-error]:after {
+    white-space: nowrap;
+}
+
 .myrow {
     position: relative !important;
 }

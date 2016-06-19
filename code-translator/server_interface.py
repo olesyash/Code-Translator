@@ -25,6 +25,7 @@ from translation_engine.translation_engine import *
 from contribution_engine.contribution_engine import *
 import logging
 import json
+from contribution_engine.user_treatment import *
 
 
 JINJA_ENVIRONMENT = jinja2.Environment(
@@ -188,6 +189,35 @@ class Approve(webapp2.RequestHandler):
         self.response.headers['Content-Type'] = 'application/json'
         self.response.write(json_response)
 
+
+class Register(webapp2.RequestHandler):
+    def post(self):
+        dic = json.loads(self.request.body)
+        ut = UserTreatment()
+        rc, message = ut.register(dic)
+        response = dict()
+        response['rc'] = rc
+        response['message'] = message
+        json_response = json.dumps(response)
+        self.response.headers.add_header("Access-Control-Allow-Origin", "*")
+        self.response.headers['Content-Type'] = 'application/json'
+        self.response.write(json_response)
+
+
+class Login(webapp2.RequestHandler):
+    def post(self):
+
+        dic = json.loads(self.request.body)
+        ut = UserTreatment()
+        rc, message = ut.login(dic)
+        response = dict()
+        response['rc'] = rc
+        response['message'] = message
+        json_response = json.dumps(response)
+        self.response.headers.add_header("Access-Control-Allow-Origin", "*")
+        self.response.headers['Content-Type'] = 'application/json'
+        self.response.write(json_response)
+
 app = webapp2.WSGIApplication([
     ('/gettranslation', GetTranslation),
     ('/contribution-page', ContributionHandler),
@@ -197,6 +227,8 @@ app = webapp2.WSGIApplication([
     ('/check-keyword', CheckKeyword),
     ('/contribute', Contribute),
     ('/approve', Approve),
+    ('/register', Register),
+    ('/login', Login),
     ('/', MainHandler)
 
 ], debug=True)
