@@ -208,17 +208,18 @@ class TranslationEngine():
         lines = code_text.split('\n')
         cur_line = 1
         shift = 0
+        # run on list of tuples, each element is a tuple
         for element in parsed_list:
-            word_type = element[0]
-            word = element[1]
-            line = element[2][1]
-            if cur_line != line:
+            word_type = element[0]  # word type
+            word = element[1]  # word
+            line = element[2][1]  # line number
+            if cur_line != line:  # if not first line, update shift to 0
                 cur_line = line
                 shift = 0
-            char_place = element[2][2] + shift
+            char_place = element[2][2] + shift  # location of word + shift
             print "char place " + str(char_place)
-            text = lines[line-1]
-            print "text before if: " + text
+            text = lines[line-1]  # take original text on the line of parsed list
+            print "text before if: " + text  # text before manipulation
             print word
             print text[char_place:char_place+len(word)]
             print(text[char_place:char_place+len(word)] == word)

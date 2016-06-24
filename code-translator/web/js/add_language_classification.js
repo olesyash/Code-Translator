@@ -23,17 +23,24 @@ $(document).on("click", ".mi", showInfo);
 $(document).on("click", "#nextBtn", prepareSubmission);
 
 var header = {
-    "statements-info": "",
-    "data_types-info": "",
-    "expressions-info": "",
-    "operators-info": ""
+    "statements-info": "How to add language: 'statements' field",
+    "data_types-info": "How to add language: 'data types' field",
+    "expressions-info": "How to add language: 'expressions' field",
+    "operators-info": "How to add language: 'operators' field",
+    "add-other-info": "How to add language: 'other' field"
 };
 
 var information = {
-    "statements-info": "",
-    "data_types-info": "",
-    "expressions-info": "",
-    "operators-info": ""
+    "statements-info": "Please insert here list of keywords describing statements, devided by comma <br> " +
+    "Example: for, if, return  <br>For more information about statments, press  <a target='_blank' href=https://en.wikipedia.org/wiki/Statement_(computer_science)>here</a>",
+    "data_types-info": "Please insert here list of keywords describing data types, devided by comma <br> " +
+    "Example: int, char, float, double  <br>For more information about data types, press  <a target='_blank' href=https://en.wikipedia.org/wiki/Data_type>here</a>",
+    "expressions-info": "Please insert here list of keywords describing expressions, devided by comma <br> " +
+    "Example: Python: print, yield, lambda  <br>For more information about expressions, press  <a target='_blank' href=https://en.wikipedia.org/wiki/Expression_(computer_science)>here</a>",
+    "operators-info": "Please insert here list of keywords describing operators, devided by comma <br> " +
+    "Example: not, or, and <br>For more information about operators, press  <a target='_blank' href=https://en.wikipedia.org/wiki/Operator_(computer_programming)>here</a>",
+    "add-other-info": "Here you can define new group name, and add keywords to this group. <br>"
+
 };
 
 var expected = ["input-statements", "input-operators", "input-expressions", "input-data_types"];
@@ -61,7 +68,7 @@ function addOther() {
     //         </div>
     console.log("in add other");
     var span = document.getElementById("other-container");
-    var row = document.createElement("div"); // <div class="card-panel response-card">
+    var row = document.createElement("div");
     row.className = "row myrow";
     var col1 = document.createElement("div");
     col1.className = "input-field col s4 push-s2";

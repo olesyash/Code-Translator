@@ -32,8 +32,13 @@ else {
 }
 
 function showInfo() {
-    $('#modal-header').html("header info about urls");
-    $('#modal-text').html("info about urls");
+    $('#modal-header').html("How to add language: 'urls' fields");
+    $('#modal-text').html("Please insert here the default urls the translation will be pulled from. <br>" +
+    "Additionally, you need to add the best way to parse the html data from that url. " +
+    "Use developer options on your browser to find the best way. " +
+    "You can parse it by specific tag: id name or class name <br>" +
+    "If there is no specific tag to parse from, you can use whole page with the tags or as plain text." +
+    "<br> You can add maximum three urls and must add at least one");
     $('#modal1').openModal();
 }
 
@@ -64,6 +69,10 @@ function add_language(){
         url["name"] = name;
         data[urls[i-1]] = url;
 
+    }
+    if (urls[0] == ""){
+        alert("You must enter at least one url");
+        return;
     }
     data["urls"] = urls;
     console.log(data);

@@ -18,11 +18,11 @@
     <div class="nav-wrapper container">
 
         <ul class="left">
-            <li><a id="logo-container" href="#" class="brand-logo center indigo-text text-darken-4">Welcome to Language Contribution Page!</a></li>
+            <li><a id="logo-container" class="brand-logo center indigo-text text-darken-4">Welcome to Language Contribution Page!</a></li>
         </ul>
 
         <ul id="nav-mobile" class="side-nav">
-            <li><a href="#">Navbar Link</a>
+            <li><a >Navbar Link</a>
         </ul>
 
     </div>
@@ -43,7 +43,7 @@
 
 <br><br>
   <div class="darken hide">
-        <p class="loader-text">Please wait while we sending the contribution to server...</p>
+        <p id="spinner-text" class="loader-text">Please wait while we sending the contribution to server...</p>
         <div class="loader" id="loader-container"></div>
   </div>
 
@@ -52,7 +52,11 @@
 
      <h4 id="header" class="center #1a237e indigo-text text-darken-4">Step 2/3, almost there!</h4>
      <h5><i>In this section, you need to add the language classification rules. Each one of the keywords has the class
-            describing it the best. Please find it and divide all of the keywords to groups</i></h5>
+            describing it the best. Please find it and divide all of the keywords to groups <br> Note: To check if the
+         keywords classified well, open your browser in incognito mode, and run in google search
+         "language keyword group" <br>
+            for example: "java for statement". If the results on first page looks unrellevant, please keep looking for
+             better classification</i></h5>
 
     <br><br>
     <!-- Modal Structure -->
@@ -62,7 +66,7 @@
             <p id="modal-text"></p>
         </div>
         <div class="modal-footer">
-            <a href="#" class=" modal-action modal-close waves-effect waves-green btn-flat">Close</a>
+            <a class=" modal-action modal-close waves-effect waves-green btn-flat">Close</a>
         </div>
     </div>
 

@@ -14,6 +14,7 @@ $("#tranalslateBtn").click(
             btn.className += " disabled";
 
             //Show loader (spinner) while waiting for translation
+            $('#spinner-text').html("Please wait while we translating the code for you...");
             $(".darken").removeClass("hide").show();
 
             sendData = $('#input_text').val();
@@ -42,7 +43,7 @@ $("#tranalslateBtn").click(
                 }
             });
         }
-        else //back button was pressed, go back to translation
+        else //back button was pressed, go back to "insert code" mode
         {
             $("#translation-card").empty(); //remove the card with translation
             clearCards(); //Clear cards list
@@ -56,22 +57,23 @@ $("#tranalslateBtn").click(
     }
 );
 
+// This Function responsible for showing cards with translation
 var showCards = function () {
     var word = $(this).html();
     console.log(word);
     var cards = document.getElementById("cards-container");
 
-    var h = parseInt(response.length / 3) + 1;
+    var h = parseInt(response.length / 3) + 1; // Calculate the total height for all cards
     cards.setAttribute("style", " min-height:" + h * 300 + "px");
-    for (var i = 0; i < response.length; i++) {
-        if (word == response[i].keyword) {
-            var translation = response[i].translation;
+    for (var i = 0; i < response.length; i++) { // Run on all translated words got from server
+        if (word == response[i].keyword) {  // If word equals to the word hovered now
+            var translation = response[i].translation; // Get the translation got from server for the word
             var $found = $('#card' + i);
             if ($found.length) {
-                if ($found.is(":hidden"))
+                if ($found.is(":hidden")) // If the card already exist and hidden, just show it
                     $found.show();
             }
-            else {
+            else { // The card doesn't exist, create it
                 var card = createCard(word, translation, response[i].link, i);
                 cards.appendChild(card);
                 $('.response-card')
@@ -87,15 +89,13 @@ var showCards = function () {
     }
 };
 
-$(document).on("mouseover", "span.keyword", showCards);
-$(document).on("mouseover", ".function", showCards);
-$(document).on("mouseover", ".operator", showCards);
-$(document).on("mouseover", ".library", showCards);
-$(document).on("mouseover", ".comment", showCards);
-$(document).on("mouseover", ".string", showCards);
-$(document).on("mouseover", ".literal", showCards);
 
+// Add listener to all classes responded by the server, to show card when clicked
+$(document).on("click", ".keyword, .literal, .function, .operator, .library ", showCards);
+
+// Function responsible to show translation
 function showTranslation(res) {
+    // Hide code area and show the code in card
     $('#code-text-area').hide();
     $('#input-card').removeClass('hide')
         .show();
@@ -103,7 +103,8 @@ function showTranslation(res) {
 
     var text = res[0];
     //text = text.replace(/\n/g, "<br/>");
-    text = text.replace(/(?:\r\n|\r|\n)/g, '<br />');
+    text = text.replace(/(?:\r\n|\r|\n)/g, '<br/>');
+    text = text.replace(/    /g, '<span class="tab"></span>');
 
     $('#translation-card').html(text);
     response = res[1];
@@ -170,6 +171,9 @@ function login() {
     data["email"] = $("#email").val();
     data["password"] = btoa($("#password").val());
     var json = JSON.stringify(data);
+     //Show loader (spinner) while waiting for translation
+    $('#spinner-text').html("Please wait to login");
+    $(".darken").removeClass("hide").show();
     $.ajax({
         //url: "http://code-translator.appspot.com/login",
         url: "/login",
@@ -178,6 +182,7 @@ function login() {
         contentType: "json",
         dataType: "json",
         success: function (response, message, jq) {
+            $(".darken").hide(); // Stop spinner
             TreatLoginResponse(response);
         },
         error: function (response, text, message) {
@@ -227,6 +232,10 @@ function register() {
     data["email"] = email.val();
     data["password"] = btoa(passwd);
     var json = JSON.stringify(data);
+
+    $('#spinner-text').html("Please wait to register");
+     //Show loader (spinner) while waiting for translation
+    $(".darken").removeClass("hide").show();
     $.ajax({
         //url:"https://code-translator.appspot.com/register",
         url: "/register",
@@ -235,6 +244,7 @@ function register() {
         contentType: "json",
         dataType: "json",
         success: function (response, message, jq) {
+            $(".darken").hide(); // Stop spinner
             TreatRegisterResponse(response);
         },
         error: function (response, text, message) {

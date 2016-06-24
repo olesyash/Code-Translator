@@ -36,7 +36,7 @@ class AddNewLanguageTest(unittest.TestCase):
         """
         dl = LanguagesSpecificFeatures("Python")
         res = dl.prepare_for_lexicon("keywords")
-        self.assertEqual(python_keywords, res)
+        self.assertIsInstance(res, Alt)
 
     def test_get_prepare_for_lexicon_C_empty(self):
         """

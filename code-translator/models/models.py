@@ -122,5 +122,6 @@ class ParsingData(ndb.Model):
     language = ndb.StringProperty()
     data = ndb.JsonProperty()
 
+
 class AllLanguages(ndb.Model):
     languages = ndb.StringProperty(repeated=True)

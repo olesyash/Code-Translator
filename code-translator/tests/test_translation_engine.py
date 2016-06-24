@@ -54,7 +54,7 @@ class TranslationEngineTest(unittest.TestCase):
         self.t = TranslationEngine(self.l)
         url = self.t.url_search("if", "keyword")
         print url
-        self.assertIn("https://docs.python.org/3/tutorial/controlflow.html", url)
+        self.assertIn("http://www.tutorialspoint.com/python", url)
 
     def test_google_search_second_page_java_goto(self):
         """

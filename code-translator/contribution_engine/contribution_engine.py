@@ -2,6 +2,7 @@ __author__ = 'olesya'
 from DAL import *
 from engine.result_parser import *
 from engine.languages_API import *
+from translation_engine.languages_specific_features import LanguagesSpecificFeatures
 import logging
 
 # encoding=utf8
@@ -18,6 +19,7 @@ class ContributionEngine():
         self.GET_CONTRIBUTION = "Please insert contribution details: "
         self.WRONG_URL = "We could not use this URL. Please recheck spelling"
         self.WRONG_TRANSLATION = "Are you sure this link describing the keyword?"
+        self.WRONG_WORD_TYPE = "Please recheck keyword type, it could not be keyword"
         self.ERROR_CODE = -1
         self.OK_CODE = 0
         self.language = language
@@ -107,7 +109,18 @@ class ContributionEngine():
         res = self.res_parser.strip_text_from_html(translation)
         return self.res_parser.find_needed_info(res, self.keyword)
 
-    def get_translation(self, link, translation_type, name=None):
+    def check_is_keyword(self):
+        """
+        This function check if it is really defined keyword in language
+        :return:
+        """
+        lsf = LanguagesSpecificFeatures(self.language)
+        list_of_keywords = lsf.find_all_keywords()
+        if not list_of_keywords:
+            return False
+        return self.keyword in list_of_keywords
+
+    def get_translation(self, link, translation_type, name=None, word_type=None):
         """
         This function get information from contributor:
         which url to access
@@ -120,6 +133,12 @@ class ContributionEngine():
         :param name: the name of element e.g id=name
         :return: return thankful message with new translation or error
         """
+        if word_type == "keyword":
+            logging.info("marked as keyword")
+            res = self.check_is_keyword()
+            if not res:
+                return self.WRONG_WORD_TYPE, self.ERROR_CODE
+
         la = LanguagesAPI()
         try:
             result, code = la.http_request_using_urlfetch(http_url=link)
@@ -139,7 +158,6 @@ class ContributionEngine():
         return translation, self.OK_CODE
 
     def save_in_db(self, word_type, link, translation):
-        # TODO: check user's level, if admin save in DB, if not save in contribution db
         try:
             DAL.save_data_in_db(self.language, self.keyword, word_type, link, translation, approved=True)
             logging.info("Saving in DB new contributed translation")

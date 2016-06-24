@@ -164,7 +164,7 @@ class Contribute(webapp2.RequestHandler):
         except KeyError:
             name = None
         ce = ContributionEngine(language, keyword)
-        res, rc = ce.get_translation(url, translation_type, name)
+        res, rc = ce.get_translation(url, translation_type, name, word_type)
         if eval(save):
             res = ce.save_in_db(word_type, url, res)
         logging.info("result " + str(res))

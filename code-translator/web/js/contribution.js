@@ -40,6 +40,8 @@ function select_listener() {
 //Check keyword button listener
 $("#keywordBtn").click(
     function () {
+        hideAll();
+        $("#header").html(GET).removeClass("red-text text-accent-4");
         console.log("button pressed");
         check_keyword();
     }
@@ -115,7 +117,6 @@ function submit_contribution() {
         return;
     }
 
-
     //Option
     var e2 = document.getElementById("select-option");
     //Because of the disabled option there is shift of one (+1)
@@ -125,7 +126,6 @@ function submit_contribution() {
         alert("Please choose an option");
         return;
     }
-
 
     //Url
     url = $('#url-insert').val();

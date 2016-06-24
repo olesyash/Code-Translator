@@ -31,9 +31,9 @@ default_function_call_char = '('
 
 # ----------------------------------------- Python -----------------------------------------------------------
 # Keywords:
-python_keywords = Str('as', 'assert', 'del', 'elif', 'else', 'except', 'exec', 'finally', 'global', 'is', 'lambda',
-                      'and', 'or', 'not', 'print', 'raise', 'try', 'with', 'yield', 'in', 'for', 'if', 'while',
-                      'break', 'continue', 'pass', 'return')
+python_keywords = ['as', 'assert', 'del', 'elif', 'else', 'except', 'exec', 'finally', 'global', 'is', 'lambda',
+                   'and', 'or', 'not', 'print', 'raise', 'try', 'with', 'yield', 'in', 'for', 'if', 'while',
+                   'break', 'continue', 'pass', 'return']
 
 # Statements
 python_statements = ['for', 'if', 'else', 'while', 'break', 'continue', 'pass', 'return']
@@ -62,13 +62,13 @@ python_func_def = Str('def')
 python_describe_class_keyword = Str()
 # ----------------------------------------- Java -----------------------------------------------------------
 # Keywords:
-java_keywords = Str('abstract',	'continue',	'for', 'new', 'switch', 'assert', 'default', 'goto',
-                    'package', 'synchronized', 'boolean', 'do', 'if', 'this', 'break',
-                    'double', 'implements', 'protected', 'throw', 'byte', 'else',
-                    'throws', 'case', 'enum', 'instanceof', 'return', 'transient', 'catch',	'extends',
-                    'int', 'short', 'try', 'char', 'final', 'interface', 'static', 'void',
-                    'finally', 'long', 'strictfp',  'volatile', 'const', 'float', 'native', 'super',
-                    'while')
+java_keywords = ['abstract', 'continue',	'for', 'new', 'switch', 'assert', 'default', 'goto',
+                 'package', 'synchronized', 'boolean', 'do', 'if', 'this', 'break',
+                 'double', 'implements', 'protected', 'throw', 'byte', 'else',
+                 'throws', 'case', 'enum', 'instanceof', 'return', 'transient', 'catch',	'extends',
+                 'int', 'short', 'try', 'char', 'final', 'interface', 'static', 'void',
+                 'finally', 'long', 'strictfp',  'volatile', 'const', 'float', 'native', 'super',
+                 'while']
 # Statements
 java_statements = ['for', 'if', 'else', 'while', 'break', 'continue', 'return', 'switch', 'case', 'do', 'new',
                    'assert', 'default', 'do', 'throw', 'throws', 'catch', 'try', 'void', 'finally']
@@ -103,11 +103,11 @@ java_describe_class_keyword = Str('public', 'private')
 
 # ------------------------------------------- Ruby ---------------------------------------------------------
 # Keywords:
-ruby_keywords = Str('BEGIN', 'do', 'next', 'then', 'END', 'else', 'alias', 'elsif', 'not',
-                    'undef', 'and', 'end', 'or', 'unless', 'begin', 'ensure', 'redo', 'until', 'break',
-                    'rescue', 'when', 'case', 'for', 'retry', 'while', 'if', 'return',
-                    'in', 'self', '__FILE__', 'defined?', 'module', 'super', '__LINE__', '__ENCODING__',
-                    'yield', '__END__')
+ruby_keywords = ['BEGIN', 'do', 'next', 'then', 'END', 'else', 'alias', 'elsif', 'not',
+                 'undef', 'and', 'end', 'or', 'unless', 'begin', 'ensure', 'redo', 'until', 'break',
+                 'rescue', 'when', 'case', 'for', 'retry', 'while', 'if', 'return',
+                 'in', 'self', '__FILE__', 'defined?', 'module', 'super', '__LINE__', '__ENCODING__',
+                 'yield', '__END__']
 # Statements
 ruby_statements = ['for', 'if', 'else', 'unless', 'case', 'when', 'while', 'until', 'break', 'next', 'redo', 'retry',
                    'do', 'then', 'END', 'alias', 'undef', 'return', 'yield']
@@ -243,6 +243,7 @@ url_info = {"https://wiki.python.org": {"id": "content"},
 
 classifications = ["keywords", "expressions", "statements", "data_types"]
 
+
 def keyword_is_title(language, keyword, title):
     """
     Check if keyword defined by a title
@@ -325,9 +326,31 @@ class LanguagesSpecificFeatures():
                 logging.info(str(type(json_load)))
                 self.data = json_load
 
-    def prepare_for_lexicon(self, title):
+    def find_all_keywords(self):
+        """
+        This function find all keywords in language
+        :return: list of keywords
+        """
         try:
-            return eval("languages_" + title)[self.language]
+            return languages_keywords[self.language]
+        except KeyError:
+            print "need to search in DB"
+            if not self.data:
+                return False
+            return self.data["keywords"]
+
+    def prepare_for_lexicon(self, title):
+        """
+        This function prepares for lexicon the needed values by executing Str() function on list
+        :param title: The features of the language needed to be prepared for lexicon
+        :return: Alt object
+        """
+        try:
+            res = eval("languages_" + title)[self.language]
+            if title == "keywords":
+                res = my_str(res)
+                return res
+            return res
         except KeyError:
             print "need to search in DB"
             print "title " + title
@@ -354,6 +377,10 @@ class LanguagesSpecificFeatures():
 
 
 def get_all_languages():
+    """
+    This function return all languages configured in the system
+    :return: list of languages
+    """
     dal = DAL()
     return dal.get_all_languages()
 
