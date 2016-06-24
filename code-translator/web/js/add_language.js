@@ -2,6 +2,7 @@
  * Created by olesya on 11-Jun-16.
  */
 
+//Get jquery functions ready
 $(document).ready(function () {
     $('.button-collapse').sideNav();
     $('.parallax').parallax();
@@ -9,6 +10,10 @@ $(document).ready(function () {
     $('select').material_select();
 });
 
+// Define variables
+var info_dict = {};
+
+// Define headers map to add information showed when information icon pressed
 var header =
 {
     "language-info": "How to add language: 'language' field",
@@ -30,8 +35,10 @@ var header =
     "class_keyword-info": "How to add language: 'class definition keyword' field"
 };
 
+// List of elements that not allowed to be empty when new language added
 var empty_not_allowed = ['input-language', 'input-keywords', 'input-operations', 'input-str_symbol1', 'input-str_symbol2'];
 
+// Define information map to add information showed when information icon pressed
 var information =
 {
     "language-info": "Please insert here the name of the language you want to add to Code Translator. " +
@@ -73,12 +80,12 @@ var information =
     "Default is True"
 };
 
-
-var info_dict = {};
-
+// Add listener to information icons
 $(document).on("click", ".material-icons", showInfo);
+// Add listener to next button
 $(document).on("click", "#nextBtn", prepareSubmission);
 
+// This function responsible to show the information of the element when "information" icon near the element pressed
 function showInfo(event) {
     console.log(event.target.id);
     $('#modal-header').html(header[event.target.id]);
@@ -86,10 +93,12 @@ function showInfo(event) {
     $('#modal1').openModal();
 }
 
+// This function preparing the data to be sent to server when "next" button pressed
 function prepareSubmission() {
-    info_dict["language"] = $('#input-language').val();
+    info_dict["language"] = $('#input-language').val(); // prepare language
     var all_data = {};
     var flag = false;
+    // Take details from the form
     $("form#info-form :input").each(function () {
         var input = $(this); //get the object
         if(empty_not_allowed.indexOf(input.attr('id'))!= -1) {
@@ -99,24 +108,23 @@ function prepareSubmission() {
                 return false;
             }
         }
-
+        // Save all lists in array by splitting it by comma and removing all spaces around the words
         var list_of_el = input.val().split(",");
         list_of_el = list_of_el.map(Function.prototype.call, String.prototype.trim);
         all_data[input.attr('id').split('-')[1]] = list_of_el;
     });
-    if (flag)
+    if (flag) // If one of the must fields in empty, do not sent the data
         return;
     var e = document.getElementById("select-function_call_must_char");
     all_data["function_call_must_char"] = [e.options[e.selectedIndex].value];
     info_dict["all_data"] = all_data;
     console.log(info_dict);
-    add_language(info_dict);
+    add_language(info_dict); //Send to server the information collected from contributor
 }
 
 
 //Send data to server to add language to parser
 function add_language(data) {
-
     var json = JSON.stringify(data);
      //Show loader (spinner) while waiting for server response
     $(".darken").removeClass("hide").show();
@@ -141,11 +149,12 @@ function add_language(data) {
         success: function (response, message, jq) {
             console.log(response);
              $(".darken").hide(); //stop spinner
-            TreatResponse(response)
+            TreatResponse(response); // treat response
         }
     });
 }
 
+// Treat response from server, if succeed redirect to next page, if not - alert on error
 function TreatResponse(response) {
     console.log(response["response"]);
     if(response["response"])

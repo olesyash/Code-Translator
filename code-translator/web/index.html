@@ -24,22 +24,30 @@
             <li><a href="#modal1" id="loginbutton" class="modal-trigger tooltipped" data-delay="50"
                    data-position="bottom" data-tooltip="Login"><i class="large material-icons ">perm_identity</i></a>
             </li>
-
             <li><a href="#modal2" id="regbutton" class="modal-trigger tooltipped" data-delay="50"
                    data-position="bottom" data-tooltip="Register"><i class="material-icons ">assignment</i></a></li>
 
-            <li><a href="#!" id="logoutbutton" class=" tooltipped" style="display: none;" data-position="bottom"
+            <li><a id="logoutbutton" class=" tooltipped" style="display: none;" data-position="bottom"
                    data-delay="50" data-tooltip="Logout" onclick="logout()"><i class="material-icons ">input</i></a>
             </li>
             <li>
-                <a id="contribute" style="width: 70px;height: 40px;position: relative;margin: 10px auto;">
+                <a id="contribute" style="width: 50px;height: 44px;position: relative;margin: 10px auto;">
                     <img class="tooltipped" data-position="bottom" data-tooltip="Contribute"
                          src="images/contribute-sign.png" onclick="contribute()"
-                         style="position: absolute;height: 90%;left: 0; top:4px">
+                         style="position: absolute;height: 70%;left: 0; top:8px">
                 </a>
             </li>
-
         </ul>
+         <ul class="left">
+             <li>
+                <a id="github" href="https://github.com/olesyash/Code-Translator/wiki"
+                   style="width: 40px;height: 44px;position: relative;margin: 10px auto;">
+                    <img class="tooltipped" data-position="bottom" data-tooltip="See on github"
+                         src="images/github.png"
+                         style="position: absolute;height: 80%;left: 0; top:8px">
+                </a>
+            </li>
+         </ul>
 
         <ul class="left">
             <li><a id="logo-container" class="brand-logo center indigo-text text-darken-4">Welcome to Code
@@ -59,7 +67,7 @@
             </div>
             <div class="row">
                 <div class="input-field">
-                    <input id="password" type="password" class="validate" name="password">
+                    <input id="password" type="password" class="validate" pattern="(\S){1,256}" name="password">
                     <label for="password" data-error="Do not leave empty" data-success="OK">Password</label>
                 </div>
             </div>
@@ -76,21 +84,23 @@
     <form id="regform">
         <div class="modal-content">
             <div class="row">
-                <div class="col s4 push-s2">
+                <div class="col s5 ">
                     <div class="input-field ">
-                        <input  id="firstname" type="text" class="validate" name="firstname" >
-                        <label for="firstname" data-error="Do not leave empty" data-success="OK">First Name</label>
+                        <i id="first-name-info" data-tooltip="Can contain 1-20 letters" data-position="left"
+                            class="small material-icons prefix tooltipped">info_outline</i>
+                        <input  id="firstname" type="text" class="validate" pattern="([A-Za-z]){1,20}" name="firstname" >
+                        <label for="firstname" data-error="Not matching requirments" data-success="OK">First Name</label>
                     </div>
                 </div>
-                <div class="col s4 push-s2">
+                <div class="col s5 ">
                     <div class="input-field">
-                        <input id="lastname" type="text" class="validate" name="lastname">
-                        <label for="lastname" data-error="Do not leave empty" data-success="OK">Last Name</label>
+                        <input id="lastname" type="text" class="validate" pattern="([A-Za-z]){1,20}"  name="lastname">
+                        <label for="lastname" data-error="Not matching requirements" data-success="OK">Last Name</label>
                     </div>
                 </div>
             </div>
             <div class="row">
-                <div class="col s8 push-s2">
+                <div class="col s9 push-s1">
                     <div class="input-field">
                         <input id="email2" type="email" class="validate" name="email">
                         <label for="email2" data-error="Not an Email" data-success="OK">Email</label>
@@ -98,24 +108,23 @@
                 </div>
             </div>
             <div class="row">
-                <div class="col s4 push-s2">
+                <div class="col s5">
                     <div class="input-field">
-                        <input id="nickname" type="text" class="validate" name="nickname">
-                        <label for="nickname" data-error="Do not leave empty" data-success="OK">Nickname</label>
+                         <i id="Nickname-info" data-tooltip="Can contain 3-20 letters, numbers, dots and underscore" data-position="left"
+                            class="small material-icons prefix tooltipped">info_outline</i>
+                        <input id="nickname" type="text" class="validate" pattern="(\w|\.){3,20}" name="nickname">
+                        <label for="nickname" data-error="Not matching requirements" data-success="OK">Nickname</label>
                     </div>
                 </div>
-                <div class="col s4 push-s2">
+                <div class="col s5">
                     <div class="input-field">
-                        <input id="password2" type="password" pattern="([0-9A-Za-z]++)+" class="validate " name="password">
-                        <label for="password2" data-error="Do not leave empty" data-success="OK">Password</label>
+                        <input id="password2" type="password" pattern="(\S){1,256}" class="validate " name="password">
+                        <label for="password2" data-error="Not matching requirements" data-success="OK">Password</label>
                     </div>
                 </div>
             </div>
             <div class="modal-footer ">
             <div class="row">
-                <!--<div class="col s4">-->
-                  <!--<h5 id="err-message"></h5>-->
-                <!--</div>-->
                 <div class="col s4 push-s6">
                         <a onclick="register()" class=" waves-effect waves-light btn right-align" type="submit">
                             <i class="small material-icons right">send</i>Submit</a>
@@ -152,8 +161,7 @@
 <br><br>
 
 <div class="darken hide">
-    <p class="loader-text">Please wait while we translating the code for you...</p>
-
+    <p id ="spinner-text" class="loader-text">Please wait while we translating the code for you...</p>
     <div class="loader" id="loader-container"></div>
 </div>
 

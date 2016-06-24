@@ -2,27 +2,32 @@
  * Created by olesya on 12-Jun-16.
  */
 
+//Get jquery functions ready
 $(document).ready(function () {
     $('.button-collapse').sideNav();
     $('.parallax').parallax();
     $('.modal-trigger').leanModal();
     $('select').material_select();
 });
+
+//Define variables
 var name = "";
 var selected_option;
 var options_list = ["class", "id"];
 var counter = 1;
 var THANKS_FOR_CONTRIBUTION = "Thank you for your contribution!";
 
+// Add on click listener to all select-options
 for(var i=1;i<4;i++) {
     $(document).on("change", "#select-option"+i, select_listener);
 }
+// Add on click listeners
 $(document).on("click", "#add-other", addOther);
 $(document).on("click", "#remove-other", removeOther);
 $(document).on("click", "#addLanguageBtn",add_language);
 $(document).on("click", ".mi", showInfo);
 
-
+// Check if language in url present, if not redirect to /add-language page
 if (document.location.href.indexOf("language=") != -1) {
     var language = document.location.href.split("language=")[1];
 }
@@ -31,6 +36,7 @@ else {
     document.location.href = "/add-language"
 }
 
+// This function shows information on information icon press
 function showInfo() {
     $('#modal-header').html("How to add language: 'urls' fields");
     $('#modal-text').html("Please insert here the default urls the translation will be pulled from. <br>" +
@@ -42,34 +48,39 @@ function showInfo() {
     $('#modal1').openModal();
 }
 
+// This function preparing the data to be sent to server when "next" button pressed
 function add_language(){
     var data = {};
+    //finally structure {"urls" : [list of urls], url1 : {"name": name, "type": type}, url2 : {"name": name, "type": type} ...}
     var urls = [];
     var selected = [];
+    // get all information from all urls inputs
     for(var i=1;i<4;i++)
     {
         var url = {};
         var j = $('#'+i);
-        if(j.hasClass('hide'))
+        if(j.hasClass('hide')) // if the element is hidden, do not add the information
             break;
-        var u = $('#'+ "input-url"+i);
+        var u = $('#'+ "input-url"+i); // take the url
         urls[i-1] = u.val();
         console.log(urls[i-1]);
         var c = document.getElementById("select-option"+i);
-        selected[i-1] = c.options[c.selectedIndex ].value;
+        selected[i-1] = c.options[c.selectedIndex ].value; // take the type of html parsing
         console.log(selected[i - 1]);
-        if(options_list.indexOf(selected[i-1]) != -1) {
+        if(options_list.indexOf(selected[i-1]) != -1) { // take the name if exist
             var name_obj = $("#name-insert" + i);
             name = name_obj.val();
         }
-        else {
+        else { // if name not needed, leave empty
             name = ""
         }
+        // save all data in dictionary data
         url["type"] = selected[i-1];
         url["name"] = name;
         data[urls[i-1]] = url;
 
     }
+    // Demand at least one url filled
     if (urls[0] == ""){
         alert("You must enter at least one url");
         return;
@@ -77,7 +88,7 @@ function add_language(){
     data["urls"] = urls;
     console.log(data);
     var all_data= {"all_data": data, "language": language};
-    sendToServer(all_data);
+    sendToServer(all_data); //send to server the data
 }
 
 
@@ -123,7 +134,7 @@ function removeOther(){
 //Send data to server to add language urls to DB
 function sendToServer(data) {
 
-    var json = JSON.stringify(data);
+    var json = JSON.stringify(data); // convert dictionary to json
     //Show loader (spinner) while waiting for server response
     $(".darken").removeClass("hide").show();
     $.ajax({
@@ -152,6 +163,7 @@ function sendToServer(data) {
     });
 }
 
+// Treat response from server, if succeed show thank you message , if not - alert on error
 function TreatResponse(response) {
     console.log(response["response"]);
     $('#info-form').addClass('hide');
