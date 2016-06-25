@@ -103,8 +103,10 @@ function showTranslation(res) {
 
     // Get response from server with code text with colored translated words, and show in card
     var text = res[0];
+    text = text.replace(/^ /mg, '&nbsp'); // Replace all spaces in the beginning of line with html spaces
     text = text.replace(/(?:\r\n|\r|\n)/g, '<br/>'); // replace all "enter = \n" => <br>
-    text = text.replace(/    /g, '<span class="tab"></span>'); // Replace all tabs "\t = 4 spaces" -> <class=tab>
+    text = text.replace(/    /g, '<span class="tab"></span>'); // Replace all "4 spaces" -> <class=tab>
+    text = text.replace(/\t/g, '<span class="tab"></span>'); // Replace all tabs "\t" -> <class=tab>
 
     $('#translation-card').html(text);
     response = res[1];

@@ -183,7 +183,7 @@ class MyScanner(Scanner):
 
         word = Rep1(letter | number | Any('_'))
         lib_name = Rep1(letter | number | symbols)
-        name = Rep1(letter | number | symbols) | Empty
+        name = Rep1(letter | number | symbols)
 
         string_symbol = Str(str_symbol1) | Str(str_symbol2)
 
