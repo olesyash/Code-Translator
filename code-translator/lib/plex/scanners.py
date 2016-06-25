@@ -134,9 +134,9 @@ class Scanner:
                     self.next_char()
                 if self.cur_char == EOF:
                     return ('', None)
-
+            prev = self.cur_char
             self.next_char()
-            return (self.cur_char, 'unrecognized')
+            return (prev, 'unrecognized')
 
             import pdb
             #pdb.set_trace()

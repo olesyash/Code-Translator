@@ -296,7 +296,6 @@ class DAL():
         res = LanguagesClassificationData.find_keyword_classification(language, keyword)
         return res.type if res else "keyword"
 
-
     def save_language_data(self, language, data):
         new = ParsingData()
         new.language = language

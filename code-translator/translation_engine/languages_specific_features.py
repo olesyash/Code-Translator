@@ -16,8 +16,11 @@ DATA_TYPE = "data type"
 OPERATOR = "operator"
 EXPRESSION = "expression"
 
-symbols = Str(',', '.', '_', '!', '/', '(', ')', ':', '-', '[', ']', '{', '}', '@', '%', '^', '&', '*', '=', '`', '$',
-              '+', '|', '\\', '?', '<', '>')
+symbols_without_escape = Str(',', '.', '_', '!', '/', '(', ')', ':', '-', '[', ']', '{', '}', '@', '%', '^', '&', '*',
+                             '=', '`', '$', '+', '|', '?', '<', '>')
+escape_char = "\\"
+
+symbols = symbols_without_escape | Str(escape_char)
 
 terminate_line_symb = Str(';')
 
@@ -193,6 +196,10 @@ languages_str_symbol2 = {"Java": str_symbol2,
                          "Python": str_symbol2,
                          "Ruby": str_symbol2}
 
+languages_escape_character = {"Java": escape_char,
+                              "Python": escape_char,
+                              "Ruby": escape_char}
+
 languages_func_def = {"Java": java_func_def,
                       "Python": python_func_def,
                       "Ruby": ruby_func_def}
@@ -204,10 +211,6 @@ languages_func_start = {"Java": default_function_start,
 languages_class_keyword = {"Java": default_class_keyword,
                            "Python": default_class_keyword,
                            "Ruby": default_class_keyword}
-
-languages_escape_character = {"Java": Str(),
-                              "Python": Str(),
-                              "Ruby": ruby_escape_string_character}
 
 languages_function_call_char = {"Java": default_function_call_char,
                                 "Python": default_function_call_char,
@@ -345,6 +348,7 @@ class LanguagesSpecificFeatures():
         :param title: The features of the language needed to be prepared for lexicon
         :return: Alt object
         """
+        self.language = "Ruby" if self.language == "Ruby-1.9" else self.language
         try:
             res = eval("languages_" + title)[self.language]
             if title == "keywords":
@@ -362,7 +366,7 @@ class LanguagesSpecificFeatures():
             if title == "function_call_must_char":
                 return res == "True"
             if title == "escape_character":
-                return ruby_escape_string_character
+                return res
             if title in ["str_symbol1", "str_symbol2", "function_call_char"]:
                 try:
                     logging.info("prepare for lexicon title {} is ready: {}".format(title, res[0]))

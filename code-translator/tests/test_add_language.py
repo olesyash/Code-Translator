@@ -115,8 +115,8 @@ class AddNewLanguageTest(unittest.TestCase):
         data['comment_end2'] = []
         data['func_def'] = []
         data['class_keyword'] = []
-        data['escape_character'] = []
-        data['func_start'] = []
+        data['escape_character'] = ['\\']
+        data['func_start'] = ['(']
         data['function_call_char'] = ['(']
         data['function_call_must_char'] = "True"
         data['other'] = {}
@@ -129,7 +129,7 @@ class AddNewLanguageTest(unittest.TestCase):
         self.run_parser()
 
         expected_lib = ['HashTable.h']
-        expected_keywords = ['include', 'void', 'int', 'if', 'return', 'for']
+        expected_keywords = ['include', 'void', 'int', 'char', 'if', 'return', 'for']
         expected_functions_calls = ['freeTable', 'freeList', 'free', 'free']
         self.assertEqual(expected_keywords, self.p.keywords)
         self.assertEqual(expected_functions_calls, self.p.scanner.functions_calls)
@@ -204,4 +204,6 @@ class AddNewLanguageTest(unittest.TestCase):
         self.assertEqual("expression", tr.classify_keywords("sizeof", "keyword"))
         self.assertEqual("operator", tr.classify_keywords("signed", "keyword"))
 
+    def tearDown(self):
+        self.testbed.deactivate()
 

@@ -259,3 +259,6 @@ class TranslationEngineTest(unittest.TestCase):
         result, code = la.http_request_using_urlfetch(http_url=url)
         res = self.t.parse_result(result)
         self.assertEqual(res, result)
+
+    def tearDown(self):
+        self.testbed.deactivate()

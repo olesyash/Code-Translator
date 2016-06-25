@@ -53,3 +53,5 @@ class JavaTest(unittest.TestCase):
         res = b.strip_text_from_html(result)
         self.assertNotIn("<", res, "The result contains tags!")
 
+    def tearDown(self):
+        self.testbed.deactivate()

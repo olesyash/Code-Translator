@@ -182,3 +182,6 @@ class ContributionTest(unittest.TestCase):
         self.ce = ContributionEngine("Java", "fo")
         res = self.ce.check_is_keyword()
         self.assertFalse(res)
+
+    def tearDown(self):
+        self.testbed.deactivate()

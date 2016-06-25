@@ -132,5 +132,5 @@ class MyParserRubyTest(unittest.TestCase):
         """
         f = open(self.filename, "r")
         output = f.read()
-        self.p = Parser("Ruby")
+        self.p = Parser("Ruby-1.9")
         self.p.run_parser(output)

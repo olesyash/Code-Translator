@@ -3,6 +3,7 @@
 void freeTable(Table *table)
 {
     int i;
+    char[] = "this is a \" string"
     if (table == NULL)
         return;
     for (i = 0; i < table->currentSize; i++) //Free all the objects in array

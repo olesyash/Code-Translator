@@ -1,3 +1,4 @@
+"string bla \"  still string for"
 "for" "if" "not"
 'else' 'elif' 'import'
 "'for'" '"for"'

@@ -30,3 +30,6 @@ class LanguagesApiTest(unittest.TestCase):
     def test_negative_test_java_get_for_statement_using_urlfetch(self):
         a = LanguagesAPI()
         self.assertRaises(WrongURL, a.http_request_using_urlfetch, "wrong_html")
+
+    def tearDown(self):
+        self.testbed.deactivate()

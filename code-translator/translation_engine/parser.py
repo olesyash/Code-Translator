@@ -102,7 +102,6 @@ class MyScanner(Scanner):
         This function is responsible to save the word that could be function call, and start state "functions"
         """
         logging.debug("check call function " + text)
-
         if self.cur_char == self.func_call_char:
             self.produce(FUNCTION, text)
             self.functions_calls.append(text)
@@ -124,7 +123,9 @@ class MyScanner(Scanner):
         This function will skip on the string symbol ending if escape character found
         """
         logging.debug("in escape character " + text)
+        #self.just_read_char()
         self.read_char()
+        self.produce(STRING, text)
 
     def check_class(self, a, text):
         logging.debug(("in check class " + text))
@@ -147,6 +148,8 @@ class MyScanner(Scanner):
             func_def = all_data.prepare_for_lexicon("func_def")
             class_keyword = all_data.prepare_for_lexicon("class_keyword")
             escape_character = all_data.prepare_for_lexicon("escape_character")
+            escape_character1 = Str(escape_character) + Str(str_symbol1)
+            escape_character2 = Str(escape_character) + Str(str_symbol2)
             self.func_start = all_data.prepare_for_lexicon("func_start")
             self.func_call_char = all_data.prepare_for_lexicon("function_call_char")
             self.must_func_call_char = all_data.prepare_for_lexicon("function_call_must_char")
@@ -164,11 +167,11 @@ class MyScanner(Scanner):
                 logging.info(comment_end2)
                 logging.info(func_def)
                 logging.info(class_keyword)
-                logging.info(escape_character)
                 logging.info(self.func_start)
                 logging.info(self.func_call_char)
                 logging.info(self.must_func_call_char)
                 logging.info(self.need_func_start)
+                logging.info(escape_character)
         except KeyError:
             print "Language not defined well"
             self.lexicon = Lexicon([])
@@ -186,20 +189,22 @@ class MyScanner(Scanner):
 
         all_symbols = symbols | comments_symbols | string_symbol | terminate_line_symb
         comments_words = Rep1(letter | number | Any('._') | all_symbols)
-        string_words = Rep1(letter | number | symbols | Str(" "))
+        string_words = Rep1(letter | number | symbols_without_escape | Str('#') | Str(" "))
 
         self.lexicon = Lexicon([
             # Ignore strings
             (Str(str_symbol1), Begin('string1')),
             State('string1', [
-                (escape_character, STRING),
+                (escape_character1, self.escape_character_in_string),
                 (string_words, STRING),
+                (Str(str_symbol2), STRING),
                 (Str(str_symbol1), Begin('')),
             ]),
             (Str(str_symbol2), Begin('string2')),
             State('string2', [
-                (escape_character, STRING),
+                (escape_character2, self.escape_character_in_string),
                 (string_words, STRING),
+                (Str(str_symbol1), STRING),
                 (Str(str_symbol2), Begin('')),
             ]),
 
@@ -230,7 +235,7 @@ class MyScanner(Scanner):
 
             # Ignore symbols
             (terminate_line_symb, IGNORE),
-            (symbols | string_symbol, IGNORE),
+            (symbols, IGNORE),
 
             # Ignore one line comments
             (start_comment_symb, self.start_comment),
@@ -269,6 +274,7 @@ class MyScanner(Scanner):
 
             # Find all functions calls
             (word, self.check_call_function),
+
             # Ignore all indentations and new lines
             (Rep1(Any(" \t\n")), IGNORE)
         ])

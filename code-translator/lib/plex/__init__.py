@@ -31,6 +31,6 @@ __version__ = '2.0.0'
 
 from actions import TEXT, IGNORE, Begin
 from lexicons import Lexicon, State
-from regexps import RE, Seq, Alt, Rep1, Empty, Str, Any, AnyBut, AnyChar, Range, my_str
+from regexps import RE, Seq, Alt, Rep1, Empty, Str, Any, AnyBut, AnyChar, Range, my_str, Char
 from regexps import Opt, Rep, Bol, Eol, Eof, Case, NoCase
 from scanners import Scanner
